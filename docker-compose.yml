@@ -1,0 +1,73 @@
+services:
+  # Nginx 웹 서버
+  nginx:
+    image: nginx:alpine
+    container_name: omamori_php_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - omamori-network
+    restart: unless-stopped
+
+  # PHP-FPM
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: omamori_php_fpm
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=omamori_db
+      - DB_USERNAME=omamori_user
+      - DB_PASSWORD=omamori_pass
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - omamori-network
+    restart: unless-stopped
+
+  # PostgreSQL 데이터베이스
+  postgres:
+    image: postgres:16-alpine
+    container_name: omamori_php_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: omamori_db
+      POSTGRES_USER: omamori_user
+      POSTGRES_PASSWORD: omamori_pass
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - omamori-network
+    restart: unless-stopped
+
+  # Redis
+  redis:
+    image: redis:alpine
+    container_name: omamori_php_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - omamori-network
+    restart: unless-stopped
+
+networks:
+  omamori-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
