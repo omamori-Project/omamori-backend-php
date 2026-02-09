@@ -41,7 +41,7 @@ class UserService extends BaseService{
         // created_at以外を選出
         $filtered = $this -> except($data, ['created_at']);
         // 現在時間
-        $filtered['updated_at'] = $this -> now();
+        $filte['updated_at'] = $this -> now();
         return $this -> userRepository -> update($id, $filtered);
     }
 }

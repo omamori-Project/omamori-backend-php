@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Modules\User\Repository;
+namespace App\Modules\User\Repositories;
 
 // Base
 use App\Common\Base\BaseRepository;
+use App\Core\Database;
 
 // 継承
 class UserRepository extends BaseRepository{

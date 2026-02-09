@@ -14,7 +14,7 @@ use App\Modules\User\Services\UserService;
 class UserController extends BaseController {
     protected UserService $userService;
 
-    pablic function __construct(){
+    public function __construct(){
         $this -> userService = new UserService();
     }
 
@@ -23,8 +23,8 @@ class UserController extends BaseController {
             // varidate(): 入力検証
             $data = $this -> validate($request, [
                 'email' => 'required|email',
-                'name' => 'require|min:3',
-                'password' => 'require|min:4'
+                'name' => 'required|min:3',
+                'password' => 'required|min:4'
             ]);
 
             $userId = $this -> userService -> createUser($data);
@@ -32,7 +32,16 @@ class UserController extends BaseController {
             return $this -> success(['id' => $userId], 'Created', 201);
         
         }catch(\Exception $e){
-            return ErrorHandler::handle($e)
+            return ErrorHandler::handle($e);
         }
     }
+
+    public function index(Request $request): Response{
+        try {
+            return $this->success([], 'Users retrieved successfully');
+        } catch (\Exception $e) {
+            return ErrorHandler:: handle($e);
+        }
+    }
+
 }
