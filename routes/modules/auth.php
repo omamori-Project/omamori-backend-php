@@ -29,16 +29,16 @@ $router -> post('/api/auth/password/reset', function ($request) {
 }, 'auth.password.reset');
 
 // 내 정보 조회
-$router -> get ('/api/auth/me', function($request){
+$router -> get ('/api/me', function($request){
     return Response:: success(null, 'Me(GET)');
-}, 'auth.me.show');
+}, 'me.show');
 
 // 내 정보 수정
-$router -> PATCH('/apu/auth/me', function($request){
+$router -> patch('/api/me', function($request){
     return Response:: success(null, 'Me(PATCH)');
-}, 'auth.me.update');
+}, 'me.update');
 
 // 회원 탈퇴
-$router -> delete('/api/auth/me', function($request){
+$router -> delete('/api/me', function($request){
     return Response:: success(null, 'Me(DELETE)');
-}, 'auth.me.destoroy');
+}, 'me.destroy');
