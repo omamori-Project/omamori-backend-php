@@ -17,7 +17,6 @@ use App\Core\Response;
 global $router;
 
 // Health Check Route
-
 $router->get('/api/health', function ($request) {
     return Response::success([
         'status' => 'ok',
@@ -27,16 +26,12 @@ $router->get('/api/health', function ($request) {
     ], 'Service is healthy');
 });
 
-// 모듈별 라우트 로드
+// 존재 확인
+$moduleFiles = ['user.php', 'auth.php', 'omamori.php', 'community.php'];
 
-// User 모듈
-require __DIR__ . '/modules/user.php';
-
-// Auth 모듈
-require __DIR__ . '/modules/auth.php';
-
-// Omamori 모듈
-require __DIR__ . '/modules/omamori.php';
-
-// Community 모듈
-require __DIR__ . '/modules/community.php';
+foreach ($moduleFiles as $file) {
+    $path = __DIR__ . "/modules/{$file}";
+    if (file_exists($path)) {
+        require $path;
+    }
+}

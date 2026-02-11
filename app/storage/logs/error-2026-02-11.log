@@ -1,0 +1,17 @@
+[2026-02-11 00:21:33] PDOException: SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "users" does not exist
+LINE 1: SELECT COUNT(*) as count FROM users WHERE email = $1 AND del...
+                                      ^ in /var/www/html/app/Core/Database.php:54
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(54): PDOStatement->execute(Array)
+#1 /var/www/html/app/Common/Base/BaseRepository.php(199): App\Core\Database->queryOne('SELECT COUNT(*)...', Array)
+#2 /var/www/html/app/Common/Base/BaseRepository.php(210): App\Common\Base\BaseRepository->count(Array)
+#3 /var/www/html/app/Modules/User/Repositories/UserRepository.php(21): App\Common\Base\BaseRepository->exists(Array)
+#4 /var/www/html/app/Modules/User/Services/UserService.php(24): App\Modules\User\Repositories\UserRepository->emailExists('user2@omamori.c...')
+#5 /var/www/html/app/Modules/User/Controllers/UserController.php(29): App\Modules\User\Services\UserService->createUser(Array)
+#6 /var/www/html/routes/modules/user.php(26): App\Modules\User\Controllers\UserController->store(Object(App\Core\Request))
+#7 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#8 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#9 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#10 /var/www/html/public/index.php(7): App\Core\Application->run()
+#11 {main}
+
