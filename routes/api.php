@@ -17,7 +17,6 @@ use App\Core\Response;
 global $router;
 
 // Health Check Route
-
 $router->get('/api/health', function ($request) {
     return Response::success([
         'status' => 'ok',
