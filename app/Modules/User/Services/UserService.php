@@ -16,6 +16,7 @@ class UserService extends BaseService{
         $this -> userRepository = new UserRepository($db);
     }
 
+    // 회원가입
     public function createUser(array $data): string{
         // BaseService의 validateRequired() 메소드 사용
         $this -> validateRequired($data, ['email', 'password', 'name']);
@@ -46,5 +47,10 @@ class UserService extends BaseService{
 
     public function getUserById(int $id): ?array{
         return $this -> userRepository -> findById($id);
+    }
+
+    // 삭재
+    public function deleteUser(int $id): bool{
+        return $this -> userRepository -> delete($id);
     }
 }
