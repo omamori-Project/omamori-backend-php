@@ -39,7 +39,15 @@ class UserService extends BaseService{
     // 업데이트
     public function updateUser(int $id, array $data): bool{
         // created_at 이외 사용 
-        $filtered = $this -> except($data, ['created_at']);
+        $filtered = $this -> except($data, ['created_at', 'id']);
+        
+        // password 오면 hash화
+        if (isset($filtered['password']) && $filtered['password'] !== ''){
+            $filtered['password'] = password_hash($filtered['password'], PASSWORD_BCRYPT);
+        }else{
+            unset($filtered['password']);
+        }
+
         // 현재 시간 기록
         $filtered['updated_at'] = $this -> now();
         return $this -> userRepository -> update($id, $filtered);
