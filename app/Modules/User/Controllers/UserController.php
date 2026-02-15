@@ -120,4 +120,63 @@ class UserController extends BaseController {
             return ErrorHandler:: handle($e);
         }
     }
+
+    // 내 정보 수정: PATCH /api/me
+    public function updateMe(Request $request): Response
+    {
+        try {
+            $id = 1; // Test ID
+
+            $user = $this -> userService -> getUserById($id);
+            if (!$user) {
+                return $this -> notFound('User not found');
+            }
+
+            // email/password 변경（선택）
+            $data = $this -> validate($request, [
+                'name' => 'min:3',
+                'email' => 'email',
+                'password' => 'min:4'
+            ]);
+
+            $ok = $this -> userService -> updateUser($id, $data);
+
+            if (!$ok) {
+                return $this -> error('Update failed', 500);
+            }
+
+            return $this -> success(['id' => $id], 'Updated');
+        } catch (\InvalidArgumentException $e) {
+            $decoded = json_decode($e -> getMessage(), true);
+            if (is_array($decoded)) {
+                return $this -> error('Validation failed', 422, $decoded);
+            }
+            return $this -> error($e -> getMessage(), 422);
+        } catch (\Exception $e) {
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+    // 회원 탈퇴: DELETE /api/me
+    public function deleteMe(Request $request): Response
+    {
+        try {
+            $id = 1; // Test ID
+
+            $user = $this -> userService->getUserById($id);
+            if (!$user) {
+                return $this  ->notFound('User not found');
+            }
+
+            $ok = $this -> userService -> deleteUser($id);
+            if (!$ok) {
+                return $this -> error('Delete failed', 500);
+            }
+
+            return $this -> success(['id' => $id], 'Deleted');
+        } catch (\Exception $e) {
+            return ErrorHandler:: handle($e);
+        }
+    }
+
 }
