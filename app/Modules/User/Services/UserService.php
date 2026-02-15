@@ -61,4 +61,37 @@ class UserService extends BaseService{
     public function deleteUser(int $id): bool{
         return $this -> userRepository -> delete($id);
     }
+
+    // me 대응
+    public function updateUserMe(int $id, array $data): bool
+    {
+        // 변경 가는 필드만 허락
+        $filtered = $this -> only($data, ['name', 'email', 'password']);
+
+        if (empty($filtered)) {
+            throw new \InvalidArgumentException('No fields to update');
+        }
+
+        // 필요하면 규칙 검증（선택）
+        $rules = [];
+        if (isset($filtered['name'])) $rules['name'] = 'required|min:3';
+        if (isset($filtered['email'])) $rules['email'] = 'required|email';
+        if (isset($filtered['password'])) $rules['password'] = 'required|min:4';
+
+        // BaseService validate는 required/min/email만 보면 됨
+        $this -> validate($filtered, $rules);
+
+        // password 오면 hash
+        if (isset($filtered['password'])) {
+            $filtered['password'] = password_hash($filtered['password'], PASSWORD_BCRYPT);
+        }
+
+        $filtered['updated_at'] = $this -> now();
+        return $this -> userRepository -> update($id, $filtered);
+    }
+
+    // 
+    public function getUserByEmail(string $email): ?array{
+        return $this -> userRepository -> findOneBy(['email' => $email]);
+    }
 }
