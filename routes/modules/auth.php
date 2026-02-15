@@ -34,11 +34,7 @@ $router -> get ('/api/me', function($request){
 }, 'me.show');
 
 // 내 정보 수정
-$router -> patch('/api/me', function($request){
-    return Response:: success(null, 'Me(PATCH)');
-}, 'me.update');
+$router -> patch('/api/me', 'App\Modules\User\Controllers\UserController@updateMe');
 
 // 회원 탈퇴
-$router -> delete('/api/me', function($request){
-    return Response:: success(null, 'Me(DELETE)');
-}, 'me.destroy');
+$router -> delete('/api/me', 'App\Modules\User\Controllers\UserController@deleteMe');
