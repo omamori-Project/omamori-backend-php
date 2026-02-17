@@ -9,7 +9,7 @@ use App\Modules\Omamori\Repositories\OmamoriRepository;
 use App\Modules\Auth\Services\AuthService;
 
 // 상속
-class OmamoriServise extends BaseService{
+class OmamoriService extends BaseService{
     protected OmamoriRepository $omamoriRepository;
 
     public function __construct(){

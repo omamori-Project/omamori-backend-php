@@ -7,14 +7,14 @@ use App\Common\Base\BaseController;
 use App\Common\Exceptions\ErrorHandler;
 use App\Core\Request;
 use App\Core\Response;
-use App\Modules\Omamori\Services\OmamoriServise;
+use App\Modules\Omamori\Services\OmamoriService;
 
 // 상속
 class OmamoriController extends BaseController{
-    protected OmamoriServise $omamoriService;
+    protected OmamoriService $omamoriService;
 
     public function __construct(){
-        $this -> omamoriService = new OmamoriServise();
+        $this -> omamoriService = new OmamoriService();
     }
 
     public function store(Request $request): Response{
@@ -30,6 +30,27 @@ class OmamoriController extends BaseController{
 
             // 201 Created
             return $this -> success($result, 'Created', 201);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+    // 오마모리 복제
+    public function duplicate(Request $request): Response{
+        try{
+            $token = $request -> bearerToken();
+            if (!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $omamoriId = (int)$request -> param('omamoriId', 0);
+            if ($omamoriId <= 0){
+                return $this -> badRequest('Invalid omamoriId');
+            }
+
+            $result = $this -> omamoriService -> duplicateOmamori($token, $omamoriId);
+            return $this -> success($result, 'Duplicated', 201);
 
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);
