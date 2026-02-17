@@ -4,7 +4,10 @@ namespace App\Modules\Omamori\Services;
 
 // import
 use App\Common\Base\BaseService;
+use App\Common\Exceptions\ErrorHandler;
 use App\Core\Database;
+use App\Core\Request;
+use App\Core\Response;
 use App\Modules\Omamori\Repositories\OmamoriRepository;
 use App\Modules\Auth\Services\AuthService;
 
@@ -57,4 +60,18 @@ class OmamoriService extends BaseService{
             'status' => 'draft',
         ];
     }
+
+    // 오마모리 복제
+    public function duplicateOmamori(string $token, int $omamoriId): array{
+        $auth = new AuthService();
+        $userId = $auth->verifyAndGetUserId($token);
+
+        $newId = $this->omamoriRepository->duplicateById($userId, $omamoriId);
+
+        return [
+            'id' => $newId,
+            'status' => 'draft',
+        ];
+    }
+    
 }

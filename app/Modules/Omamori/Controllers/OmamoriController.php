@@ -46,7 +46,7 @@ class OmamoriController extends BaseController{
 
             $omamoriId = (int)$request -> param('omamoriId', 0);
             if ($omamoriId <= 0){
-                return $this -> badRequest('Invalid omamoriId');
+                return $this -> error('Invalid omamoriId');
             }
 
             $result = $this -> omamoriService -> duplicateOmamori($token, $omamoriId);
