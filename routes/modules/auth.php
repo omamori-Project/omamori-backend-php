@@ -1,44 +1,24 @@
 <?php
-
-/**
- * Auth Module Routes
- */
+// Auth Module Routes
 
 use App\Core\Response;
 
 global $router;
 
 // 회원가입
-$router -> post('/api/auth/register', function ($request) {
-    return Response::success(null, 'Register endpoint');
-}, 'auth.register');
+$router -> post('/api/auth/register', 'App\Modules\Auth\Controllers\AuthController@register');
 
 // 로그인
-$router -> post('/api/auth/login', function ($request) {
-    return Response::success(null, 'Login endpoint');
-}, 'auth.login');
+$router -> post('/api/auth/login', 'App\Modules\Auth\Controllers\AuthController@login');
 
 // 로그아웃
-$router -> post('/api/auth/logout', function ($request) {
-    return Response::success(null, 'Logout endpoint');
-}, 'auth.logout');
-
-// 비밀번호 재설정
-$router -> post('/api/auth/password/reset', function ($request) {
-    return Response::success(null, 'Password reset');
-}, 'auth.password.reset');
+$router -> post('/api/auth/logout', 'App\Modules\Auth\Controllers\AuthController@logout');
 
 // 내 정보 조회
-$router -> get ('/api/me', function($request){
-    return Response:: success(null, 'Me(GET)');
-}, 'me.show');
+$router -> get ('/api/me', 'App\Modules\User\Controllers\UserController@showMe');
 
 // 내 정보 수정
-$router -> patch('/api/me', function($request){
-    return Response:: success(null, 'Me(PATCH)');
-}, 'me.update');
+$router -> patch('/api/me', 'App\Modules\User\Controllers\UserController@updateMe');
 
 // 회원 탈퇴
-$router -> delete('/api/me', function($request){
-    return Response:: success(null, 'Me(DELETE)');
-}, 'me.destroy');
+$router -> delete('/api/me', 'App\Modules\User\Controllers\UserController@deleteMe');

@@ -20,4 +20,15 @@ class UserRepository extends BaseRepository{
     public function emailExists(string $email): bool{
         return $this -> exists(['email' => $email]);
     }
+
+    // 변경
+    public function emailExistsExceptId(string $email, int $excludeId){
+        $sql = "SELECT COUNT(*) as count FROM {$this -> table}
+                WHERE email = ?
+                    AND {$this -> primaryKey} != ?
+                    AND deleted_at IS NULL";
+        
+        $result = $this -> db -> queryOne($sql, [$email, $excludeId]);
+        return (int)$result['count'] > 0;
+    }
 }
