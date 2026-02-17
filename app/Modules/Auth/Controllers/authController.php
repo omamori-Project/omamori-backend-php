@@ -7,16 +7,20 @@ use App\Common\Base\BaseController;
 use App\Common\Exceptions\ErrorHandler;
 use App\Core\Request;
 use App\Core\Response;
+use App\Modules\Auth\Services\AuthService;
 use App\Modules\User\Services\UserService;
 
 // 상속
 class AuthController extends BaseController{
     private UserService $userService;
+    private AuthService $authService;
 
     public function __construct(){
         $this -> userService = new UserService();
+        $this -> authService = new AuthService();
     }
 
+    // 회원가입
     public function register(Request $request): Response{
         try{
             $data = $this -> validate($request, [
@@ -29,19 +33,19 @@ class AuthController extends BaseController{
             return $this -> success(['id' => $userId], 'Created', 201);
 
         }catch(\InvalidArgumentException $e){
-            $msg = $e -> getMessage();
-            $decoded = json_decode($msg, true);
+            $decoded = json_decode($e -> getMessage(), true);
 
             if(is_array($decoded)){
-                return $this -> error('Validation failed', 422, $decoded);
+                return $this -> error('validation failed', 422, true);
             }
-            return $this -> error($msg, 422);
-
+            return $this -> error($e -> getMessage(), 422);
+        
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);
         }
     }
 
+    // 로그인
     public function login(Request $request): Response{
         try{
             $data = $this -> validate($request, [
@@ -49,25 +53,39 @@ class AuthController extends BaseController{
                 'password' => 'required|min:4'
             ]);
 
-            // 이메일으로 사용자 취득 -> 비밀번호 확인
             $user = $this -> userService -> getUserByEmail($data['email']);
 
-            if(!$user || !password_verify($data['password'], $user['password'])){
+            if(!$user){
                 return $this -> unauthorized('Invalid credentials');
             }
 
-            $token = \App\Modules\User\Services\TokenService:: issue((int)$user['id']);
-            return $this -> success(['token' => $token], 'Logged in');
+            if(!password_verify($data['password'], $user['password'])){
+                return $this -> unauthorized('Invalid credentials');
+            }
+
+            $token = $this -> authService -> generateToken((int)$user['id']);
+            return $this -> success([
+                'token' => $token,
+                'token_type' => 'Bearer',
+                'expires_in' => (int)($_ENV['TOKEN_TTL'] ?? 3600),
+                ], 'OK');
 
         }catch(\InvalidArgumentException $e){
-            $msg = $e -> getMessage();
-            $decoded = json_decode($msg, true);
-
+            $decoded = json_decode($e -> getMessage(), true);
             if(is_array($decoded)){
                 return $this -> error('Validation failed', 422, $decoded);
             }
-            return $this -> error($msg, 422);
+            return $this -> error($e -> getMessage(), 422);
 
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+    // 로그아웃
+    public function logout(Request $request): Response{
+        try{
+            return $this -> success(null, 'Logout');
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);
         }

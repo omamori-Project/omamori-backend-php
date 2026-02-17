@@ -8,6 +8,7 @@ use App\Common\Exceptions\ErrorHandler;
 use App\Core\Request;
 use App\Core\Response;
 use App\Modules\User\Services\UserService;
+use App\Modules\Auth\Services\AuthService;
 
 // 상속
 class UserController extends BaseController {
@@ -125,33 +126,37 @@ class UserController extends BaseController {
     public function updateMe(Request $request): Response
     {
         try {
-            $id = 1; // Test ID
-
-            $user = $this -> userService -> getUserById($id);
-            if (!$user) {
-                return $this -> notFound('User not found');
+            $token = $request -> bearerToken();
+            if (!$token) {
+                return $this -> unauthorized('Token required');
             }
 
-            // email/password 변경（선택）
-            $data = $this -> validate($request, [
-                'name' => 'min:3',
-                'email' => 'email',
-                'password' => 'min:4'
-            ]);
+            $auth = new AuthService();
+            $userId = $auth -> verifyAndGetUserId($token);
+            // Json body
+            $input = $request -> input();
+            $data = [];
 
-            $ok = $this -> userService -> updateUser($id, $data);
-
-            if (!$ok) {
-                return $this -> error('Update failed', 500);
+            if(array_key_exists('name', $input)){
+                $data['name'] = $input['name'];
+            }
+            if(array_key_exists('email', $input)){
+                $data['email'] = $input['email'];
+            }
+            if(array_key_exists('password', $input)){
+                $data['password'] = $input['password'];
             }
 
-            return $this -> success(['id' => $id], 'Updated');
-        } catch (\InvalidArgumentException $e) {
-            $decoded = json_decode($e -> getMessage(), true);
-            if (is_array($decoded)) {
-                return $this -> error('Validation failed', 422, $decoded);
+            // 입력 확인
+            if(empty($data)){
+                return $this -> error('No data to update', 400);
             }
-            return $this -> error($e -> getMessage(), 422);
+
+            // 성공 내용 출력
+            $ok = $this -> userService -> updateUserMe($userId, $data);
+            return $this -> success(['id' => $userId], 'Updated');
+
+
         } catch (\Exception $e) {
             return ErrorHandler:: handle($e);
         }
@@ -161,19 +166,21 @@ class UserController extends BaseController {
     public function deleteMe(Request $request): Response
     {
         try {
-            $id = 1; // Test ID
+            $token = $request -> bearerToken();
 
-            $user = $this -> userService->getUserById($id);
-            if (!$user) {
-                return $this  ->notFound('User not found');
+            if (!$token) {
+                return $this -> unauthorized('Token required');
             }
 
-            $ok = $this -> userService -> deleteUser($id);
+            $auth = new AuthService();
+            $userId = $auth -> verifyAndGetUserId($token);
+            $ok = $this -> userService -> deleteUser($userId);
+
             if (!$ok) {
                 return $this -> error('Delete failed', 500);
             }
+            return $this -> success(['id' => $userId], 'Deleted');
 
-            return $this -> success(['id' => $id], 'Deleted');
         } catch (\Exception $e) {
             return ErrorHandler:: handle($e);
         }

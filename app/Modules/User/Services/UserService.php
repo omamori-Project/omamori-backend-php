@@ -18,6 +18,7 @@ class UserService extends BaseService{
 
     // 회원가입
     public function createUser(array $data): string{
+        $data = $this -> only($data, ['email', 'password', 'name']);
         // BaseService의 validateRequired() 메소드 사용
         $this -> validateRequired($data, ['email', 'password', 'name']);
 
@@ -80,6 +81,13 @@ class UserService extends BaseService{
 
         // BaseService validate는 required/min/email만 보면 됨
         $this -> validate($filtered, $rules);
+
+        // 이메일 오면 중복 확인
+        if(isset($filtered['email'])){
+            if($this -> userRepository -> emailExistsExceptId($filtered['email'], $id)){
+                throw new \InvalidArgumentException('Email already exists');
+            }
+        }
 
         // password 오면 hash
         if (isset($filtered['password'])) {
