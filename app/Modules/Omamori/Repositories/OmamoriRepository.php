@@ -55,7 +55,7 @@ class OmamoriRepository extends BaseRepository{
                 )
                 SELECT
                     user_id,
-                    title,
+                    ('복제' || title) as title,
                     meaning,
                     'draft' as status,
                     theme,
