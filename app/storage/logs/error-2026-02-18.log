@@ -1,0 +1,39 @@
+[2026-02-18 08:56:41] Firebase\JWT\ExpiredException: Expired token in /var/www/html/vendor/firebase/php-jwt/src/JWT.php:188
+Stack trace:
+#0 /var/www/html/app/Modules/Auth/Services/AuthService.php(23): Firebase\JWT\JWT::decode('eyJ0eXAiOiJKV1Q...', Object(SensitiveParameterValue))
+#1 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(67): App\Modules\Auth\Services\AuthService->verifyAndGetUserId('eyJ0eXAiOiJKV1Q...')
+#2 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(52): App\Modules\Omamori\Services\OmamoriService->duplicateOmamori('eyJ0eXAiOiJKV1Q...', 1)
+#3 /var/www/html/routes/modules/omamori.php(14): App\Modules\Omamori\Controllers\OmamoriController->duplicate(Object(App\Core\Request))
+#4 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#6 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#7 /var/www/html/public/index.php(7): App\Core\Application->run()
+#8 {main}
+
+[2026-02-18 08:57:26] RuntimeException: Omamori not found or not allowed in /var/www/html/app/Modules/Omamori/Repositories/OmamoriRepository.php:66
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(69): App\Modules\Omamori\Repositories\OmamoriRepository->duplicateById(4, 4)
+#1 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(52): App\Modules\Omamori\Services\OmamoriService->duplicateOmamori('eyJ0eXAiOiJKV1Q...', 4)
+#2 /var/www/html/routes/modules/omamori.php(14): App\Modules\Omamori\Controllers\OmamoriController->duplicate(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#4 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#5 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#6 /var/www/html/public/index.php(7): App\Core\Application->run()
+#7 {main}
+
+[2026-02-18 09:17:31] PDOException: SQLSTATE[42703]: Undefined column: 7 ERROR:  column "update_at" does not exist
+LINE 1: ... id, user_id, title, meaning, status, created_at, update_at,...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "omamoris.updated_at". in /var/www/html/app/Core/Database.php:54
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(54): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Omamori/Repositories/OmamoriRepository.php(80): App\Core\Database->queryOne('SELECT id, user...', Array)
+#2 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(70): App\Modules\Omamori\Repositories\OmamoriRepository->findOwnById(4, 4)
+#3 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(52): App\Modules\Omamori\Services\OmamoriService->duplicateOmamori('eyJ0eXAiOiJKV1Q...', 1)
+#4 /var/www/html/routes/modules/omamori.php(14): App\Modules\Omamori\Controllers\OmamoriController->duplicate(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+

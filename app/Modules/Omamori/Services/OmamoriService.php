@@ -64,14 +64,19 @@ class OmamoriService extends BaseService{
     // 오마모리 복제
     public function duplicateOmamori(string $token, int $omamoriId): array{
         $auth = new AuthService();
-        $userId = $auth->verifyAndGetUserId($token);
+        $userId = $auth -> verifyAndGetUserId($token);
 
-        $newId = $this->omamoriRepository->duplicateById($userId, $omamoriId);
+        $newId = $this -> omamoriRepository -> duplicateById($userId, $omamoriId);
+        $row = $this -> omamoriRepository -> findOwnById($userId, $newId);
+        if(!$row){
+            throw new \RuntimeException('Duplicated omamori not found');
+        }
 
         return [
-            'id' => $newId,
-            'status' => 'draft',
+            'id' => (int)$row['id'],
+            'title' => $row['title'],
+            'meaning' => $row['meaning'],
+            'status' => $row['status'],
         ];
     }
-    
 }

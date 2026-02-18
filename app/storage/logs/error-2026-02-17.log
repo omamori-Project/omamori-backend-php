@@ -81,3 +81,44 @@ Stack trace:
 #8 /var/www/html/public/index.php(7): App\Core\Application->run()
 #9 {main}
 
+[2026-02-17 23:31:42] PDOException: SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ")"
+LINE 16:                 )
+                         ^ in /var/www/html/app/Core/Database.php:54
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(54): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Omamori/Repositories/OmamoriRepository.php(77): App\Core\Database->queryOne('INSERT INTO oma...', Array)
+#2 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(69): App\Modules\Omamori\Repositories\OmamoriRepository->duplicateById(4, 7)
+#3 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(52): App\Modules\Omamori\Services\OmamoriService->duplicateOmamori('eyJ0eXAiOiJKV1Q...', 7)
+#4 /var/www/html/routes/modules/omamori.php(14): App\Modules\Omamori\Controllers\OmamoriController->duplicate(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+
+[2026-02-17 23:32:50] PDOException: SQLSTATE[42703]: Undefined column: 7 ERROR:  column "theme" of relation "omamoris" does not exist
+LINE 6:                     theme,
+                            ^ in /var/www/html/app/Core/Database.php:54
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(54): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Omamori/Repositories/OmamoriRepository.php(77): App\Core\Database->queryOne('INSERT INTO oma...', Array)
+#2 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(69): App\Modules\Omamori\Repositories\OmamoriRepository->duplicateById(4, 7)
+#3 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(52): App\Modules\Omamori\Services\OmamoriService->duplicateOmamori('eyJ0eXAiOiJKV1Q...', 7)
+#4 /var/www/html/routes/modules/omamori.php(14): App\Modules\Omamori\Controllers\OmamoriController->duplicate(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+
+[2026-02-17 23:38:03] RuntimeException: Omamori not found or not allowed in /var/www/html/app/Modules/Omamori/Repositories/OmamoriRepository.php:66
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(69): App\Modules\Omamori\Repositories\OmamoriRepository->duplicateById(4, 7)
+#1 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(52): App\Modules\Omamori\Services\OmamoriService->duplicateOmamori('eyJ0eXAiOiJKV1Q...', 7)
+#2 /var/www/html/routes/modules/omamori.php(14): App\Modules\Omamori\Controllers\OmamoriController->duplicate(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#4 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#5 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#6 /var/www/html/public/index.php(7): App\Core\Application->run()
+#7 {main}
+

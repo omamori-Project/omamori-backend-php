@@ -42,29 +42,15 @@ class OmamoriRepository extends BaseRepository{
                     title,
                     meaning,
                     status,
-                    theme,
-                    size_code,
-                    back_message,
-                    applied_fortune_color_id,
-                    applied_frame_id,
-                    preview_file_id,
-                    published_at,
                     created_at,
                     updated_at,
-                    deleted_at,
+                    deleted_at
                 )
                 SELECT
                     user_id,
                     ('복제' || title) as title,
                     meaning,
                     'draft' as status,
-                    theme,
-                    size_code,
-                    back_message,
-                    applied_fortune_color_id,
-                    applied_frame_id,
-                    preview_file_id,
-                    NULL as published_at,
                     NOW() as created_at,
                     NOW() as updated_at,
                     NULL as deleted_at
@@ -81,5 +67,17 @@ class OmamoriRepository extends BaseRepository{
         }
         return (int)$result['id'];
 
+    }
+
+    // 
+    public function findOwnById(int $userId, int $omamoriId): ?array{
+        $sql = "SELECT id, user_id, title, meaning, status, created_at, updated_at, deleted_at
+                FROM {$this -> table}
+                WHERE id = ?
+                    AND user_id = ?
+                    AND deleted_at IS NULL";
+
+        $result = $this -> db -> queryOne($sql, [$omamoriId, $userId]);
+        return $result ?: null;
     }
 }
