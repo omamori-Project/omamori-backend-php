@@ -4,12 +4,15 @@ namespace App\Modules\Omamori\Services;
 
 // import
 use App\Common\Base\BaseService;
+use App\Common\Exceptions\ErrorHandler;
 use App\Core\Database;
+use App\Core\Request;
+use App\Core\Response;
 use App\Modules\Omamori\Repositories\OmamoriRepository;
 use App\Modules\Auth\Services\AuthService;
 
 // 상속
-class OmamoriServise extends BaseService{
+class OmamoriService extends BaseService{
     protected OmamoriRepository $omamoriRepository;
 
     public function __construct(){
@@ -55,6 +58,25 @@ class OmamoriServise extends BaseService{
             'title' => $title,
             'meaning' => $meaning,
             'status' => 'draft',
+        ];
+    }
+
+    // 오마모리 복제
+    public function duplicateOmamori(string $token, int $omamoriId): array{
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        $newId = $this -> omamoriRepository -> duplicateById($userId, $omamoriId);
+        $row = $this -> omamoriRepository -> findOwnById($userId, $newId);
+        if(!$row){
+            throw new \RuntimeException('Duplicated omamori not found');
+        }
+
+        return [
+            'id' => (int)$row['id'],
+            'title' => $row['title'],
+            'meaning' => $row['meaning'],
+            'status' => $row['status'],
         ];
     }
 }
