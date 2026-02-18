@@ -81,4 +81,26 @@ class OmamoriRepository extends BaseRepository{
         return $result ?: null;
     }
 
+    // 오마모리 내 목록
+    public function findByUserId(int $userId, int $size, int $offset): array{
+        $sql = "SELECT id, title, meaning, status, created_at, updated_at
+                FROM {$this -> table}
+                WHERE user_id = ?
+                    AND deleted_at IS NULL
+                ORDER BY created_at DESC
+                LIMIT ? OFFSET ?";
+
+        return $this -> db -> query($sql, [$userId, $size, $offset]);
+    }
+
+    // 오마모리 건수
+    public function countByUserId(int $userId): int{
+        $sql = "SELECT COUNT(*) AS total
+                FROM omamoris
+                WHERE user_id = ?
+                    AND deleted_at IS NULL";
+        
+        $row = $this -> db -> query($sql, [$userId]);
+        return (int)($row['total'] ?? 0);
+    }
 }

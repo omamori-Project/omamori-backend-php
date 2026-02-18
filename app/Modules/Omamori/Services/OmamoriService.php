@@ -98,4 +98,31 @@ class OmamoriService extends BaseService{
             'updated_at' => $row['updated_at'],
         ];
     }
+
+    // 오마모리 내 목록
+    public function getList(string $token, int $page, int $size): array{
+        // 1 이하
+        if($page < 1) $page = 1;
+
+        if($size < 1) $size = 10;
+        if($size > 50) $size = 50;
+
+        $offset = ($page - 1) * $size;
+
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        $items = $this -> omamoriRepository -> findByUserId($userId, $size, $offset);
+        $total = $this -> omamoriRepository -> countByUserId($userId);
+
+        return [
+            'items' => $items,
+            'meta' => [
+                'page' => $page,
+                'size' => $size,
+                'total' => $total,
+                'total_pages' => (int)ceil($total / $size),
+            ],
+        ];
+    }
 }

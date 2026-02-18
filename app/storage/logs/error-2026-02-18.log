@@ -47,3 +47,65 @@ Stack trace:
 #5 /var/www/html/public/index.php(7): App\Core\Application->run()
 #6 {main}
 
+[2026-02-18 20:57:02] Firebase\JWT\ExpiredException: Expired token in /var/www/html/vendor/firebase/php-jwt/src/JWT.php:188
+Stack trace:
+#0 /var/www/html/app/Modules/Auth/Services/AuthService.php(23): Firebase\JWT\JWT::decode('eyJ0eXAiOiJKV1Q...', Object(SensitiveParameterValue))
+#1 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(113): App\Modules\Auth\Services\AuthService->verifyAndGetUserId('eyJ0eXAiOiJKV1Q...')
+#2 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(91): App\Modules\Omamori\Services\OmamoriService->getList('eyJ0eXAiOiJKV1Q...', 1, 1)
+#3 /var/www/html/routes/modules/omamori.php(24): App\Modules\Omamori\Controllers\OmamoriController->index(Object(App\Core\Request))
+#4 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#6 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#7 /var/www/html/public/index.php(7): App\Core\Application->run()
+#8 {main}
+
+[2026-02-18 20:57:33] RuntimeException: Omamori not found in /var/www/html/app/Modules/Omamori/Services/OmamoriService.php:90
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(73): App\Modules\Omamori\Services\OmamoriService->getOwnOmamoriById('eyJ0eXAiOiJKV1Q...', 10)
+#1 /var/www/html/routes/modules/omamori.php(19): App\Modules\Omamori\Controllers\OmamoriController->show(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+
+[2026-02-18 20:57:46] PDOException: SQLSTATE[42703]: Undefined column: 7 ERROR:  column "published_at" does not exist
+LINE 2:                         updated_at, published_at
+                                            ^ in /var/www/html/app/Core/Database.php:46
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(46): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Omamori/Repositories/OmamoriRepository.php(94): App\Core\Database->query('SELECT id, titl...', Array)
+#2 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(115): App\Modules\Omamori\Repositories\OmamoriRepository->findByUserId(4, 1, 0)
+#3 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(91): App\Modules\Omamori\Services\OmamoriService->getList('eyJ0eXAiOiJKV1Q...', 1, 1)
+#4 /var/www/html/routes/modules/omamori.php(24): App\Modules\Omamori\Controllers\OmamoriController->index(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+
+[2026-02-18 21:00:14] PDOException: SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ":"
+LINE 3:                 WHERE user_id = : user_id
+                                        ^ in /var/www/html/app/Core/Database.php:46
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(46): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Omamori/Repositories/OmamoriRepository.php(103): App\Core\Database->query('SELECT COUNT(*)...', Array)
+#2 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(116): App\Modules\Omamori\Repositories\OmamoriRepository->countByUserId(4)
+#3 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(91): App\Modules\Omamori\Services\OmamoriService->getList('eyJ0eXAiOiJKV1Q...', 1, 1)
+#4 /var/www/html/routes/modules/omamori.php(24): App\Modules\Omamori\Controllers\OmamoriController->index(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+
+[2026-02-18 21:03:00] RuntimeException: Omamori not found in /var/www/html/app/Modules/Omamori/Services/OmamoriService.php:90
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(73): App\Modules\Omamori\Services\OmamoriService->getOwnOmamoriById('eyJ0eXAiOiJKV1Q...', 10)
+#1 /var/www/html/routes/modules/omamori.php(19): App\Modules\Omamori\Controllers\OmamoriController->show(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+
