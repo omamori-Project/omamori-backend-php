@@ -79,4 +79,23 @@ class OmamoriService extends BaseService{
             'status' => $row['status'],
         ];
     }
+
+    // 오마모리 조회
+    public function getOwnOmamoriById(string $token, int $omamoriId): array{
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+        $row = $this -> omamoriRepository -> findOwnById($userId, $omamoriId);
+
+        if(!$row){
+            throw new \RuntimeException('Omamori not found');
+        }
+        return[
+            'id' => (int)$row['id'],
+            'title' => $row['title'],
+            'meaning' => $row['meaning'],
+            'status' => $row['status'],
+            'created_at' => $row['created_at'],
+            'updated_at' => $row['updated_at'],
+        ];
+    }
 }

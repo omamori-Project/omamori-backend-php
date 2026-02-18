@@ -69,7 +69,7 @@ class OmamoriRepository extends BaseRepository{
 
     }
 
-    // 
+    // 오마모리 조회
     public function findOwnById(int $userId, int $omamoriId): ?array{
         $sql = "SELECT id, user_id, title, meaning, status, created_at, updated_at, deleted_at
                 FROM {$this -> table}
@@ -80,4 +80,5 @@ class OmamoriRepository extends BaseRepository{
         $result = $this -> db -> queryOne($sql, [$omamoriId, $userId]);
         return $result ?: null;
     }
+
 }
