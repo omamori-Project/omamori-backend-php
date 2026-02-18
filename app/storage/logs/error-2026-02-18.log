@@ -37,3 +37,13 @@ Stack trace:
 #8 /var/www/html/public/index.php(7): App\Core\Application->run()
 #9 {main}
 
+[2026-02-18 15:18:56] RuntimeException: Omamori not found in /var/www/html/app/Modules/Omamori/Services/OmamoriService.php:90
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(73): App\Modules\Omamori\Services\OmamoriService->getOwnOmamoriById('eyJ0eXAiOiJKV1Q...', 10)
+#1 /var/www/html/routes/modules/omamori.php(19): App\Modules\Omamori\Controllers\OmamoriController->show(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+

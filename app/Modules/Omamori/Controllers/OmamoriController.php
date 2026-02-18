@@ -56,4 +56,25 @@ class OmamoriController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+    // 오마모리 조회(편집/확인)
+    public function show(Request $request): Response{
+        try{
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $omamoriId = (int)$request -> param('omamoriId', 0);
+            if($omamoriId <= 0){
+                return $this -> error('Invalid omamoriId');
+            }
+
+            $result = $this -> omamoriService -> getOwnOmamoriById($token, $omamoriId);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
