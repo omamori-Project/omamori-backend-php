@@ -8,3 +8,8 @@ global $router;
 $router -> post('/api/omamoris', function($request){
     return (new OmamoriController()) -> store($request);
 }, 'omamoris.store');
+
+// 오미모리 복제
+$router -> post('/api/omamoris/[i:omamoriId]/duplicate', function($request){
+    return (new OmamoriController())-> duplicate($request);
+}, 'omamoris.duplicate');
