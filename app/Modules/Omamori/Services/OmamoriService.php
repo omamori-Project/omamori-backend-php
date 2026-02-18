@@ -100,20 +100,31 @@ class OmamoriService extends BaseService{
     }
 
     // 오마모리 내 목록
-    public function getList(string $token, int $page, int $size): array{
+    public function getList(string $token, int $page, int $size, ?string $status = null): array{
         // 1 이하
         if($page < 1) $page = 1;
 
         if($size < 1) $size = 10;
         if($size > 50) $size = 50;
 
+        if($status !== null){
+            $status = trim((string)$status);
+
+            if($status == ''){
+                $status = null;
+
+            }elseif(!in_array($status, ['draft', 'published'], true)){
+                throw new \InvalidArgumentException('Invalid status');
+            }
+        }
+
         $offset = ($page - 1) * $size;
 
         $auth = new AuthService();
         $userId = $auth -> verifyAndGetUserId($token);
 
-        $items = $this -> omamoriRepository -> findByUserId($userId, $size, $offset);
-        $total = $this -> omamoriRepository -> countByUserId($userId);
+        $items = $this -> omamoriRepository -> findByUserId($userId, $size, $offset, $status);
+        $total = $this -> omamoriRepository -> countByUserId($userId, $status);
 
         return [
             'items' => $items,
