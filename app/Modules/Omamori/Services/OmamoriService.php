@@ -94,6 +94,7 @@ class OmamoriService extends BaseService{
             'title' => $row['title'],
             'meaning' => $row['meaning'],
             'status' => $row['status'],
+            'published_at' => $row['published_at'] ?? null,
             'created_at' => $row['created_at'],
             'updated_at' => $row['updated_at'],
         ];
@@ -148,5 +149,49 @@ class OmamoriService extends BaseService{
                     'total_pages' => (int)ceil($total / $size),
                 ],
             ];
+    }
+
+    // 오마모리 공개
+    public function publishOmamori(string $token, int $omamoriId): array{
+        // token -> userId
+        $auth = new AuthService();
+        $userId = $auth->verifyAndGetUserId($token);
+
+        // 내 omamori 조회
+        $row = $this->omamoriRepository->findOwnById($userId, $omamoriId);
+        if(!$row){
+            throw new \RuntimeException('Omamori not found');
+        }
+
+        // 이미 published면 같은 결과(200)
+        if(($row['status'] ?? null) === 'published'){
+            return [
+                'id' => (int)$row['id'],
+                'title' => $row['title'],
+                'meaning' => $row['meaning'],
+                'status' => $row['status'],
+                'created_at' => $row['created_at'],
+                'updated_at' => $row['updated_at'],
+                'published_at' => $row['published_at'] ?? null,
+            ];
+        }
+
+        // draft만 publish 가능
+        if(($row['status'] ?? null) !== 'draft'){
+            throw new \InvalidArgumentException('Invalid status');
+        }
+
+        // draft -> published 업데이트
+        $updated = $this->omamoriRepository->publish($userId, $omamoriId);
+
+        return [
+            'id' => (int)$updated['id'],
+            'title' => $updated['title'],
+            'meaning' => $updated['meaning'],
+            'status' => $updated['status'],
+            'created_at' => $updated['created_at'],
+            'updated_at' => $updated['updated_at'],
+            'published_at' => $updated['published_at'] ?? null,
+        ];
     }
 }
