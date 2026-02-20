@@ -82,26 +82,39 @@ class OmamoriRepository extends BaseRepository{
     }
 
     // 오마모리 내 목록
-    public function findByUserId(int $userId, int $size, int $offset, ?string $status = null): array{
-        $sql = "SELECT id, title, meaning, status, created_at, updated_at
-                FROM {$this -> table}
-                WHERE user_id = ?
-                    AND deleted_at IS NULL";
-        
-        $params = [$userId];
+    public function findByUserId(
+        int $userId,
+        int $size,
+        int $offset,
+        ?string $status = null,
+        string $sort = 'latest'): array{
+            $orderBy = "created_at DESC";
 
-        if($status !== null){
-           $sql .= " AND status = ? ";
-           $params [] = $status;
-        }
+            if($sort === 'oldest'){
+                $orderBy = "created_at ASC";
 
-        $sql .= " ORDER BY created_at DESC LIMIT ? OFFSET ? ";
+            }elseif($sort === 'updated'){
+                $orderBy = "updated_at DESC";
+            }
 
-        $params[] = $size;
-        $params[] = $offset;
+            $sql = "SELECT id, title, meaning, status, created_at, updated_at
+                    FROM {$this -> table}
+                    WHERE user_id = ?
+                        AND deleted_at IS NULL";
+            
+            $params = [$userId];
 
-        return $this -> db -> query($sql, $params);
-        
+            if($status !== null){
+            $sql .= " AND status = ? ";
+            $params [] = $status;
+            }
+
+            $sql .= " ORDER BY {$orderBy} LIMIT ? OFFSET ? ";
+
+            $params[] = $size;
+            $params[] = $offset;
+
+            return $this -> db -> query($sql, $params);
     }
 
     // 오마모리 건수

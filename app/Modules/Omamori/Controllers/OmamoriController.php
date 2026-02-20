@@ -90,8 +90,9 @@ class OmamoriController extends BaseController{
             $size = (int)$request -> query('size', 10);
             // null or string
             $status = $request -> query('status');
+            $sort = $request -> query('sort', 'latest');
 
-            $result = $this -> omamoriService -> getList($token, $page, $size, $status);
+            $result = $this -> omamoriService -> getList($token, $page, $size, $status, $sort);
             return $this -> success($result, 'OK', 200);
 
         }catch(\Exception $e){

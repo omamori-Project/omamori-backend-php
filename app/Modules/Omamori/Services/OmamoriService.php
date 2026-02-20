@@ -100,40 +100,53 @@ class OmamoriService extends BaseService{
     }
 
     // 오마모리 내 목록
-    public function getList(string $token, int $page, int $size, ?string $status = null): array{
+    public function getList(
+        string $token,
+        int $page,
+        int $size,
+        ?string $status = null,
+        ?string $sort = 'latest'): array{
         // 1 이하
-        if($page < 1) $page = 1;
+            if($page < 1) $page = 1;
 
-        if($size < 1) $size = 10;
-        if($size > 50) $size = 50;
+            if($size < 1) $size = 10;
+            if($size > 50) $size = 50;
 
-        if($status !== null){
-            $status = trim((string)$status);
+            if($status !== null){
+                $status = trim((string)$status);
 
-            if($status == ''){
-                $status = null;
+                if($status == ''){
+                    $status = null;
 
-            }elseif(!in_array($status, ['draft', 'published'], true)){
-                throw new \InvalidArgumentException('Invalid status');
+                }elseif(!in_array($status, ['draft', 'published'], true)){
+                    throw new \InvalidArgumentException('Invalid status');
+                }
             }
-        }
 
-        $offset = ($page - 1) * $size;
+            if($sort !== null){
+                $sort = trim((string)$sort);
 
-        $auth = new AuthService();
-        $userId = $auth -> verifyAndGetUserId($token);
+                if(!in_array($sort, ['latest', 'oldest', 'updated'], true)){
+                    throw new \InvalidArgumentException('Invalid sort');
+                }
+            }
 
-        $items = $this -> omamoriRepository -> findByUserId($userId, $size, $offset, $status);
-        $total = $this -> omamoriRepository -> countByUserId($userId, $status);
+            $offset = ($page - 1) * $size;
 
-        return [
-            'items' => $items,
-            'meta' => [
-                'page' => $page,
-                'size' => $size,
-                'total' => $total,
-                'total_pages' => (int)ceil($total / $size),
-            ],
-        ];
+            $auth = new AuthService();
+            $userId = $auth -> verifyAndGetUserId($token);
+
+            $items = $this -> omamoriRepository -> findByUserId($userId, $size, $offset, $status, $sort);
+            $total = $this -> omamoriRepository -> countByUserId($userId, $status);
+
+            return [
+                'items' => $items,
+                'meta' => [
+                    'page' => $page,
+                    'size' => $size,
+                    'total' => $total,
+                    'total_pages' => (int)ceil($total / $size),
+                ],
+            ];
     }
 }
