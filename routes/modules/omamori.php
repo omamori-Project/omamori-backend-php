@@ -23,3 +23,8 @@ $router -> get('/api/omamoris/[i:omamoriId]', function($request){
 $router -> get('/api/omamoris', function($request){
     return (new OmamoriController()) -> index($request);
 }, 'omamoris.index');
+
+// 오마모리 공개(draft -> published)
+$router -> patch('/api/omamoris/[i:omamoriId]/published', function($request){
+    return (new OmamoriController()) -> publish($request);
+}, 'omamoris.publish');

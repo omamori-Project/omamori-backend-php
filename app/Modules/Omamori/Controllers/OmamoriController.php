@@ -99,4 +99,23 @@ class OmamoriController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+    // 오마모리 공개
+    public function publish(Request $request): Response{
+        try{
+            $token = $request -> bearerToken();
+            if (!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            if($omamoriId <= 0){
+                return $this -> error('Invallid omamoriId');
+            }
+            return $this -> success(['omamoriId' => $omamoriId], 'Publish endpoint ready', 200);
+            
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
