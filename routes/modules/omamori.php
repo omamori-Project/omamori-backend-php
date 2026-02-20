@@ -18,3 +18,8 @@ $router -> post('/api/omamoris/[i:omamoriId]/duplicate', function($request){
 $router -> get('/api/omamoris/[i:omamoriId]', function($request){
     return (new OmamoriController()) -> show($request);
 }, 'omamoris.show');
+
+// 오마모리 내 목록
+$router -> get('/api/omamoris', function($request){
+    return (new OmamoriController()) -> index($request);
+}, 'omamoris.index');

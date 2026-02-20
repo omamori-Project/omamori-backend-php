@@ -77,4 +77,26 @@ class OmamoriController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+    // 오마모리 내 목록
+    public function index(Request $request): Response{
+        try{
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $page = (int)$request -> query('page', 1);
+            $size = (int)$request -> query('size', 10);
+            // null or string
+            $status = $request -> query('status');
+            $sort = $request -> query('sort', 'latest');
+
+            $result = $this -> omamoriService -> getList($token, $page, $size, $status, $sort);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
