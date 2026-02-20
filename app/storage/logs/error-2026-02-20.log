@@ -30,3 +30,39 @@ Stack trace:
 #5 /var/www/html/public/index.php(7): App\Core\Application->run()
 #6 {main}
 
+[2026-02-20 21:37:22] RuntimeException: Invalid user_id in /var/www/html/app/Modules/Omamori/Services/OmamoriService.php:166
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(116): App\Modules\Omamori\Services\OmamoriService->publishOmamori('eyJ0eXAiOiJKV1Q...', 5)
+#1 /var/www/html/routes/modules/omamori.php(29): App\Modules\Omamori\Controllers\OmamoriController->publish(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+
+[2026-02-20 21:48:10] PDOException: SQLSTATE[42703]: Undefined column: 7 ERROR:  column "usser_id" does not exist
+LINE 6:                 AND usser_id = $2
+                            ^
+HINT:  Perhaps you meant to reference the column "omamoris.user_id". in /var/www/html/app/Core/Database.php:54
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(54): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Omamori/Repositories/OmamoriRepository.php(149): App\Core\Database->queryOne('UPDATE omamoris...', Array)
+#2 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(184): App\Modules\Omamori\Repositories\OmamoriRepository->publish(4, 5)
+#3 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(116): App\Modules\Omamori\Services\OmamoriService->publishOmamori('eyJ0eXAiOiJKV1Q...', 5)
+#4 /var/www/html/routes/modules/omamori.php(29): App\Modules\Omamori\Controllers\OmamoriController->publish(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+
+[2026-02-20 22:00:26] RuntimeException: Omamori not found in /var/www/html/app/Modules/Omamori/Services/OmamoriService.php:90
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(73): App\Modules\Omamori\Services\OmamoriService->getOwnOmamoriById('eyJ0eXAiOiJKV1Q...', 10)
+#1 /var/www/html/routes/modules/omamori.php(19): App\Modules\Omamori\Controllers\OmamoriController->show(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+

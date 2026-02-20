@@ -110,10 +110,12 @@ class OmamoriController extends BaseController{
 
             $omamoriId = (int)($request -> param('omamoriId') ?? 0);
             if($omamoriId <= 0){
-                return $this -> error('Invallid omamoriId');
+                return $this -> error('Invalid omamoriId');
             }
-            return $this -> success(['omamoriId' => $omamoriId], 'Publish endpoint ready', 200);
-            
+
+            $result = $this -> omamoriService -> publishOmamori($token, $omamoriId);
+            return $this -> success($result, 'OK', 200);
+
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);
         }
