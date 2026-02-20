@@ -71,7 +71,7 @@ class OmamoriRepository extends BaseRepository{
 
     // 오마모리 조회
     public function findOwnById(int $userId, int $omamoriId): ?array{
-        $sql = "SELECT id, user_id, title, meaning, status, created_at, updated_at, deleted_at
+        $sql = "SELECT id, user_id, title, meaning, status, published_at, created_at, updated_at, deleted_at
                 FROM {$this -> table}
                 WHERE id = ?
                     AND user_id = ?
@@ -95,9 +95,15 @@ class OmamoriRepository extends BaseRepository{
 
             }elseif($sort === 'updated'){
                 $orderBy = "updated_at DESC";
+            }elseif($sort === 'latest'){
+                if($status === 'published'){
+                    $orderBy = "published_at DESC";
+                }else{
+                    $orderBy = "created_at DESC";
+                }
             }
 
-            $sql = "SELECT id, title, meaning, status, created_at, updated_at
+            $sql = "SELECT id, title, meaning, status, published_at, created_at, updated_at
                     FROM {$this -> table}
                     WHERE user_id = ?
                         AND deleted_at IS NULL";
@@ -133,5 +139,23 @@ class OmamoriRepository extends BaseRepository{
         
         $row = $this -> db -> queryOne($sql, $params);
         return (int)($row['total'] ?? 0);
+    }
+
+    // 오마모리 공개
+    public function publish(int $userId, int $omamoriId): array{
+        $sql = "UPDATE {$this -> table}
+                SET status = 'published',
+                    published_at = NOW(),
+                    updated_at = NOW()
+                WHERE id = ?
+                AND user_id = ?
+                AND deleted_at IS NULL
+                AND status = 'draft' RETURNING *";
+
+        $row = $this -> db -> queryOne($sql, [$omamoriId, $userId]);
+        if(!$row){
+            throw new \RuntimeException('Publish failed');
+        }
+        return $row;
     }
 }
