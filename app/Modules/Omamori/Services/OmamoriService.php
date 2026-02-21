@@ -155,10 +155,10 @@ class OmamoriService extends BaseService{
     public function publishOmamori(string $token, int $omamoriId): array{
         // token -> userId
         $auth = new AuthService();
-        $userId = $auth->verifyAndGetUserId($token);
+        $userId = $auth -> verifyAndGetUserId($token);
 
         // 내 omamori 조회
-        $row = $this->omamoriRepository->findOwnById($userId, $omamoriId);
+        $row = $this -> omamoriRepository -> findOwnById($userId, $omamoriId);
         if(!$row){
             throw new \RuntimeException('Omamori not found');
         }
@@ -182,7 +182,7 @@ class OmamoriService extends BaseService{
         }
 
         // draft -> published 업데이트
-        $updated = $this->omamoriRepository->publish($userId, $omamoriId);
+        $updated = $this -> omamoriRepository -> publish($userId, $omamoriId);
 
         return [
             'id' => (int)$updated['id'],
@@ -192,6 +192,53 @@ class OmamoriService extends BaseService{
             'created_at' => $updated['created_at'],
             'updated_at' => $updated['updated_at'],
             'published_at' => $updated['published_at'] ?? null,
+        ];
+    }
+
+    // 오마모리 정보 수정
+    public function updateOmamori(string $token, int $omamoriId, array $input): array{
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // title, meaning 받기
+        $data = $this -> only($input, ['title', 'meaning']);
+
+        // title 정리
+        $title = null;
+        if(array_key_exists('title', $data)){
+            $t = trim((string)$data['title']);
+            if($t !== ''){
+                $title = $t;
+            }
+        }       
+
+        // meaning 정리
+        $meaning = null;
+        if(array_key_exists('meaning', $data)){
+            $m = trim((string)$data['meaning']);
+            if($m !== ''){
+                $meaning = $m;
+            }
+        }
+
+        // 최소 검증
+        if($title === null){
+            throw new \InvalidArgumentException('title required');
+        }
+        if($meaning === null){
+            throw new \InvalidArgumentException('meaning required');
+        }
+
+        // update
+        $updated = $this -> omamoriRepository -> updateDraftInfo($userId, $omamoriId, $title, $meaning);
+        return [
+            'id' => (int)$updated['id'],
+            'title' => $updated['title'],
+            'meaning' => $updated['meaning'],
+            'status' => $updated['status'],
+            'published_at' => $updated['published_at'],
+            'created_at' => $updated['created_at'],
+            'updated_at' => $updated['updated_at'],
         ];
     }
 }

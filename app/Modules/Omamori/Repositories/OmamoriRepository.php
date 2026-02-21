@@ -158,4 +158,24 @@ class OmamoriRepository extends BaseRepository{
         }
         return $row;
     }
+
+    // 오마모리 정보 수정
+    public function updateDraftInfo(int $userId, int $omamoriId, string $title, ?string $meaning): array{
+        $sql = "UPDATE {$this -> table}
+                SET title = ?,
+                    meaning = ?,
+                    updated_at = NOW()
+                WHERE id = ?
+                    AND user_id = ?
+                    AND deleted_at IS NULL
+                    AND status = 'draft'
+                RETURNING id, user_id, title, meaning, status, published_at, created_at, updated_at, deleted_at";
+
+        $row = $this -> db -> queryOne($sql, [$title, $meaning, $omamoriId, $userId]);
+
+        if(!$row){
+            throw new \RuntimeException('Update failed');
+        }
+        return $row;
+    }
 }
