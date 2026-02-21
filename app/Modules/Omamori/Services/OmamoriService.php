@@ -241,4 +241,12 @@ class OmamoriService extends BaseService{
             'updated_at' => $updated['updated_at'],
         ];
     }
+
+    // 오마모리 삭제
+    public function deleteOmamori(string $token, int $omamoriId): array{
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        return $this -> omamoriRepository -> softDelete($userId, $omamoriId);
+    }
 }

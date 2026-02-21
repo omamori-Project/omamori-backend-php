@@ -138,4 +138,24 @@ class OmamoriController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+    // 오마모리 삭제
+    public function destroy(Request $request): Response{
+        try{
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            if($omamoriId <= 0){
+                return $this -> error('Invalid omamoriId');
+            }
+            $result = $this -> omamoriService -> deleteOmamori($token, $omamoriId);
+            return $this -> success($result, 'Delete', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
