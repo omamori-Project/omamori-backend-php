@@ -178,4 +178,21 @@ class OmamoriRepository extends BaseRepository{
         }
         return $row;
     }
+
+    // 오마모리 삭제
+    public function softDelete(int $userId, int $omamoriId){
+        $sql = "UPDATE {$this -> table}
+                SET updated_at = NOW(),
+                    deleted_at = NOW()
+                WHERE id = ?
+                    AND user_id = ?
+                    AND deleted_at IS NULL
+                RETURNING id, user_id, title, meaning, status, published_at, created_at, updated_at, deleted_at";
+
+        $row = $this -> db -> queryOne($sql, [$omamoriId, $userId]);
+        if(!$row){
+            throw new \RuntimeException('Delete faild');
+        }
+        return $row;
+    }
 }
