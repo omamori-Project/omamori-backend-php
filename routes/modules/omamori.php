@@ -33,3 +33,8 @@ $router -> post('/api/omamoris/[i:omamoriId]/publish', function($request){
 $router -> patch('/api/omamoris/[i:omamoriId]', function($request){
     return (new OmamoriController()) -> update($request);
 }, 'omamoris.update');
+
+// 오마모리 삭제
+$router -> delete('/api/omamoris/[i:omamoriId]', function($request){
+    return (new OmamoriController()) -> destroy($request);
+}, 'omamoris.destroy');

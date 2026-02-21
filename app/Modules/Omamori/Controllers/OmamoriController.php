@@ -131,8 +131,33 @@ class OmamoriController extends BaseController{
 
             $input = $request -> input();
 
-            $result = $this -> omamoriService -> updateOmamori($token, $request -> param('omamoriId'), $input);
+            $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            if($omamoriId <= 0){
+                return $this -> error('Invalid omamoriId');
+            }
+
+            $result = $this -> omamoriService -> updateOmamori($token, $omamoriId, $input);
             return $this -> success($result, 'updated', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+    // 오마모리 삭제
+    public function destroy(Request $request): Response{
+        try{
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            if($omamoriId <= 0){
+                return $this -> error('Invalid omamoriId');
+            }
+            $result = $this -> omamoriService -> deleteOmamori($token, $omamoriId);
+            return $this -> success($result, 'Deleted', 200);
 
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);
