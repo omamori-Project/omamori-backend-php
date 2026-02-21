@@ -1,0 +1,86 @@
+[2026-02-21 15:10:16] Error: Call to undefined method App\Modules\Omamori\Controllers\OmamoriController::update() in /var/www/html/routes/modules/omamori.php:34
+Stack trace:
+#0 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#1 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#2 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#3 /var/www/html/public/index.php(7): App\Core\Application->run()
+#4 {main}
+
+[2026-02-21 15:10:44] Error: Call to undefined method App\Modules\Omamori\Controllers\OmamoriController::update() in /var/www/html/routes/modules/omamori.php:34
+Stack trace:
+#0 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#1 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#2 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#3 /var/www/html/public/index.php(7): App\Core\Application->run()
+#4 {main}
+
+[2026-02-21 15:11:59] InvalidArgumentException: title required in /var/www/html/app/Modules/Omamori/Services/OmamoriService.php:226
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(134): App\Modules\Omamori\Services\OmamoriService->updateOmamori('eyJ0eXAiOiJKV1Q...', 5, Array)
+#1 /var/www/html/routes/modules/omamori.php(34): App\Modules\Omamori\Controllers\OmamoriController->update(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+
+[2026-02-21 15:14:10] InvalidArgumentException: title required in /var/www/html/app/Modules/Omamori/Services/OmamoriService.php:226
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(134): App\Modules\Omamori\Services\OmamoriService->updateOmamori('eyJ0eXAiOiJKV1Q...', 6, Array)
+#1 /var/www/html/routes/modules/omamori.php(34): App\Modules\Omamori\Controllers\OmamoriController->update(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+
+[2026-02-21 15:14:19] InvalidArgumentException: title required in /var/www/html/app/Modules/Omamori/Services/OmamoriService.php:226
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(134): App\Modules\Omamori\Services\OmamoriService->updateOmamori('eyJ0eXAiOiJKV1Q...', 1, Array)
+#1 /var/www/html/routes/modules/omamori.php(34): App\Modules\Omamori\Controllers\OmamoriController->update(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+
+[2026-02-21 15:14:49] InvalidArgumentException: title required in /var/www/html/app/Modules/Omamori/Services/OmamoriService.php:226
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(134): App\Modules\Omamori\Services\OmamoriService->updateOmamori('eyJ0eXAiOiJKV1Q...', 7, Array)
+#1 /var/www/html/routes/modules/omamori.php(34): App\Modules\Omamori\Controllers\OmamoriController->update(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+
+[2026-02-21 15:24:29] PDOException: SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ","
+LINE 5:                 WHERE id = $3,
+                                     ^ in /var/www/html/app/Core/Database.php:54
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(54): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Omamori/Repositories/OmamoriRepository.php(174): App\Core\Database->queryOne('UPDATE omamoris...', Array)
+#2 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(233): App\Modules\Omamori\Repositories\OmamoriRepository->updateDraftInfo(4, 7, '\xE4\xBF\xAE\xE6\xAD\xA3\xE3\x82\xBF\xE3\x82\xA4\xE3\x83\x88...', '\xE4\xBF\xAE\xE6\xAD\xA3\xE6\x84\x8F\xE5\x91\xB3')
+#3 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(134): App\Modules\Omamori\Services\OmamoriService->updateOmamori('eyJ0eXAiOiJKV1Q...', 7, Array)
+#4 /var/www/html/routes/modules/omamori.php(34): App\Modules\Omamori\Controllers\OmamoriController->update(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+
+[2026-02-21 15:25:30] PDOException: SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ","
+LINE 5:                 WHERE id = $3,
+                                     ^ in /var/www/html/app/Core/Database.php:54
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(54): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Omamori/Repositories/OmamoriRepository.php(174): App\Core\Database->queryOne('UPDATE omamoris...', Array)
+#2 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(233): App\Modules\Omamori\Repositories\OmamoriRepository->updateDraftInfo(4, 7, '\xE4\xBF\xAE\xE6\xAD\xA3\xE3\x82\xBF\xE3\x82\xA4\xE3\x83\x88...', '\xE4\xBF\xAE\xE6\xAD\xA3\xE6\x84\x8F\xE5\x91\xB3')
+#3 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(134): App\Modules\Omamori\Services\OmamoriService->updateOmamori('eyJ0eXAiOiJKV1Q...', 7, Array)
+#4 /var/www/html/routes/modules/omamori.php(34): App\Modules\Omamori\Controllers\OmamoriController->update(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+

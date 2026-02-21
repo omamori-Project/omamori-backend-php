@@ -120,4 +120,22 @@ class OmamoriController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+    // 오마모리 정보 수정
+    public function update(Request $request): Response{
+        try{
+            $token = $request -> bearerToken();
+            if (!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $input = $request -> input();
+
+            $result = $this -> omamoriService -> updateOmamori($token, $request -> param('omamoriId'), $input);
+            return $this -> success($result, 'updated', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
