@@ -94,6 +94,7 @@ class OmamoriService extends BaseService{
             'title' => $row['title'],
             'meaning' => $row['meaning'],
             'status' => $row['status'],
+            'back_message' => $row['back_message'],
             'published_at' => $row['published_at'] ?? null,
             'created_at' => $row['created_at'],
             'updated_at' => $row['updated_at'],
@@ -248,5 +249,29 @@ class OmamoriService extends BaseService{
         $userId = $auth -> verifyAndGetUserId($token);
 
         return $this -> omamoriRepository -> softDelete($userId, $omamoriId);
+    }
+
+    // 오마모리 뒷면 메시지 입력/수정
+    public function updateBackMessage(string $token, int $omamoriId, array $input): array{
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // 입력값 추출
+        $backMessage = $input['back_message'] ?? null;
+
+        // 빈 문자열은 null로 통일
+        if(is_string($backMessage)){
+            $backMessage = trim($backMessage);
+            // 없으면 null
+            if($backMessage === ''){
+                $backMessage = null;
+            }
+        }
+
+        // 배열/객체 들어오면 실패
+        if(!is_null($backMessage) && !is_string($backMessage)){
+            throw new \InvalidArgumentException('back_message must be string or null');
+        }
+        return $this -> omamoriRepository ->updateBackMessage($userId, $omamoriId, $backMessage);
     }
 }
