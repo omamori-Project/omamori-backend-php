@@ -3,6 +3,7 @@
 namespace App\Modules\Omamori\Repositories;
 
 use App\Common\Base\BaseRepository;
+use App\Common\Exceptions\ErrorHandler;
 use App\Core\Database;
 
 class OmamoriRepository extends BaseRepository{
@@ -71,7 +72,7 @@ class OmamoriRepository extends BaseRepository{
 
     // 오마모리 조회
     public function findOwnById(int $userId, int $omamoriId): ?array{
-        $sql = "SELECT id, user_id, title, meaning, status, published_at, created_at, updated_at, deleted_at
+        $sql = "SELECT id, user_id, title, meaning, status, back_message, published_at, created_at, updated_at, deleted_at
                 FROM {$this -> table}
                 WHERE id = ?
                     AND user_id = ?
@@ -82,11 +83,7 @@ class OmamoriRepository extends BaseRepository{
     }
 
     // 오마모리 내 목록
-    public function findByUserId(
-        int $userId,
-        int $size,
-        int $offset,
-        ?string $status = null,
+    public function findByUserId(int $userId, int $size, int $offset, ?string $status = null,
         string $sort = 'latest'): array{
             $orderBy = "created_at DESC";
 
@@ -103,7 +100,7 @@ class OmamoriRepository extends BaseRepository{
                 }
             }
 
-            $sql = "SELECT id, title, meaning, status, published_at, created_at, updated_at
+            $sql = "SELECT id, title, meaning, status, back_message, published_at, created_at, updated_at
                     FROM {$this -> table}
                     WHERE user_id = ?
                         AND deleted_at IS NULL";
@@ -195,4 +192,22 @@ class OmamoriRepository extends BaseRepository{
         }
         return $row;
     }
+
+    // 오마모리 뒷면 메시지 입력/수정
+    public function updateBackMessage(int $userId, int $omamoriId, ?string $backMessage): array{
+        $sql = "UPDATE {$this -> table}
+        SET back_message = ?,
+            updated_at = NOW()
+        WHERE id = ?
+            AND user_id = ?
+            AND deleted_at IS NULL
+            RETURNING id, user_id, title, meaning, status, back_message, published_at, created_at, updated_at, deleted_at";
+        
+        $row = $this -> db -> queryOne($sql, [$backMessage, $omamoriId, $userId]);
+        if(!$row){
+            throw new \RuntimeException('Update back message faild');
+        }
+        return $row ?: null;
+    }
+
 }

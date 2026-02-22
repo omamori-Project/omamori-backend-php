@@ -8,6 +8,7 @@ use App\Common\Exceptions\ErrorHandler;
 use App\Core\Request;
 use App\Core\Response;
 use App\Modules\Omamori\Services\OmamoriService;
+use Error;
 
 // 상속
 class OmamoriController extends BaseController{
@@ -158,6 +159,29 @@ class OmamoriController extends BaseController{
             }
             $result = $this -> omamoriService -> deleteOmamori($token, $omamoriId);
             return $this -> success($result, 'Deleted', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+    // 오마모리 뒷면 메시지 입력/수정
+    public function updateBackMessage(Request $request): Response{
+        try{
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            if($omamoriId <= 0){
+                return $this -> error('Invalid omamoriId');
+            }
+
+            $input = $request -> input();
+
+            $result = $this -> omamoriService -> updateBackMessage($token, $omamoriId, $input);
+            return $this -> success($result, 'Updated back messgage');
 
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);

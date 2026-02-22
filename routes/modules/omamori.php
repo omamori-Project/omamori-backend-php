@@ -38,3 +38,8 @@ $router -> patch('/api/omamoris/[i:omamoriId]', function($request){
 $router -> delete('/api/omamoris/[i:omamoriId]', function($request){
     return (new OmamoriController()) -> destroy($request);
 }, 'omamoris.destroy');
+
+// 오마모리 뒷면 메시지 입력/수정
+$router -> patch('/api/omamoris/[i:omamoriId]/back-message', function($request){
+    return (new OmamoriController()) -> updateBackMessage($request);
+}, 'omamoris.updateBackMessage');
