@@ -207,7 +207,7 @@ class OmamoriRepository extends BaseRepository{
         if(!$row){
             throw new \RuntimeException('Update back message faild');
         }
-        return $row;
+        return $row ?: null;
     }
 
 }

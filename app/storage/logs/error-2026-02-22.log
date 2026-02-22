@@ -45,3 +45,37 @@ Stack trace:
 #6 /var/www/html/public/index.php(7): App\Core\Application->run()
 #7 {main}
 
+[2026-02-22 16:00:03] Firebase\JWT\ExpiredException: Expired token in /var/www/html/vendor/firebase/php-jwt/src/JWT.php:188
+Stack trace:
+#0 /var/www/html/app/Modules/Auth/Services/AuthService.php(23): Firebase\JWT\JWT::decode('eyJ0eXAiOiJKV1Q...', Object(SensitiveParameterValue))
+#1 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(257): App\Modules\Auth\Services\AuthService->verifyAndGetUserId('eyJ0eXAiOiJKV1Q...')
+#2 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(183): App\Modules\Omamori\Services\OmamoriService->updateBackMessage('eyJ0eXAiOiJKV1Q...', 7, Array)
+#3 /var/www/html/routes/modules/omamori.php(44): App\Modules\Omamori\Controllers\OmamoriController->updateBackMessage(Object(App\Core\Request))
+#4 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#6 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#7 /var/www/html/public/index.php(7): App\Core\Application->run()
+#8 {main}
+
+[2026-02-22 16:03:01] Firebase\JWT\ExpiredException: Expired token in /var/www/html/vendor/firebase/php-jwt/src/JWT.php:188
+Stack trace:
+#0 /var/www/html/app/Modules/Auth/Services/AuthService.php(23): Firebase\JWT\JWT::decode('eyJ0eXAiOiJKV1Q...', Object(SensitiveParameterValue))
+#1 /var/www/html/app/Modules/Omamori/Services/OmamoriService.php(257): App\Modules\Auth\Services\AuthService->verifyAndGetUserId('eyJ0eXAiOiJKV1Q...')
+#2 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(183): App\Modules\Omamori\Services\OmamoriService->updateBackMessage('eyJ0eXAiOiJKV1Q...', 7, Array)
+#3 /var/www/html/routes/modules/omamori.php(44): App\Modules\Omamori\Controllers\OmamoriController->updateBackMessage(Object(App\Core\Request))
+#4 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#6 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#7 /var/www/html/public/index.php(7): App\Core\Application->run()
+#8 {main}
+
+[2026-02-22 16:04:20] RuntimeException: Omamori not found in /var/www/html/app/Modules/Omamori/Services/OmamoriService.php:261
+Stack trace:
+#0 /var/www/html/app/Modules/Omamori/Controllers/OmamoriController.php(183): App\Modules\Omamori\Services\OmamoriService->updateBackMessage('eyJ0eXAiOiJKV1Q...', 7, Array)
+#1 /var/www/html/routes/modules/omamori.php(44): App\Modules\Omamori\Controllers\OmamoriController->updateBackMessage(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+

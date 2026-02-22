@@ -256,6 +256,11 @@ class OmamoriService extends BaseService{
         $auth = new AuthService();
         $userId = $auth -> verifyAndGetUserId($token);
 
+        $current = $this -> omamoriRepository -> findOwnById($userId, $omamoriId);
+        if(!$current){
+            throw new \RuntimeException('Omamori not found');
+        }
+
         // 입력값 추출
         $backMessage = $input['back_message'] ?? null;
 
@@ -272,6 +277,10 @@ class OmamoriService extends BaseService{
         if(!is_null($backMessage) && !is_string($backMessage)){
             throw new \InvalidArgumentException('back_message must be string or null');
         }
-        return $this -> omamoriRepository ->updateBackMessage($userId, $omamoriId, $backMessage);
+        $updated = $this -> omamoriRepository -> updateBackMessage($userId, $omamoriId, $backMessage);
+        if(!$updated){
+            throw new \RuntimeException('Update back message faild');
+        }
+        return $updated;
     }
 }
