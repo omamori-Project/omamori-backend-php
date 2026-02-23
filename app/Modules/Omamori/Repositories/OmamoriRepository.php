@@ -7,6 +7,7 @@ use App\Common\Exceptions\ErrorHandler;
 use App\Core\Database;
 
 class OmamoriRepository extends BaseRepository{
+    // table명
     protected string $table = 'omamoris';
 
     public function __construct(Database $db)
@@ -209,5 +210,4 @@ class OmamoriRepository extends BaseRepository{
         }
         return $row ?: null;
     }
-
 }
