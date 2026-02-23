@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\Omamori\Repositories;
+namespace App\Modules\Element\Repositories;
 
 // import
 use App\Common\Base\BaseRepository;
 use App\Core\Database;
 
 // 상속
-class OmamoriElementRepository extends BaseRepository{
+class ElementRepository extends BaseRepository{
     // 리포지토리명
     protected string $table = 'omamori_elements';
 
