@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Modules\Omamori\Controllers;
+namespace App\Modules\Element\Controllers;
 
 use App\Common\Base\BaseController;
 use App\Common\Exceptions\ErrorHandler;
 use App\Core\Request;
 use App\Core\Response;
-use App\Modules\Omamori\Services\OmamoriElementService;
+use App\Modules\Element\Services\ElementService;
 
-class OmamoriElementController extends BaseController{
-    protected OmamoriElementService $omamoriElementService;
+class ElementController extends BaseController{
+    protected ElementService $elementService;
 
     public function __construct()
     {
-        $this -> omamoriElementService = new OmamoriElementService();
+        $this -> elementService = new ElementService();
     }
 
     // 오마모리 요소 추가
@@ -34,7 +34,7 @@ class OmamoriElementController extends BaseController{
 
             $input = $request -> input();
 
-            $result = $this -> omamoriElementService -> createElement($token, $omamoriId, $input);
+            $result = $this -> elementService -> createElement($token, $omamoriId, $input);
             return $this -> success($result, 'Created', 201);
 
         }catch(\Exception $e){

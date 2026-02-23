@@ -5,6 +5,7 @@ namespace App\Modules\Omamori\Repositories;
 use App\Common\Base\BaseRepository;
 use App\Common\Exceptions\ErrorHandler;
 use App\Core\Database;
+use RuntimeException;
 
 class OmamoriRepository extends BaseRepository{
     // table명
@@ -209,5 +210,34 @@ class OmamoriRepository extends BaseRepository{
             throw new \RuntimeException('Update back message faild');
         }
         return $row ?: null;
+    }
+
+    // 오마모리 배경 존재 확인
+    public function existsActiveFortuneColor(int $fortuneColorId): bool{
+        $sql = "SELECT 1
+                FROM fortune_colors
+                WHERE id = ?
+                    AND is_active = true
+                LIMIT 1";
+
+        $row = $this -> db -> queryOne($sql, [$fortuneColorId]);
+        return $row ? true : false;
+    }
+
+    // 배경색 적용
+    public function updateAppliedFortuneColor(int $userId, int $omamoriId, int $fortuneColorId): array{
+        $sql = "UPDATE {$this -> table}
+                SET applied_fortune_color_id = ?,
+                    updated_at = NOW()
+                WHERE id = ?
+                    AND user_id = ?
+                    AND deleted_at IS NULL
+                RETURNING id, user_id, title, meaning, status, applied_fortune_color_id, published_at, created_at, updated_at, deleted_at";
+    
+        $row = $this -> db -> queryOne($sql, [$fortuneColorId, $omamoriId, $userId]);
+        if(!$row){
+            throw new RuntimeException('Update background color failed');
+        }
+        return $row;
     }
 }

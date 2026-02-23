@@ -1,7 +1,7 @@
 <?php
 
 use App\Modules\Omamori\Controllers\OmamoriController;
-use App\Modules\Omamori\Controllers\OmamoriElementController;
+use App\Modules\Element\Controllers\ElementController;
 
 global $router;
 
@@ -47,5 +47,5 @@ $router -> patch('/api/omamoris/[i:omamoriId]/back-message', function($request){
 
 // 오마모리 디자인요소 추가 - 텍스트 요소 추가
 $router -> post('/api/omamoris/[i:omamoriId]/elements', function($request){
-    return (new OmamoriElementController()) -> store($request);
+    return (new ElementController()) -> store($request);
 }, 'omamoriElements.store');
