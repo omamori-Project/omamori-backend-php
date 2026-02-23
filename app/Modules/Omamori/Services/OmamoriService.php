@@ -20,6 +20,7 @@ class OmamoriService extends BaseService{
         $this -> omamoriRepository = new OmamoriRepository($db);
     }
 
+
     // 오마모리 생성
     public function createOmamori(string $token, array $input): array{
         // 토큰 검증
@@ -62,6 +63,7 @@ class OmamoriService extends BaseService{
         ];
     }
 
+
     // 오마모리 복제
     public function duplicateOmamori(string $token, int $omamoriId): array{
         $auth = new AuthService();
@@ -80,6 +82,7 @@ class OmamoriService extends BaseService{
             'status' => $row['status'],
         ];
     }
+
 
     // 오마모리 조회
     public function getOwnOmamoriById(string $token, int $omamoriId): array{
@@ -103,6 +106,7 @@ class OmamoriService extends BaseService{
             'updated_at' => $row['updated_at'],
         ];
     }
+
 
     // 오마모리 내 목록
     public function getList(
@@ -155,6 +159,7 @@ class OmamoriService extends BaseService{
             ];
     }
 
+
     // 오마모리 공개
     public function publishOmamori(string $token, int $omamoriId): array{
         // 토큰 검증
@@ -198,6 +203,7 @@ class OmamoriService extends BaseService{
             'published_at' => $updated['published_at'] ?? null,
         ];
     }
+
 
     // 오마모리 정보 수정
     public function updateOmamori(string $token, int $omamoriId, array $input): array{
@@ -247,6 +253,7 @@ class OmamoriService extends BaseService{
         ];
     }
 
+
     // 오마모리 삭제
     public function deleteOmamori(string $token, int $omamoriId): array{
         // 토큰 검증
@@ -256,6 +263,7 @@ class OmamoriService extends BaseService{
         return $this -> omamoriRepository -> softDelete($userId, $omamoriId);
     }
 
+    
     // 오마모리 뒷면 메시지 입력/수정
     public function updateBackMessage(string $token, int $omamoriId, array $input): array{
         // 토큰 검증
