@@ -20,6 +20,7 @@ class OmamoriController extends BaseController{
 
     public function store(Request $request): Response{
         try{
+            // 토큰 검증
             $token = $request -> bearerToken();
             if(!$token){
                 return $this -> unauthorized('Token required');
@@ -40,12 +41,15 @@ class OmamoriController extends BaseController{
     // 오마모리 복제
     public function duplicate(Request $request): Response{
         try{
+            // 토큰 검증
             $token = $request -> bearerToken();
             if (!$token){
                 return $this -> unauthorized('Token required');
             }
 
+            // omamoriId 취득
             $omamoriId = (int)$request -> param('omamoriId', 0);
+            // ID가 0이하이라면 오류
             if ($omamoriId <= 0){
                 return $this -> error('Invalid omamoriId');
             }
@@ -61,12 +65,15 @@ class OmamoriController extends BaseController{
     // 오마모리 조회(편집/확인)
     public function show(Request $request): Response{
         try{
+            // 토큰 검증
             $token = $request -> bearerToken();
             if(!$token){
                 return $this -> unauthorized('Token required');
             }
 
+            // omamoriId 취득
             $omamoriId = (int)$request -> param('omamoriId', 0);
+            // ID가 0이하이라면 오류
             if($omamoriId <= 0){
                 return $this -> error('Invalid omamoriId');
             }
@@ -82,6 +89,7 @@ class OmamoriController extends BaseController{
     // 오마모리 내 목록
     public function index(Request $request): Response{
         try{
+            // 토큰 검증
             $token = $request -> bearerToken();
             if(!$token){
                 return $this -> unauthorized('Token required');
@@ -104,12 +112,15 @@ class OmamoriController extends BaseController{
     // 오마모리 공개
     public function publish(Request $request): Response{
         try{
+            // 토큰 검증
             $token = $request -> bearerToken();
             if (!$token){
                 return $this -> unauthorized('Token required');
             }
 
+            // omamoriId 취득
             $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            // ID가 0이하이라면 오류
             if($omamoriId <= 0){
                 return $this -> error('Invalid omamoriId');
             }
@@ -125,6 +136,7 @@ class OmamoriController extends BaseController{
     // 오마모리 정보 수정
     public function update(Request $request): Response{
         try{
+            // 토큰 검증
             $token = $request -> bearerToken();
             if (!$token){
                 return $this -> unauthorized('Token required');
@@ -132,7 +144,9 @@ class OmamoriController extends BaseController{
 
             $input = $request -> input();
 
+            // omamoriId 취득
             $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            // ID가 0이하이라면 오류
             if($omamoriId <= 0){
                 return $this -> error('Invalid omamoriId');
             }
@@ -148,12 +162,15 @@ class OmamoriController extends BaseController{
     // 오마모리 삭제
     public function destroy(Request $request): Response{
         try{
+            // 토큰 검증
             $token = $request -> bearerToken();
             if(!$token){
                 return $this -> unauthorized('Token required');
             }
 
+            // omamoriId 취득
             $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            // ID가 0이하이라면 오류
             if($omamoriId <= 0){
                 return $this -> error('Invalid omamoriId');
             }
@@ -168,12 +185,15 @@ class OmamoriController extends BaseController{
     // 오마모리 뒷면 메시지 입력/수정
     public function updateBackMessage(Request $request): Response{
         try{
+            // 토큰 검증
             $token = $request -> bearerToken();
             if(!$token){
                 return $this -> unauthorized('Token required');
             }
 
+            // omamoriId 취득
             $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            // ID가 0이하이라면 오류
             if($omamoriId <= 0){
                 return $this -> error('Invalid omamoriId');
             }
