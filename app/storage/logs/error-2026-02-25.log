@@ -1,0 +1,113 @@
+[2026-02-25 14:14:39] InvalidArgumentException: element_ids required in /var/www/html/app/Modules/Element/Services/ElementService.php:126
+Stack trace:
+#0 /var/www/html/app/Modules/Element/Controllers/ElementController.php(60): App\Modules\Element\Services\ElementService->reorderElements('eyJ0eXAiOiJKV1Q...', 5, Array)
+#1 /var/www/html/routes/modules/omamori.php(55): App\Modules\Element\Controllers\ElementController->reorder(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+
+[2026-02-25 14:21:04] RuntimeException: Element not found or not allowed in /var/www/html/app/Modules/Element/Services/ElementService.php:135
+Stack trace:
+#0 /var/www/html/app/Modules/Element/Controllers/ElementController.php(60): App\Modules\Element\Services\ElementService->reorderElements('eyJ0eXAiOiJKV1Q...', 5, Array)
+#1 /var/www/html/routes/modules/omamori.php(55): App\Modules\Element\Controllers\ElementController->reorder(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+
+[2026-02-25 14:24:48] PDOException: SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near "$1"
+LINE 2:                 SET layer = CASE idWHEN $1 THEN $2WHEN $3 TH...
+                                                ^ in /var/www/html/app/Core/Database.php:46
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(46): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Element/Repositories/ElementRepository.php(87): App\Core\Database->query('UPDATE omamori_...', Array)
+#2 /var/www/html/app/Modules/Element/Services/ElementService.php(154): App\Modules\Element\Repositories\ElementRepository->updateLayersBulk(5, Array)
+#3 /var/www/html/app/Modules/Element/Controllers/ElementController.php(60): App\Modules\Element\Services\ElementService->reorderElements('eyJ0eXAiOiJKV1Q...', 5, Array)
+#4 /var/www/html/routes/modules/omamori.php(55): App\Modules\Element\Controllers\ElementController->reorder(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+
+[2026-02-25 14:25:15] PDOException: SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near "$1"
+LINE 2:                 SET layer = CASE idWHEN $1 THEN $2WHEN $3 TH...
+                                                ^ in /var/www/html/app/Core/Database.php:46
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(46): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Element/Repositories/ElementRepository.php(87): App\Core\Database->query('UPDATE omamori_...', Array)
+#2 /var/www/html/app/Modules/Element/Services/ElementService.php(154): App\Modules\Element\Repositories\ElementRepository->updateLayersBulk(5, Array)
+#3 /var/www/html/app/Modules/Element/Controllers/ElementController.php(60): App\Modules\Element\Services\ElementService->reorderElements('eyJ0eXAiOiJKV1Q...', 5, Array)
+#4 /var/www/html/routes/modules/omamori.php(55): App\Modules\Element\Controllers\ElementController->reorder(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+
+[2026-02-25 14:28:46] PDOException: SQLSTATE[42804]: Datatype mismatch: 7 ERROR:  column "layer" is of type integer but expression is of type text
+LINE 2:                 SET layer = CASE id WHEN $1 THEN $2 WHEN $3 ...
+                                    ^
+HINT:  You will need to rewrite or cast the expression. in /var/www/html/app/Core/Database.php:46
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(46): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Element/Repositories/ElementRepository.php(87): App\Core\Database->query('UPDATE omamori_...', Array)
+#2 /var/www/html/app/Modules/Element/Services/ElementService.php(154): App\Modules\Element\Repositories\ElementRepository->updateLayersBulk(5, Array)
+#3 /var/www/html/app/Modules/Element/Controllers/ElementController.php(60): App\Modules\Element\Services\ElementService->reorderElements('eyJ0eXAiOiJKV1Q...', 5, Array)
+#4 /var/www/html/routes/modules/omamori.php(55): App\Modules\Element\Controllers\ElementController->reorder(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+
+[2026-02-25 14:30:20] PDOException: SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near "::"
+LINE 2:                 SET layer = CASE id WHEN $1 THEN::int $2 WHE...
+                                                        ^ in /var/www/html/app/Core/Database.php:46
+Stack trace:
+#0 /var/www/html/app/Core/Database.php(46): PDOStatement->execute(Array)
+#1 /var/www/html/app/Modules/Element/Repositories/ElementRepository.php(87): App\Core\Database->query('UPDATE omamori_...', Array)
+#2 /var/www/html/app/Modules/Element/Services/ElementService.php(154): App\Modules\Element\Repositories\ElementRepository->updateLayersBulk(5, Array)
+#3 /var/www/html/app/Modules/Element/Controllers/ElementController.php(60): App\Modules\Element\Services\ElementService->reorderElements('eyJ0eXAiOiJKV1Q...', 5, Array)
+#4 /var/www/html/routes/modules/omamori.php(55): App\Modules\Element\Controllers\ElementController->reorder(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#6 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#7 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#8 /var/www/html/public/index.php(7): App\Core\Application->run()
+#9 {main}
+
+[2026-02-25 17:42:00] Firebase\JWT\ExpiredException: Expired token in /var/www/html/vendor/firebase/php-jwt/src/JWT.php:188
+Stack trace:
+#0 /var/www/html/app/Modules/Auth/Services/AuthService.php(23): Firebase\JWT\JWT::decode('eyJ0eXAiOiJKV1Q...', Object(SensitiveParameterValue))
+#1 /var/www/html/app/Modules/Element/Services/ElementService.php(115): App\Modules\Auth\Services\AuthService->verifyAndGetUserId('eyJ0eXAiOiJKV1Q...')
+#2 /var/www/html/app/Modules/Element/Controllers/ElementController.php(60): App\Modules\Element\Services\ElementService->reorderElements('eyJ0eXAiOiJKV1Q...', 5, Array)
+#3 /var/www/html/routes/modules/omamori.php(55): App\Modules\Element\Controllers\ElementController->reorder(Object(App\Core\Request))
+#4 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#5 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#6 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#7 /var/www/html/public/index.php(7): App\Core\Application->run()
+#8 {main}
+
+[2026-02-25 17:42:27] InvalidArgumentException: elementIds required in /var/www/html/app/Modules/Element/Services/ElementService.php:126
+Stack trace:
+#0 /var/www/html/app/Modules/Element/Controllers/ElementController.php(60): App\Modules\Element\Services\ElementService->reorderElements('eyJ0eXAiOiJKV1Q...', 5, Array)
+#1 /var/www/html/routes/modules/omamori.php(55): App\Modules\Element\Controllers\ElementController->reorder(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+
+[2026-02-25 17:45:54] InvalidArgumentException: Invalid elementIds in /var/www/html/app/Modules/Element/Services/ElementService.php:152
+Stack trace:
+#0 /var/www/html/app/Modules/Element/Controllers/ElementController.php(60): App\Modules\Element\Services\ElementService->reorderElements('eyJ0eXAiOiJKV1Q...', 5, Array)
+#1 /var/www/html/routes/modules/omamori.php(55): App\Modules\Element\Controllers\ElementController->reorder(Object(App\Core\Request))
+#2 /var/www/html/app/Core/Router.php(111): App\Core\Application->{closure}(Object(App\Core\Request))
+#3 /var/www/html/app/Core/Router.php(100): App\Core\Router->handleRoute(Object(Closure), Object(App\Core\Request))
+#4 /var/www/html/app/Core/Application.php(47): App\Core\Router->dispatch(Object(App\Core\Request))
+#5 /var/www/html/public/index.php(7): App\Core\Application->run()
+#6 {main}
+

@@ -105,6 +105,67 @@ class ElementService extends BaseService{
         $result['props'] = is_string($result['props']) ? json_decode($result['props'], true) : $result['props'];
         $result['transform'] = is_string($result['transform']) ? json_decode($result['transform'], true) : $result['transform'];
         return $result;
+    }
 
+
+    // 오마모리 요소 재정렬 (background 제외)
+    public function reorderElements(string $token, int $omamoriId, array $input): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // 오마모리 존재/소유자 확인
+        $omamori = $this -> omamoriRepository -> findOwnById($userId, $omamoriId);
+        if(!$omamori){
+            throw new \RuntimeException('Omamori not found or not allowed');
+        }
+
+        // Element 받기
+        $elementIds = $input['elementIds'] ?? null;
+        if (!is_array($elementIds) || empty($elementIds)){
+            throw new \InvalidArgumentException('elementIds required');
+        }
+        if (count($elementIds) !== count(array_unique($elementIds))){
+            throw new \InvalidArgumentException('elementIds duplicated');
+        }
+
+        // 이 오마모리의 요소인지 확인 (soft delete 제외)
+        $row = $this -> elementRepository -> getElementsById($omamoriId, $elementIds);
+        if(count($row) !== count($elementIds)){
+            throw new \RuntimeException('Element not found or not allowed');
+        }
+
+        // background 포함 금지
+        foreach($row as $r){
+            if(($r['type'] ?? null) === 'background'){
+                throw new \InvalidArgumentException('Background can not be reordered');
+            }
+        }
+
+        // 누락 방지
+        $allNonBgIds = $this -> elementRepository -> findNonBackgroundIdsByOmamoriId($omamoriId);
+        $req = array_map('intval', $elementIds);
+        $all = array_map('intval', $allNonBgIds);
+        sort($req);
+        sort($all);
+        if($req !== $all){
+            throw new \InvalidArgumentException('Invalid elementIds');
+        }
+
+        // 순서대로 layer 재부여
+        $idToLayer = [];
+        $layer = 1;
+        foreach($elementIds as $id){
+            $idToLayer[(int)$id] = $layer;
+            $layer ++;
+        }
+
+        // 업데이트
+        $updatedRows = $this -> elementRepository -> updateLayersBulk($omamoriId, $idToLayer);
+        $this -> elementRepository -> setBackgroundLayerZero($omamoriId);
+        return [
+            'omamori_id' => (int)$omamoriId,
+            'items' => $updatedRows
+        ];
     }
 }
