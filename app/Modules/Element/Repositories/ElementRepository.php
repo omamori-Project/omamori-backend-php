@@ -5,6 +5,7 @@ namespace App\Modules\Element\Repositories;
 // import
 use App\Common\Base\BaseRepository;
 use App\Core\Database;
+use Dotenv\Util\Str;
 
 // 상속
 class ElementRepository extends BaseRepository{
@@ -97,7 +98,7 @@ class ElementRepository extends BaseRepository{
                     AND type <> 'background'";
 
         $rows = $this -> db -> query($sql, [$omamoriId]);
-        $id = [];
+        $ids = [];
         foreach($rows as $row){
             $ids[] = (int)$row['id'];
         }
@@ -114,5 +115,32 @@ class ElementRepository extends BaseRepository{
                     AND type = 'background'";
 
         $this -> db -> execute($sql, [$omamoriId]);
+    }
+
+    // element 취득
+    public function findElementById(int $elementId): array{
+        $sql = "SELECT id, omamori_id, type, layer, props, transform, deleted_at, created_at, updated_at
+                FROM {$this -> table}
+                WHERE id = ?";
+
+        $row = $this -> db -> queryOne($sql, [$elementId]);
+        return $row ?: null;
+    }
+
+
+    // element props/transform 변경
+    public function updateElementPropsTransform(int $elementId, ?string $propsJson, ?string $transformJson): array{
+        $sql = "UPDATE {$this -> table}
+                SET props = ?,
+                    transform = ?,
+                    updated_at = NOW()
+                WHERE id = ?
+                RETURNING id, omamori_id, type, props, transform, updated_at";
+
+        $row = $this -> db -> queryOne($sql, [$propsJson, $transformJson, $elementId]);
+        if(!$row){
+            throw new \RuntimeException('Update element failed');
+        }
+        return $row;
     }
 }

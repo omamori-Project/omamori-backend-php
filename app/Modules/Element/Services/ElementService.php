@@ -168,4 +168,76 @@ class ElementService extends BaseService{
             'items' => $updatedRows
         ];
     }
+
+
+    // 요소 수정
+    public function updateElement(string $token, int $omamoriId, int $elementId, array $input): array{
+        // 토큰 취득
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // 오마모리 취득
+        $omamori = $this -> omamoriRepository -> findOwnById($userId, $omamoriId);
+        if(!$omamori){
+            throw new \RuntimeException('Omamori not found or not allowed');
+        }
+        
+        // element 취득
+        $element = $this -> elementRepository -> findElementById($elementId);
+        if(!$element){
+            throw new \RuntimeException('Element not found');
+        }
+
+        // 오마모리 요소 확인
+        if((int)$element['omamori_id'] !== (int)$omamoriId){
+            throw new \RuntimeException('Element not found or not allowed');
+        }
+
+        // soft delete 학인
+        if(!empty($element['deleted_at'])){
+            throw new \InvalidArgumentException('Element already deleted');
+        }
+
+        // background 제외
+        if(($element['type'] ?? null) === 'background'){
+            throw new \InvalidArgumentException('Background is not updatable');
+        }
+
+        // props/transform 둘 다 없어서는 안 됨
+        $hasProps = array_key_exists('props', $input);
+        $hasTransform = array_key_exists('transform', $input);
+        if(!$hasProps && !$hasTransform){
+            throw new \InvalidArgumentException('props or transform required');
+        }
+
+        // 타입 체크(있을 때만)
+        if($hasProps && !is_array($input['props'])){
+            throw new \InvalidArgumentException('props must be object');
+        }
+        if($hasTransform && !is_array($input['transform'])){
+            throw new \InvalidArgumentException('transform must be object');
+        }
+
+        // 전부 변경
+        $currentProps = $element['props'];
+        $currentTransform = $element['transform'];
+
+        $newPropsJson = $hasProps 
+            ? json_encode($input['props'], JSON_UNESCAPED_UNICODE)
+            : (is_string($currentProps)
+                ? $currentProps
+                : json_encode($elementId, JSON_UNESCAPED_UNICODE));
+
+        $newTransformJson = $hasTransform 
+            ? json_encode($input['transform'], JSON_UNESCAPED_UNICODE)
+            :(is_string($currentTransform) 
+                ? $currentTransform 
+                : json_encode($currentTransform, JSON_UNESCAPED_UNICODE));
+
+        // 업데이트
+        $updated = $this -> elementRepository -> updateElementPropsTransform($elementId, $newPropsJson, $newTransformJson);
+        $updated['props'] = is_string($updated['props']) ? json_decode($updated['props'], true) : $updated['props'];
+        $updated['transform'] = is_string($updated['transform']) ? json_decode($updated['transform'], true) : $updated['transform'];
+        return $updated;
+    }
 }
