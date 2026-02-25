@@ -85,7 +85,7 @@ class ElementRepository extends BaseRepository{
     }
 
 
-    // non-background 요소 id 목록 조회
+    // 
     public function findNonBackgroundIdsByOmamoriId(int $omamoriId): array {
         $sql = "SELECT id
                 FROM {$this -> table}
