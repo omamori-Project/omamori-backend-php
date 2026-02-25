@@ -41,4 +41,27 @@ class ElementController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 오마모리 요소 재정렬 (background 제외)
+    public function reorder(Request $request): Response{
+        try{
+            // 토큰 검증
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            // route param
+            $omamoriId = (int)$request -> param('omamoriId');
+
+            // body
+            $input = $request -> input();
+            $result = $this -> elementService -> reorderElements($token, $omamoriId, $input);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
