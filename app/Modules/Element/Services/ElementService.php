@@ -226,7 +226,7 @@ class ElementService extends BaseService{
             ? json_encode($input['props'], JSON_UNESCAPED_UNICODE)
             : (is_string($currentProps)
                 ? $currentProps
-                : json_encode($elementId, JSON_UNESCAPED_UNICODE));
+                : json_encode($currentProps, JSON_UNESCAPED_UNICODE));
 
         $newTransformJson = $hasTransform 
             ? json_encode($input['transform'], JSON_UNESCAPED_UNICODE)

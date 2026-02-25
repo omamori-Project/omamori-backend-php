@@ -5,11 +5,10 @@ namespace App\Modules\Element\Repositories;
 // import
 use App\Common\Base\BaseRepository;
 use App\Core\Database;
-use Dotenv\Util\Str;
 
 // 상속
 class ElementRepository extends BaseRepository{
-    // 리포지토리명
+    // table명
     protected string $table = 'omamori_elements';
 
     public function __construct(Database $db)
@@ -19,7 +18,6 @@ class ElementRepository extends BaseRepository{
     
     // 요소 추가
     public function insert(int $omamoriId, string $type, int $layer, array $props, array $transform): array{
-       
        $sql = "INSERT INTO {$this -> table}
                     (omamori_id, type, layer, props, transform, created_at, updated_at)
                 VALUES
@@ -30,7 +28,6 @@ class ElementRepository extends BaseRepository{
         $transformJson = json_encode($transform, JSON_UNESCAPED_UNICODE);
 
         $row = $this -> db -> queryOne($sql, [$omamoriId, $type, $layer, $propsJson, $transformJson]);
-    
         if(!$row){
             throw new \RuntimeException('Insert element failed');
         }
@@ -38,31 +35,30 @@ class ElementRepository extends BaseRepository{
     }
 
     // 오마모리 요소 재정렬 (background 제외)
-    public function getElementsById(int $omamoriId, array $elementId): array{
-        if(empty($elementId)){
+    public function getElementsById(int $omamoriId, array $elementIds): array{
+        if(empty($elementIds)){
             return [];
         }
 
-        $placeholder = implode(',', array_fill(0, count($elementId), '?'));
+        $placeholder = implode(',', array_fill(0, count($elementIds), '?'));
         $sql = "SELECT id, omamori_id, type, layer, deleted_at
                 FROM {$this -> table}
                 WHERE omamori_id = ?
                     AND deleted_at IS NULL
                     AND id IN ({$placeholder})";
         
-        $params = array_merge([$omamoriId], array_values($elementId));
+        $params = array_merge([$omamoriId], array_values($elementIds));
         return $this -> db -> query($sql, $params);
     }
 
-
+    // 요소 레이어 일괄 업데이트
     public function updateLayersBulk(int $omamoriId, array $idToLayer): array{
         if(empty($idToLayer)){
-            return[];
+            return [];
         }
 
         $caseSql = "CASE id ";
         $params = [];
-
         foreach($idToLayer as $id => $layer){
             $caseSql .= "WHEN ? THEN (? )::int ";
             $params[] = (int)$id;
@@ -89,7 +85,7 @@ class ElementRepository extends BaseRepository{
     }
 
 
-    // 
+    // non-background 요소 id 목록 조회
     public function findNonBackgroundIdsByOmamoriId(int $omamoriId): array {
         $sql = "SELECT id
                 FROM {$this -> table}
@@ -105,7 +101,7 @@ class ElementRepository extends BaseRepository{
         return $ids;
     }
 
-
+    // background layer = 항상 0 으로 고정
     public function setBackgroundLayerZero(int $omamoriId): void{
         $sql = "UPDATE {$this -> table}
                 SET layer = 0,
@@ -117,8 +113,8 @@ class ElementRepository extends BaseRepository{
         $this -> db -> execute($sql, [$omamoriId]);
     }
 
-    // element 취득
-    public function findElementById(int $elementId): array{
+    // element 단건 조회
+    public function findElementById(int $elementId): ?array{
         $sql = "SELECT id, omamori_id, type, layer, props, transform, deleted_at, created_at, updated_at
                 FROM {$this -> table}
                 WHERE id = ?";
@@ -128,14 +124,14 @@ class ElementRepository extends BaseRepository{
     }
 
 
-    // element props/transform 변경
+    // element props/transform 전체 갱신
     public function updateElementPropsTransform(int $elementId, ?string $propsJson, ?string $transformJson): array{
         $sql = "UPDATE {$this -> table}
                 SET props = ?,
                     transform = ?,
                     updated_at = NOW()
                 WHERE id = ?
-                RETURNING id, omamori_id, type, props, transform, updated_at";
+                RETURNING id, omamori_id, type, layer, props, transform, updated_at";
 
         $row = $this -> db -> queryOne($sql, [$propsJson, $transformJson, $elementId]);
         if(!$row){

@@ -69,8 +69,9 @@ class ElementController extends BaseController{
     }
 
 
-    // 오마모리 수정
+    // 오마모리 요소 수정
     public function updateElement(Request $request): Response{
+        
         try{
             // 토큰 검증
             $token = $request -> bearerToken();
@@ -85,7 +86,7 @@ class ElementController extends BaseController{
             }
 
             $elementId = (int)($request -> param('elementId') ?? 0);
-            if(!$elementId <= 0){
+            if($elementId <= 0){
                 return $this -> error('Invalid elementId');
             }
 
@@ -97,6 +98,6 @@ class ElementController extends BaseController{
 
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);
-        }        
+        }
     }
 }
