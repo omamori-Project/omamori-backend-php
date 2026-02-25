@@ -49,3 +49,8 @@ $router -> patch('/api/omamoris/[i:omamoriId]/back-message', function($request){
 $router -> post('/api/omamoris/[i:omamoriId]/elements', function($request){
     return (new ElementController()) -> store($request);
 }, 'omamoriElements.store');
+
+// 오마모리 요소 재정렬 (background 제외)
+$router -> post('/api/omamoris/[i:omamoriId]/elements/reorder', function($request){
+    return (new ElementController()) -> reorder($request);
+}, 'omamoriElements.reoder');
