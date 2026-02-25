@@ -59,11 +59,11 @@ class ElementRepository extends BaseRepository{
             return[];
         }
 
-        $caseSql = "CASE id";
+        $caseSql = "CASE id ";
         $params = [];
 
         foreach($idToLayer as $id => $layer){
-            $caseSql .= "WHEN ? THEN ?";
+            $caseSql .= "WHEN ? THEN (? )::int ";
             $params[] = (int)$id;
             $params[] = (int)$layer;
         }
@@ -85,5 +85,34 @@ class ElementRepository extends BaseRepository{
             $params[] = (int)$id;
         }
         return $this -> db -> query($sql, $params);
+    }
+
+
+    // 
+    public function findNonBackgroundIdsByOmamoriId(int $omamoriId): array {
+        $sql = "SELECT id
+                FROM {$this -> table}
+                WHERE omamori_id = ?
+                    AND deleted_at IS NULL
+                    AND type <> 'background'";
+
+        $rows = $this -> db -> query($sql, [$omamoriId]);
+        $id = [];
+        foreach($rows as $row){
+            $ids[] = (int)$row['id'];
+        }
+        return $ids;
+    }
+
+
+    public function setBackgroundLayerZero(int $omamoriId): void{
+        $sql = "UPDATE {$this -> table}
+                SET layer = 0,
+                    updated_at = NOW()
+                WHERE omamori_id = ?
+                    AND deleted_at IS NULL
+                    AND type = 'background'";
+
+        $this -> db -> execute($sql, [$omamoriId]);
     }
 }

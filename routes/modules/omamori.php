@@ -53,4 +53,4 @@ $router -> post('/api/omamoris/[i:omamoriId]/elements', function($request){
 // 오마모리 요소 재정렬 (background 제외)
 $router -> post('/api/omamoris/[i:omamoriId]/elements/reorder', function($request){
     return (new ElementController()) -> reorder($request);
-}, 'omamoriElement.reoder');
+}, 'omamoriElements.reoder');

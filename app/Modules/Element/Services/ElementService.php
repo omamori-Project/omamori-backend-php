@@ -121,12 +121,12 @@ class ElementService extends BaseService{
         }
 
         // Element 받기
-        $elementIds = $input['element_ids'] ?? null;
+        $elementIds = $input['elementIds'] ?? null;
         if (!is_array($elementIds) || empty($elementIds)){
-            throw new \InvalidArgumentException('element_ids required');
+            throw new \InvalidArgumentException('elementIds required');
         }
         if (count($elementIds) !== count(array_unique($elementIds))){
-            throw new \InvalidArgumentException('element_ids duplicated');
+            throw new \InvalidArgumentException('elementIds duplicated');
         }
 
         // 이 오마모리의 요소인지 확인 (soft delete 제외)
@@ -142,6 +142,16 @@ class ElementService extends BaseService{
             }
         }
 
+        // 누락 방지
+        $allNonBgIds = $this -> elementRepository -> findNonBackgroundIdsByOmamoriId($omamoriId);
+        $req = array_map('intval', $elementIds);
+        $all = array_map('intval', $allNonBgIds);
+        sort($req);
+        sort($all);
+        if($req !== $all){
+            throw new \InvalidArgumentException('Invalid elementIds');
+        }
+
         // 순서대로 layer 재부여
         $idToLayer = [];
         $layer = 1;
@@ -152,6 +162,7 @@ class ElementService extends BaseService{
 
         // 업데이트
         $updatedRows = $this -> elementRepository -> updateLayersBulk($omamoriId, $idToLayer);
+        $this -> elementRepository -> setBackgroundLayerZero($omamoriId);
         return [
             'omamori_id' => (int)$omamoriId,
             'items' => $updatedRows
