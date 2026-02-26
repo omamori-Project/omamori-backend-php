@@ -189,4 +189,19 @@ class ElementRepository extends BaseRepository{
         }
         return $ids;
     }
+
+
+    // 태상 오마모리 요소 전부를 삭제
+    public function softDeleteAllByOmamoriId(int $omamoriId): int{
+        $sql = "UPDATE {$this -> table}
+                SET deleted_at = NOW(),
+                    updated_at = NOW()
+                WHERE omamori_id = ?
+                    AND deleted_at IS NULL";
+        
+        $stmt = $this -> db -> getConnection() -> prepare($sql);
+        $stmt -> execute([$omamoriId]);
+        return $stmt -> rowCount();
+    }
+
 }
