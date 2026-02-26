@@ -8,16 +8,18 @@ use App\Common\Exceptions\ErrorHandler;
 use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
+use App\Modules\Element\Repositories\ElementRepository;
 use App\Modules\Omamori\Repositories\OmamoriRepository;
 use App\Modules\Auth\Services\AuthService;
 
 // 상속
 class OmamoriService extends BaseService{
+    protected Database $db;
     protected OmamoriRepository $omamoriRepository;
 
     public function __construct(){
-        $db = new Database();
-        $this -> omamoriRepository = new OmamoriRepository($db);
+        $this -> db = new Database();
+        $this -> omamoriRepository = new OmamoriRepository($this -> db);
     }
 
 
@@ -293,8 +295,107 @@ class OmamoriService extends BaseService{
         }
         $updated = $this -> omamoriRepository -> updateBackMessage($userId, $omamoriId, $backMessage);
         if(!$updated){
-            throw new \RuntimeException('Update back message faild');
+            throw new \RuntimeException('Update back message failed');
         }
         return $updated;
+    }
+
+    // 오마모리 임시 저장
+    public function saveDraft(string $token, int $omamoriId, array $input): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // 오마모리 확인
+        $current = $this -> omamoriRepository -> findOwnById($userId, $omamoriId);
+        if(!$current){
+            throw new \RuntimeException('Omamori not found');
+        }
+        if(($current['status'] ?? null) !== 'draft'){
+            throw new \RuntimeException('Omamori already published');
+        }
+
+        // 보내는 내용
+        $title = $input['title'] ?? null;
+        if(!is_string($title) || trim($title) === ''){
+            throw new \InvalidArgumentException('title required');
+        }
+        $title = trim($title);
+
+        $meaning = array_key_exists('meaning', $input) ? $input['meaning'] : null;
+        if(is_string($meaning)){
+            $meaning = trim($meaning);
+            if($meaning === '') $meaning = null;
+        }
+        if(!is_null($meaning) && !is_string($meaning)){
+            throw new \InvalidArgumentException('meaning must be string or null');
+        }
+
+        $backMessage = array_key_exists('back_message', $input) ? $input['back_message'] : null;
+        if(is_string($backMessage)){
+            $backMessage = trim($backMessage);
+            if($backMessage === '') $backMessage = null;
+        }
+        if(!is_null($backMessage) && !is_string($backMessage)){
+            throw new \InvalidArgumentException('back_message must be string or null');
+        }
+
+        $fortuneColorId = array_key_exists('applied_fortune_color_id', $input) ? $input['applied_fortune_color_id'] : null;
+        if($fortuneColorId !== null){
+            if(!is_int($fortuneColorId) && !(is_string($fortuneColorId) && ctype_digit($fortuneColorId))){
+                throw new \InvalidArgumentException('applied_fortune_color_id must be int or null');
+            }
+            $fortuneColorId = (int)$fortuneColorId;
+
+            if(!$this -> omamoriRepository -> existsActiveFortuneColor($fortuneColorId)){
+                throw new \InvalidArgumentException('fortune color not active');
+            }
+        }
+
+        $elements = $input['elements'] ?? null;
+        if(!is_array($elements)){
+            throw new \InvalidArgumentException('elements required');
+        }
+        $elementRepo = new ElementRepository($this -> db);
+
+        try{
+            $this -> db -> beginTransaction();
+            $omamoriRow = $this -> omamoriRepository -> saveDraftAll($userId, $omamoriId, $title, $meaning, $backMessage, $fortuneColorId);
+            $elementRepo -> softDeleteAllByOmamoriId($omamoriId);
+            
+            $inserted = [];
+            $layer = 0;
+            foreach($elements as $el){
+                if(!is_array($el)){
+                    throw new \InvalidArgumentException('elements item must be object');
+                }
+
+                $type = $el['type'] ?? null;
+                $props = $el['props'] ?? null;
+                $transform = $el['transform'] ?? null;
+
+                if(!is_string($type) || trim($type) === ''){
+                    throw new \InvalidArgumentException('element.type required');
+                }
+                if(!is_array($props)){
+                    throw new \InvalidArgumentException('element.props required');
+                }
+                if(!is_array($transform)){
+                    throw new \InvalidArgumentException('element.transform required');
+                }
+
+                $inserted[] = $elementRepo -> insert($omamoriId, $type, $layer, $props, $transform);
+                $layer ++;
+            }
+            $this -> db -> commit();
+            return[
+                'omamori' => $omamoriRow,
+                'elements' => $inserted,
+                ];
+
+        }catch(\Exception $e){
+            $this -> db -> rollBack();
+            throw $e;
+        }
     }
 }
