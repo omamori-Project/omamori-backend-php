@@ -1,9 +1,10 @@
 /vendor/
-app/storage/logs/*
+/storage/logs/*
 /storage/cache/*
 /storage/omamori/generated/*
 /storage/omamori/temp/*
 !.gitkeep
+app/storage/logs/*
 
 .env
 .env.backup
