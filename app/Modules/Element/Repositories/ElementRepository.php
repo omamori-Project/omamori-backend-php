@@ -191,7 +191,7 @@ class ElementRepository extends BaseRepository{
     }
 
 
-    // 태상 오마모리 요소 전부를 삭제
+    // 대상 오마모리 요소 전부를 삭제
     public function softDeleteAllByOmamoriId(int $omamoriId): int{
         $sql = "UPDATE {$this -> table}
                 SET deleted_at = NOW(),
