@@ -242,6 +242,21 @@ class ElementService extends BaseService{
     }
 
 
+    // 삭제 성공 후 layer 재정렬(1..N)
+    private function normalizeLayers(int $omamoriId): void{
+        $ids = $this -> elementRepository -> findActiveNonBackgroundIdsOrdered($omamoriId);
+        $idToLayer = [];
+        $layer = 1;
+        foreach($ids as $id){
+            $idToLayer[$id] = $layer;
+            $layer ++;
+        }
+
+        $this -> elementRepository -> updateLayersBulk($omamoriId, $idToLayer);
+        $this -> elementRepository -> setBackgroundLayerZero($omamoriId);
+    }
+
+
     // 요소 삭제
     public function destroyElement(string $token, int $omamoriId, int $elementId): array{
         // 토큰 검증
@@ -263,7 +278,9 @@ class ElementService extends BaseService{
         $deleted = $this -> elementRepository -> softDeleteElement($omamoriId, $elementId);
         if(!$deleted){
             throw new \RuntimeException('Element not found or not allowed');
-        }
+        }        
+
+        $this -> normalizeLayers($omamoriId);
         return $deleted;
     } 
 }

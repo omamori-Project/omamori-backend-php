@@ -170,4 +170,23 @@ class ElementRepository extends BaseRepository{
         // 없으면 null 처리 (404)
         return $row ?: null;
     }
+
+
+    // 삭제되지 않은 non-background 요소를 layer 순으로 가져오기
+    public function findActiveNonBackgroundIdsOrdered(int $omamoriId): array{
+        $sql = "SELECT id
+                FROM {$this -> table}
+                WHERE omamori_id = ?
+                    AND deleted_at IS NULL
+                    AND type <> 'background'
+                ORDER BY layer ASC, id ASC";
+
+        $rows = $this -> db -> query($sql, [$omamoriId]);
+
+        $ids = [];
+        foreach($rows as $row){
+            $ids[] = (int)$row['id'];
+        }
+        return $ids;
+    }
 }
