@@ -59,3 +59,8 @@ $router -> post('/api/omamoris/[i:omamoriId]/elements/reorder', function($reques
 $router -> patch('/api/omamoris/[i:omamoriId]/elements/[i:elementId]', function($request){
     return (new ElementController()) -> updateElement($request);
 }, 'omamoriElements.update');
+
+// 오마모리 요소 삭제
+$router -> delete('/api/omamoris/[i:omamoriId]/elements/[i:elementId]', function($request){
+    return (new ElementController()) -> destroy($request);
+}, 'omamoriElements.delete');

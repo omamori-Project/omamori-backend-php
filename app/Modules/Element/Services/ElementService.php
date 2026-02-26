@@ -240,4 +240,47 @@ class ElementService extends BaseService{
         $updated['transform'] = is_string($updated['transform']) ? json_decode($updated['transform'], true) : $updated['transform'];
         return $updated;
     }
+
+
+    // 삭제 성공 후 layer 재정렬(1..N)
+    private function normalizeLayers(int $omamoriId): void{
+        $ids = $this -> elementRepository -> findActiveNonBackgroundIdsOrdered($omamoriId);
+        $idToLayer = [];
+        $layer = 1;
+        foreach($ids as $id){
+            $idToLayer[$id] = $layer;
+            $layer ++;
+        }
+
+        $this -> elementRepository -> updateLayersBulk($omamoriId, $idToLayer);
+        $this -> elementRepository -> setBackgroundLayerZero($omamoriId);
+    }
+
+
+    // 요소 삭제
+    public function destroyElement(string $token, int $omamoriId, int $elementId): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // 오마모리 존재 확인
+        $omamori = $this -> omamoriRepository -> findOwnById($userId, $omamoriId);
+        if(!$omamori){
+            throw new \RuntimeException('Omamori not found or not allowed');
+        }
+
+        // 요소 존재 학인(소속 + 미삭제)
+        $element = $this -> elementRepository -> findActiveElementByOmamoriId($omamoriId, $elementId);
+        if(!$element){
+            throw new \RuntimeException('Element not found or not allowed');
+        }
+
+        $deleted = $this -> elementRepository -> softDeleteElement($omamoriId, $elementId);
+        if(!$deleted){
+            throw new \RuntimeException('Element not found or not allowed');
+        }        
+
+        $this -> normalizeLayers($omamoriId);
+        return $deleted;
+    } 
 }

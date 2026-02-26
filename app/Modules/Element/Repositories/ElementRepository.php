@@ -139,4 +139,54 @@ class ElementRepository extends BaseRepository{
         }
         return $row;
     }
+
+
+    // 오마모리 요소 한개만 조회
+    public function findActiveElementByOmamoriId(int $omamoriId, int $elementId): ?array{
+        $sql = "SELECT id, omamori_id, type, layer, props, transform, created_at, updated_at, deleted_at
+                FROM {$this -> table}
+                WHERE omamori_id = ?
+                    AND id = ?
+                    AND deleted_at IS NULL
+                    AND type <> 'background'";
+
+        $row = $this -> db -> queryOne($sql, [$omamoriId, $elementId]);
+        return $row ?: null;
+    }
+
+
+    // element 삭제
+    public function softDeleteElement(int $omamoriId, int $elementId): ?array{
+        $sql = "UPDATE {$this -> table}
+                SET deleted_at = NOW(),
+                    updated_at = NOW()
+                WHERE omamori_id = ?
+                    AND id = ?
+                    AND deleted_at IS NULL
+                    AND type <> 'background'
+                RETURNING id, omamori_id, deleted_at, updated_at";
+        
+        $row = $this -> db -> queryOne($sql, [$omamoriId, $elementId]);
+        // 없으면 null 처리 (404)
+        return $row ?: null;
+    }
+
+
+    // 삭제되지 않은 non-background 요소를 layer 순으로 가져오기
+    public function findActiveNonBackgroundIdsOrdered(int $omamoriId): array{
+        $sql = "SELECT id
+                FROM {$this -> table}
+                WHERE omamori_id = ?
+                    AND deleted_at IS NULL
+                    AND type <> 'background'
+                ORDER BY layer ASC, id ASC";
+
+        $rows = $this -> db -> query($sql, [$omamoriId]);
+
+        $ids = [];
+        foreach($rows as $row){
+            $ids[] = (int)$row['id'];
+        }
+        return $ids;
+    }
 }

@@ -240,4 +240,23 @@ class OmamoriRepository extends BaseRepository{
         }
         return $row;
     }
+
+
+    // 삭제되지 않은 non-background 요소를 layer 순으로 가져오기
+public function findActiveNonBackgroundIdsOrdered(int $omamoriId): array{
+    $sql = "SELECT id
+            FROM {$this -> table}
+            WHERE omamori_id = ?
+              AND deleted_at IS NULL
+              AND type <> 'background'
+            ORDER BY layer ASC, id ASC";
+            
+    $rows = $this -> db  ->query($sql, [$omamoriId]);
+
+    $ids = [];
+    foreach($rows as $row){
+        $ids[] = (int)$row['id'];
+    }
+    return $ids;
+}
 }
