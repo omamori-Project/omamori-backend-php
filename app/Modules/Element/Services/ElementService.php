@@ -242,7 +242,7 @@ class ElementService extends BaseService{
     }
 
 
-    // 삭제 성공 후 layer 재정렬(1..N)
+     // 삭제 성공 후 layer 재정렬(1..N)
     private function normalizeLayers(int $omamoriId): void{
         $ids = $this -> elementRepository -> findActiveNonBackgroundIdsOrdered($omamoriId);
         $idToLayer = [];
