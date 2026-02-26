@@ -64,3 +64,8 @@ $router -> patch('/api/omamoris/[i:omamoriId]/elements/[i:elementId]', function(
 $router -> delete('/api/omamoris/[i:omamoriId]/elements/[i:elementId]', function($request){
     return (new ElementController()) -> destroy($request);
 }, 'omamoriElements.delete');
+
+// 오마모리 입시 저장
+$router -> post('/api/omamoris/[i:omamoriId]/save-draft', function($request){
+    return (new OmamoriController()) -> saveDraft($request);
+}, 'omamoris.save-draft');

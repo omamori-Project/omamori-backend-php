@@ -8,7 +8,7 @@ use App\Common\Exceptions\ErrorHandler;
 use App\Core\Request;
 use App\Core\Response;
 use App\Modules\Omamori\Services\OmamoriService;
-use Error;
+
 
 // 상속
 class OmamoriController extends BaseController{
@@ -201,7 +201,30 @@ class OmamoriController extends BaseController{
             $input = $request -> input();
 
             $result = $this -> omamoriService -> updateBackMessage($token, $omamoriId, $input);
-            return $this -> success($result, 'Updated back messgage');
+            return $this -> success($result, 'Updated back message');
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 오마모리 임시 저장
+    public function saveDraft(Request $request): Response{
+        try{
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $omamoriId = (int)$request -> param('omamoriId', 0);
+            if($omamoriId <= 0){
+                return $this -> error('Invalid omamoriId');
+            }
+            $input = $request->input();
+
+            $result = $this -> omamoriService -> saveDraft($token, $omamoriId, $input);
+            return $this -> success($result, 'OK', 200);
 
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);

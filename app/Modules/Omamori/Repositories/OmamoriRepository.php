@@ -190,7 +190,7 @@ class OmamoriRepository extends BaseRepository{
 
         $row = $this -> db -> queryOne($sql, [$omamoriId, $userId]);
         if(!$row){
-            throw new \RuntimeException('Delete faild');
+            throw new \RuntimeException('Delete failed');
         }
         return $row;
     }
@@ -207,7 +207,7 @@ class OmamoriRepository extends BaseRepository{
         
         $row = $this -> db -> queryOne($sql, [$backMessage, $omamoriId, $userId]);
         if(!$row){
-            throw new \RuntimeException('Update back message faild');
+            throw new \RuntimeException('Update back message failed');
         }
         return $row ?: null;
     }
@@ -242,21 +242,27 @@ class OmamoriRepository extends BaseRepository{
     }
 
 
-    // 삭제되지 않은 non-background 요소를 layer 순으로 가져오기
-public function findActiveNonBackgroundIdsOrdered(int $omamoriId): array{
-    $sql = "SELECT id
-            FROM {$this -> table}
-            WHERE omamori_id = ?
-              AND deleted_at IS NULL
-              AND type <> 'background'
-            ORDER BY layer ASC, id ASC";
-            
-    $rows = $this -> db  ->query($sql, [$omamoriId]);
+    // 임시 저장
+    public function saveDraftAll(int $userId, int $omamoriId, string $title, ?string $meaning, ?string $backMessage, ?int $fortuneColorId): array{
+        $sql = "UPDATE {$this -> table}
+                SET title = ?,
+                    meaning = ?,
+                    back_message = ?,
+                    applied_fortune_color_id = ?,
+                    status = 'draft',
+                    published_at = NULL,
+                    updated_at = NOW()
+                WHERE id = ?
+                    AND user_id = ?
+                    AND deleted_at IS NULL
+                    AND status = 'draft'
+                RETURNING id, user_id, title, meaning, status, back_message, applied_fortune_color_id, published_at, created_at, updated_at, deleted_at";
 
-    $ids = [];
-    foreach($rows as $row){
-        $ids[] = (int)$row['id'];
+        $row = $this -> db -> queryOne($sql, [$title, $meaning, $backMessage, $fortuneColorId, $omamoriId, $userId]);
+               
+        if(!$row){
+            throw new \RuntimeException('Save draft failed');
+        }
+        return $row;
     }
-    return $ids;
-}
 }
