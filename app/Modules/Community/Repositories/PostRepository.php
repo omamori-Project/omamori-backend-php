@@ -19,9 +19,9 @@ class PostRepository extends BaseRepository{
     // 게시글 작성
     public function createPost(array $data): int{
         $sql = "INSERT INTO {$this -> table}
-                    (user_id, omamori_id, title, content, created_at, updated_at)
+                    (user_id, omamori_id, title, content)
                 VALUES
-                    (?, ?, ?, ?, NOW(), NOW())
+                    (?, ?, ?, ?)
                 RETURNING id";
 
         $result = $this -> db -> queryOne($sql, [
