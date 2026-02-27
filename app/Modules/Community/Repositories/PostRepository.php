@@ -36,7 +36,7 @@ class PostRepository extends BaseRepository{
 
     // 전체 게시글 목록 조회 (공개 피드)
     public function findPublishedPostById(int $postId): ?array{
-        $sql = "SELECT id, user_id, omamori_id, title, content, created_at, updated_at
+        $sql = "SELECT id, user_id, omamori_id, title, content, like_count, comment_count, bookmark_count, created_at, updated_at
                 FROM {$this -> table}
                 WHERE id = ?
                     AND status = 'published'
