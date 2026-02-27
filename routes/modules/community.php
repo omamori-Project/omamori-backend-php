@@ -1,10 +1,11 @@
 <?php
 
-use App\Modules\Community\Controllers\CommunityController;
+// import
+use App\Modules\Community\Controllers\PostController;
 
 global $router;
 
 // 게시글 작성
-$router -> post('/api/post/', function($request){
-    return (new CommunityController()) -> post($request);
+$router -> post('/api/posts/', function($request){
+    return (new PostController()) -> post($request);
 }, 'omamoris.community.post');
