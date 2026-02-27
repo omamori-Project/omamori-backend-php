@@ -7,6 +7,7 @@ use App\Common\Base\BaseService;
 use App\Core\Database;
 use App\Modules\Auth\Services\AuthService;
 use App\Modules\Community\Repositories\PostRepository;
+use RuntimeException;
 
 // 상속
 class PostService extends BaseService{
@@ -51,5 +52,12 @@ class PostService extends BaseService{
     }
 
 
-
+    // 전체 게시글 목록 조회 (공개 피드)
+    public function showPublishedPost(int $postId): array{
+        $post = $this -> postRepository -> findPublishedPostById($postId);
+        if(!$post){
+            throw new RuntimeException('Post not found');
+        }
+        return $post;
+    }
 }
