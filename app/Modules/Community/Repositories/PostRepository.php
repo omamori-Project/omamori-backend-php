@@ -36,12 +36,9 @@ class PostRepository extends BaseRepository{
 
     // 전체 게시글 목록 조회 (공개 피드)
     public function findPostsForFeed(int $page, int $size, string $sort): array{
-        $allowedSort = ['latest', 'popular'];
-        if (!in_array($sort, $allowedSort, true)) {
-            $sort = 'latest';
-        }
+        $Sort = in_array($sort, ['latest', 'popular']);
 
-        $orderBy = $sort === 'popular' ? 'like_count DESC, created_at DESC' : 'created_at DESC';
+        $orderBy = ($sort === 'popular') ? 'like_count DESC, created_at DESC' : 'created_at DESC';
         $offset = ($page - 1) * $size;
 
         $sql = "SELECT id, user_id, omamori_id, title, content, like_count, comment_count, bookmark_count, created_at, updated_at
@@ -58,7 +55,7 @@ class PostRepository extends BaseRepository{
                 WHERE deleted_at IS NULL";
 
         $row = $this -> db -> queryOne($sql);
-        return (int)$row['cnt'];
+        return (int)($row['cnt'] ?? 0);
     }
 
     // public function findPublishedPostById(int $postId): ?array{
