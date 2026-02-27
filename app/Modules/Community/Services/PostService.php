@@ -11,26 +11,26 @@ use App\Modules\Community\Repositories\PostRepository;
 // 상속
 class PostService extends BaseService{
     protected Database $db;
-    protected PostRepository $postrepository;
+    protected PostRepository $postRepository;
 
     public function __construct()
     {
         $this -> db = new Database();
-        $this -> postrepository = new PostRepository($this -> db);
+        $this -> postRepository = new PostRepository($this -> db);
     }
 
 
     // 게시글 작성
-    public function createPost(string $token, array $input){
+    public function createPost(string $token, array $input): array{
         // 토큰 겁증
         $auth = new AuthService();
         $userId = $auth -> verifyAndGetUserId($token);
 
         // 입력값 검증
-        $this -> validateRequired($input, ['title', 'content']);
+        $this -> validateRequired($input, ['title', 'content', 'omamori_id']);
 
         // 숫자인지만 체크
-        if(isset($input['omamori_id']) && !is_numeric($input['omamori_id'])){
+        if(!is_numeric($input['omamori_id'])){
             throw new \InvalidArgumentException('Omamori_id must be number');
         }
 
@@ -43,7 +43,7 @@ class PostService extends BaseService{
         ];
 
         // postId 보내기
-        $postId = $this -> postrepository -> createPost($data);
+        $postId = $this -> postRepository -> createPost($data);
 
         // postId 받기
         return ['id' => $postId];
