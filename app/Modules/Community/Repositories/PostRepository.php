@@ -25,7 +25,7 @@ class PostRepository extends BaseRepository{
                 RETURNING id";
 
         $result = $this -> db -> queryOne($sql, [
-            $data['user_id,'],
+            $data['user_id'],
             $data['omamori_id'],
             $data['title'],
             $data['content']
