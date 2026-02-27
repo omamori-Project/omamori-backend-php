@@ -40,4 +40,15 @@ class PostController extends BaseController{
         }
     }
 
+
+    // 전체 게시글 목록 조회 (공개 피드)
+    public function index(Request $request): Response{
+        try{
+            $query = $request -> input();
+            $result = $this -> postService -> index($query);
+            return $this -> success($result, 'OK', 200);
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
