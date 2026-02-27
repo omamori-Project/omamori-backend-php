@@ -53,11 +53,34 @@ class PostService extends BaseService{
 
 
     // 전체 게시글 목록 조회 (공개 피드)
-    public function showPublishedPost(int $postId): array{
-        $post = $this -> postRepository -> findPublishedPostById($postId);
-        if(!$post){
-            throw new RuntimeException('Post not found');
-        }
-        return $post;
+    public function index(array $query): array{
+        $page = isset($query['page']) && is_numeric($query['page']) ? (int)$query['page'] : 1;
+        $size = isset($query['size']) && is_numeric($query['size']) ? (int)$query['size'] : 10;
+        $sort = isset($query['sort']) ? (string)$query['sort'] : 'latest';
+
+        if ($page < 1) $page = 1;
+        if ($size < 1) $size = 1;
+        if ($size > 50) $size = 50;
+
+        $items = $this -> postRepository -> findPostsForFeed($page, $size, $sort);
+        $total = $this -> postRepository -> countPostsForFeed();
+
+        return [
+            'items' => $items,
+            'meta' => [
+                'page' => $page,
+                'size' => $size,
+                'total' => $total,
+                'sort' => $sort,
+            ],
+        ];
     }
+
+    // public function showPublishedPost(int $postId): array{
+    //     $post = $this -> postRepository -> findPublishedPostById($postId);
+    //     if(!$post){
+    //         throw new RuntimeException('Post not found');
+    //     }
+    //     return $post;
+    // }
 }
