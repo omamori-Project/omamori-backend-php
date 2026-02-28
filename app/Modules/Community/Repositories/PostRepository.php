@@ -65,7 +65,6 @@ class PostRepository extends BaseRepository{
         $sql = "SELECT id, user_id, omamori_id, title, content, like_count, comment_count, bookmark_count, created_at, updated_at
                 FROM {$this -> table}
                 WHERE id = ?
-                    AND status = 'published'
                     AND deleted_at IS NULL
                 LIMIT 1";
 
