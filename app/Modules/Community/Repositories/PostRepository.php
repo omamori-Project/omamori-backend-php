@@ -53,7 +53,8 @@ class PostRepository extends BaseRepository{
     public function countPostsForFeed(): int{
         $sql = "SELECT COUNT(*) AS cnt
                 FROM {$this -> table}
-                WHERE deleted_at IS NULL";
+                WHERE deleted_at IS NULL
+                    AND status = 'published'";
 
         $row = $this -> db -> queryOne($sql);
         return (int)($row['cnt'] ?? 0);
