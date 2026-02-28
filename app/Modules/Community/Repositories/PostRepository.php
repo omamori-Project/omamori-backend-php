@@ -44,7 +44,6 @@ class PostRepository extends BaseRepository{
         $sql = "SELECT id, user_id, omamori_id, title, content, like_count, comment_count, bookmark_count, created_at, updated_at
                 FROM {$this -> table}
                 WHERE deleted_at IS NULL
-                    AND status = 'published'
                 ORDER BY {$orderBy}
                 LIMIT ? OFFSET ?";
         return $this -> db -> query($sql, [$size, $offset]);
@@ -53,8 +52,7 @@ class PostRepository extends BaseRepository{
     public function countPostsForFeed(): int{
         $sql = "SELECT COUNT(*) AS cnt
                 FROM {$this -> table}
-                WHERE deleted_at IS NULL
-                    AND status = 'published'";
+                WHERE deleted_at IS NULL";
 
         $row = $this -> db -> queryOne($sql);
         return (int)($row['cnt'] ?? 0);
@@ -79,7 +77,6 @@ class PostRepository extends BaseRepository{
                 FROM post_likes
                 WHERE post_id = ?
                     AND user_id = ?
-                    AND deleted_at IS NULL
                 LIMIT 1";
 
         $result = $this -> db -> queryOne($sql, [$postId, $userId]);
@@ -93,7 +90,6 @@ class PostRepository extends BaseRepository{
                 FROM post_bookmarks
                 WHERE post_id = ?
                     AND user_id = ?
-                    AND deleted_at IS NULL
                 LIMIT 1";
         
         $result = $this -> db -> queryOne($sql, [$postId, $userId]);
