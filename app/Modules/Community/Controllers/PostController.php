@@ -52,4 +52,19 @@ class PostController extends BaseController{
 
         }
     }
+
+
+    // 상세 조회
+    public function show(Request $request, int $postId): Response{
+        try{
+            // token select
+            $token = $request -> bearerToken();
+
+            $result = $this -> postService -> showPublishedPost($token, $postId);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
