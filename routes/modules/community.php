@@ -17,5 +17,5 @@ $router -> get('/api/posts', function($request){
 
 // 상세 조회
 $router -> get('/api/posts/[i:postId]', function($request, $postId){
-    return (new PostController()) -> show($request, (int)$postId);
+    return (new PostController()) -> show($request);
 }, 'omamoris.community.show');
