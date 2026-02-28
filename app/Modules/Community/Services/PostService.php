@@ -76,11 +76,36 @@ class PostService extends BaseService{
         ];
     }
 
-    // public function showPublishedPost(int $postId): array{
-    //     $post = $this -> postRepository -> findPublishedPostById($postId);
-    //     if(!$post){
-    //         throw new RuntimeException('Post not found');
-    //     }
-    //     return $post;
-    // }
+    public function showPublishedPost(?string $token, int $postId): array{
+        // postId 검증
+        if($postId < 1){
+            throw new \InvalidArgumentException('posts must be positive integer');
+        }
+
+        // 게시글 조회
+        $post = $this -> postRepository -> findPublishedPostById($postId);
+        if(!$post){
+            throw new RuntimeException('Post not found');
+        }
+
+        // 로그인 안 해도 항상 내려줌
+        $viewer = [
+            'is_liked' => false,
+            'is_bookmarked' => false,
+        ];
+
+        // 로그인 사용자 기준으로 viewer 상태 계산
+        if($token){
+            $auth = new AuthService();
+            $userId = (int)$auth -> verifyAndGetUserId($token);
+
+            $viewer['is_liked'] = $this -> postRepository -> existsLike($postId, $userId);
+            $viewer['is_bookmarked'] = $this -> postRepository -> existsBookmark($postId, $userId);
+        }
+
+        return [
+            'post' => $post,
+            'viewer' => $viewer,
+        ];
+    }
 }

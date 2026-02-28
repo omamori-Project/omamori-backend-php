@@ -13,4 +13,9 @@ $router -> post('/api/posts', function($request){
 // 전체 게시글 목록 조회 (공개 피드)
 $router -> get('/api/posts', function($request){
     return (new PostController()) -> index($request);
+}, 'omamoris.community.index');
+
+// 상세 조회
+$router -> get('/api/posts/[i:postId]', function($request){
+    return (new PostController()) -> show($request);
 }, 'omamoris.community.show');

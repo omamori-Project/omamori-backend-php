@@ -52,4 +52,27 @@ class PostController extends BaseController{
 
         }
     }
+
+
+    // 상세 조회
+    public function show(Request $request): Response{
+        try{
+            //  토큰 겁증
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $postId = (int)$request -> param('postId', 0);
+            if(!$postId){
+                return $this -> error('Invalid postId');
+            }
+
+            $result = $this -> postService -> showPublishedPost($token, $postId);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
