@@ -98,28 +98,35 @@ class PostRepository extends BaseRepository{
 
 
     // 특정 유저 게시글 목록 조회
-    public function findPostsByUserId(int $userId, int $page, int $size, string $sort = 'latest'): array{
-        $orderBy = 'creates_at DESC';
+    public function paginateByUserId(int $userId, int $page, int $size, array $orderBy = ['created_at' => 'DESC']): array{
+        $orderParts = [];
+        foreach($orderBy as $column => $direction){
+            $orderParts[] = "{$column} {$direction}";
+        }
+        $orderBySql = !empty($orderParts) ? implode(', ', $orderParts) : 'created_at DESC';
+
         $offset = ($page - 1) * $size;
-        $sql = "SELECT id, user_id, omamori_id, title, content, lile_count, comment_count, bookmark_count, created_at, updated_at
+
+        $sql = "SELECT id, user_id, omamori_id, title, content, like_count, comment_count, bookmark_count, created_at, updated_at
                 FROM {$this -> table}
-                WHERE user_id = ?
-                    AND deleted_at IS NULL
-                ORDER BY {$orderBy}
-                LIMIT ? OFFSET ?";
+                 WHERE user_id = ?
+                   AND deleted_at IS NULL
+                 ORDER BY {$orderBySql}
+                 LIMIT ? OFFSET ?";
 
-        return $this -> db -> queryOne($sql, [$userId, $size, $offset]);
-    }
+        $items = $this -> db -> query($sql, [$userId, $size, $offset]);
 
-
-    // 특정 유저 게시글 총 개수
-    public function countPostsByUserId(int $userId): int{
-        $sql = "SELECT COUNT(*) AS cnt
-                FROM {$this -> table}
-                WHERE user_id = ?
+        $sqlTotal = "SELECT COUNT(*) AS cnt
+                  FROM {$this->table}
+                  WHERE user_id = ?
                     AND deleted_at IS NULL";
 
-        $row = $this -> db -> queryOne($sql, [$userId]);
-        return (int)($row['cnt'] ?? 0);
+        $row = $this->db->queryOne($sqlTotal, [$userId]);
+        $total = (int)($row['cnt'] ?? 0);
+
+        return [
+            'items' => is_array($items) ? $items : [],
+            'total' => $total,
+        ];
     }
 }
