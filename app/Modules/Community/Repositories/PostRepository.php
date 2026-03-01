@@ -95,4 +95,31 @@ class PostRepository extends BaseRepository{
         $result = $this -> db -> queryOne($sql, [$postId, $userId]);
         return $result ? true : false;
     }
+
+
+    // 특정 유저 게시글 목록 조회
+    public function findPostsByUserId(int $userId, int $page, int $size, string $sort = 'latest'): array{
+        $orderBy = 'creates_at DESC';
+        $offset = ($page - 1) * $size;
+        $sql = "SELECT id, user_id, omamori_id, title, content, lile_count, comment_count, bookmark_count, created_at, updated_at
+                FROM {$this -> table}
+                WHERE user_id = ?
+                    AND deleted_at IS NULL
+                ORDER BY {$orderBy}
+                LIMIT ? OFFSET ?";
+
+        return $this -> db -> queryOne($sql, [$userId, $size, $offset]);
+    }
+
+
+    // 특정 유저 게시글 총 개수
+    public function countPostsByUserId(int $userId): int{
+        $sql = "SELECT COUNT(*) AS cnt
+                FROM {$this -> table}
+                WHERE user_id = ?
+                    AND deleted_at IS NULL";
+
+        $row = $this -> db -> queryOne($sql, [$userId]);
+        return (int)($row['cnt'] ?? 0);
+    }
 }
