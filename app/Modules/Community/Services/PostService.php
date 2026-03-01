@@ -108,4 +108,44 @@ class PostService extends BaseService{
             'viewer' => $viewer,
         ];
     }
+
+
+    // 특정 유저 게시글 목록 조회
+    public function indexByUser(int $userId, array $query): array{
+        // 사용자 검증
+        if($userId < 1){
+            throw new \InvalidArgumentException('userId must be positive integer');
+        }
+
+        // query 정규화
+        $page = isset($query['page']) && is_numeric($query['page']) ? (int)$query['page'] : 1;
+        $size = isset($query['size']) && is_numeric($query['size']) ? (int)$query['size'] : 10;
+        $sort = isset($query['sort']) ? (string)$query['sort'] : 'latest';
+
+        if(!in_array($sort, ['latest', 'popular'])) $sort = 'latest';
+        if($page < 1) $page = 1;
+        if($size < 1) $size = 1;
+        if($size > 50) $size = 50;
+
+        // sort(string) -> orderBy(array)변환
+        $orderBy = ['created_at' => 'DESC'];
+        if($sort === 'popular'){
+            $orderBy = [
+                'like_count' => 'DESC',
+                'created_at' => 'DESC',
+            ];
+        }
+
+        $p = $this -> postRepository -> paginateByUserId($userId, $page, $size, $orderBy);
+        return [
+            'items' => $p['items'],
+            'meta' => [
+                'page' => $page,
+                'size' => $size,
+                'total' => $p['total'],
+                'sort' => $sort,
+            ],
+        ];
+    }
+
 }

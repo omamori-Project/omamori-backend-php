@@ -75,4 +75,23 @@ class PostController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 특정 유저 게시글 목록 조회
+    public function indexByUser(Request $request): Response{
+        try{
+            // 토큰 겁증
+            $userId = (int)$request -> param('userId', 0);
+            if(!$userId){
+                return $this -> error('Invalid userId');
+            }
+
+            $query = $_GET;
+            $result = $this -> postService -> indexByUser($userId, $query);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
