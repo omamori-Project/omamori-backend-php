@@ -108,4 +108,37 @@ class PostService extends BaseService{
             'viewer' => $viewer,
         ];
     }
+
+
+    // 특정 유저 게시글 목록 조회
+    public function indexByUser(int $userId, array $query): array{
+        // 사용자 검증
+        if($userId < 1){
+            throw new \InvalidArgumentException('userId must be positive integer');
+        }
+
+        // query 정규화
+        $page = isset($query['page']) && is_numeric($query['page']) ? (int)$query['page'] : 1;
+        $size = isset($query['size']) && is_numeric($query['size']) ? (int)$query['size'] : 10;
+    
+        // latest로 고정
+        $sort = isset($query['sort']) ? (string)$query['sort'] : 'latest';
+        if($page < 1) $page = 1;
+        if($size < 1) $size = 1;
+        if($size > 50) $size = 50;
+
+        // repository 호출
+        $items = $this -> postRepository -> findPublishedPostById($userId, $page, $size, $sort);
+        $total = $this -> postRepository -> countPostsByUserId($userId);
+        return[
+            'items' => $items,
+            'meta' => [
+                'page' => $page,
+                'size' => $size,
+                'total' => $total,
+                'sort' => $sort,
+            ],
+        ];
+    }
+
 }
