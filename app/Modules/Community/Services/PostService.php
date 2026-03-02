@@ -58,6 +58,7 @@ class PostService extends BaseService{
         $size = isset($query['size']) && is_numeric($query['size']) ? (int)$query['size'] : 10;
         $sort = isset($query['sort']) ? (string)$query['sort'] : 'latest';
 
+        if(!in_array($sort, ['latest', 'popular'], true)) $sort = 'latest';
         if ($page < 1) $page = 1;
         if ($size < 1) $size = 1;
         if ($size > 50) $size = 50;
@@ -122,7 +123,7 @@ class PostService extends BaseService{
         $size = isset($query['size']) && is_numeric($query['size']) ? (int)$query['size'] : 10;
         $sort = isset($query['sort']) ? (string)$query['sort'] : 'latest';
 
-        if(!in_array($sort, ['latest', 'popular'])) $sort = 'latest';
+        if(!in_array($sort, ['latest', 'popular'], true)) $sort = 'latest';
         if($page < 1) $page = 1;
         if($size < 1) $size = 1;
         if($size > 50) $size = 50;
@@ -191,7 +192,7 @@ class PostService extends BaseService{
             throw new RuntimeException('Post not found');
         }
         
-        if((int)$post['usser_id'] !== (int)$userId){
+        if((int)$post['user_id'] !== (int)$userId){
             throw new RuntimeException('Forbidden');
         }
 
@@ -214,11 +215,11 @@ class PostService extends BaseService{
     public function deletePost(string $token, int $postId): array{
         // 토큰 검증
         $auth = new AuthService();
-        $userId = $auth -> verifyAndGetUserId($token);
+        $userId = (int)$auth->verifyAndGetUserId($token);
 
         // 존제 확인
         $post = $this -> postRepository -> findPublishedPostById($postId);
-        if(!$postId){
+        if(!$post){
             throw new \RuntimeException('Post not found');
         }
 

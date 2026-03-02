@@ -60,12 +60,9 @@ class PostController extends BaseController{
         try{
             //  토큰 겁증
             $token = $request -> bearerToken();
-            if(!$token){
-                return $this -> unauthorized('Token required');
-            }
 
             $postId = (int)$request -> param('postId', 0);
-            if($postId < 1){
+            if($postId <= 0){
                 return $this -> error('Invalid postId');
             }
 
@@ -83,11 +80,11 @@ class PostController extends BaseController{
         try{
             // 토큰 겁증
             $userId = (int)$request -> param('userId', 0);
-            if(!$userId){
+            if($userId <= 0){
                 return $this -> error('Invalid userId');
             }
 
-            $query = $_GET;
+            $query = $request -> query();
             $result = $this -> postService -> indexByUser($userId, $query);
             return $this -> success($result, 'OK', 200);
 
@@ -108,14 +105,7 @@ class PostController extends BaseController{
 
             // postId
             $postId = (int)$request -> param('postId', 0);
-            if($postId < 1){
-                $uri = $_SERVER['REQUEST_URI'] ?? '';
-                
-                if(preg_match('~/(api/)?posts/(\d+)~', $uri, $m)){
-                    $postId = (int)$m[2]; // 숫자는 2번 그룹
-                }
-            }
-            if($postId < 1){
+            if($postId <= 0){
                 return $this -> error('Invalid postId');
             }
 
@@ -140,6 +130,10 @@ class PostController extends BaseController{
             }
 
             $postId = (int)$request -> param('postId', 0);
+            if($postId < 1){
+                return $this -> error('Invalid postId');
+            }
+
             $result = $this -> postService -> deletePost($token, $postId);
             return $this -> success($result, 'Deleted', 200);
 
