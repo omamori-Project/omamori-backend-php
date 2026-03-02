@@ -44,7 +44,7 @@ class PostController extends BaseController{
     // 전체 게시글 목록 조회 (공개 피드)
     public function index(Request $request): Response{
         try{
-            $query = $_GET;
+            $query = $request -> query();
             $result = $this -> postService -> index($query);
             return $this -> success($result, 'OK', 200);
         }catch(\Exception $e){
@@ -65,7 +65,7 @@ class PostController extends BaseController{
             }
 
             $postId = (int)$request -> param('postId', 0);
-            if(!$postId){
+            if($postId < 1){
                 return $this -> error('Invalid postId');
             }
 
@@ -145,6 +145,25 @@ class PostController extends BaseController{
 
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 내 게시글 목록 조회
+    public function indexByMe(Request $request): Response{
+        try{
+            // 토큰 검증
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $query = $request -> query();
+            $result = $this -> postService -> indexByMe($token, $query);
+
+            return $this -> success($result, 'OK', 200);
+        }catch(\Exception $e){
+            return ErrorHandler::handle($e);
         }
     }
 }
