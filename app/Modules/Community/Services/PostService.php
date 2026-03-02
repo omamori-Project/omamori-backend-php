@@ -209,4 +209,30 @@ class PostService extends BaseService{
         return $updated;
     }
 
+
+    // 게시글 삭제
+    public function deletePost(string $token, int $postId): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // 존제 확인
+        $post = $this -> postRepository -> findPublishedPostById($postId);
+        if(!$postId){
+            throw new \RuntimeException('Post not found');
+        }
+
+        // 사용자 확인
+        if((int)$post['user_id'] !== (int)$userId){
+            throw new \RuntimeException('Forbidden');
+        }
+
+        // soft delete
+        $affected = $this -> postRepository -> deletePost($postId);
+        if($affected === 0){
+            throw new \RuntimeException('Delete faild');
+        }
+        return ['post' => $postId];
+    }
+
 }
