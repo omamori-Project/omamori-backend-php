@@ -56,6 +56,7 @@ class PostController extends BaseController{
 
     // 상세 조회
     public function show(Request $request): Response{
+        
         try{
             //  토큰 겁증
             $token = $request -> bearerToken();
@@ -88,6 +89,39 @@ class PostController extends BaseController{
 
             $query = $_GET;
             $result = $this -> postService -> indexByUser($userId, $query);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 게시글 수정
+    public function update(Request $request): Response{
+        try{
+            // 토큰 검증
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            // postId
+            $postId = (int)$request -> param('postId', 0);
+            if($postId < 1){
+                $uri = $_SERVER['REQUEST_URI'] ?? '';
+                
+                if(preg_match('~/(api/)?posts/(\d+)~', $uri, $m)){
+                    $postId = (int)$m[2]; // 숫자는 2번 그룹
+                }
+            }
+            if($postId < 1){
+                return $this -> error('Invalid postId');
+            }
+
+            // Json body
+            $input = $request -> input();
+            $result = $this -> postService -> updatePost($token, $postId, $input);
             return $this -> success($result, 'OK', 200);
 
         }catch(\Exception $e){
