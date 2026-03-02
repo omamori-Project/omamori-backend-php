@@ -129,4 +129,30 @@ class PostRepository extends BaseRepository{
             'total' => $total,
         ];
     }
+
+
+    // 게시글 수정
+    public function updatePost(int $postId, array $data): int{
+        // 허용 필드만 남기기
+        $allowed = ['title', 'content', 'updated_at'];
+        $filtered = array_intersect_key($allowed);
+        if(empty($filtered)){
+            throw new \InvalidArgumentException('No fields to update');
+        }
+
+        $setParts = [];
+        $params = [];
+        foreach($filtered as $key => $value){
+            $setParts[] = "{$key} = ?";
+            $params[] = $value;
+        }
+
+        $setSql = implode(', ', $setParts);
+        $sql = "UPDATE {$this -> table}
+                SET {$setSql}
+                    AND deleted_at IS NULL";
+        
+        $params[] = $postId;
+        return $this -> db -> execute($sql, $params);
+    }
 }

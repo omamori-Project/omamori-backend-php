@@ -23,4 +23,9 @@ $router -> get('/api/posts/[i:postId]', function($request){
 // 특정 유저 게시글 목록 조회
 $router -> get('/api/users/[i:userId]/posts', function($request){
     return (new PostController()) -> indexByUser($request);
-}, 'omamoris.community.');
+}, 'omamoris.community.indexByUser');
+
+// 게시글 수정
+$router -> patch('/api/posts/[i:postId]', function($request){
+    return (new PostController()) -> update($request);
+}, 'omamoris.community.update');
