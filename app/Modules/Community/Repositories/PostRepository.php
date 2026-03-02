@@ -36,7 +36,7 @@ class PostRepository extends BaseRepository{
 
     // 전체 게시글 목록 조회 (공개 피드)
     public function findPostsForFeed(int $page, int $size, string $sort): array{
-        $sort = in_array($sort, ['latest', 'popular']);
+        if(!in_array($sort, ['latest', 'popular'], true)) $sort = 'latest';
 
         $orderBy = ($sort === 'popular') ? 'like_count DESC, created_at DESC' : 'created_at DESC';
         $offset = ($page - 1) * $size;
