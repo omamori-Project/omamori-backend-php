@@ -157,4 +157,15 @@ class PostRepository extends BaseRepository{
         $params[] = $postId;
         return $this -> db -> execute($sql, $params);
     }
+
+    // 게시글 삭제
+    public function deletePost(int $postId): int{
+        $sql = "UPDATE {$this -> table}
+                SET deleted_at = NOW(),
+                    updated_at = NOW()
+                WHERE id = ?
+                    AND deleted_at IS NULL";
+        
+        return $this -> db -> execute($sql, [$postId]);
+    }
 }

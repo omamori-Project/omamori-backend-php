@@ -128,4 +128,23 @@ class PostController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 게시글 삭제
+    public function destroy(Request $request): Response{
+        try{
+            // 토큰 검증
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $postId = (int)$request -> param('postId', 0);
+            $result = $this -> postService -> deletePost($token, $postId);
+            return $this -> success($result, 'Deleted', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
