@@ -162,7 +162,7 @@ class PostRepository extends BaseRepository{
     public function deletePost(int $postId): int{
         $sql = "UPDATE {$this -> table}
                 SET deleted_at = NOW(),
-                    AND updated_at = NOW()
+                    updated_at = NOW()
                 WHERE id = ?
                     AND deleted_at IS NULL";
         

@@ -139,7 +139,7 @@ class PostController extends BaseController{
                 return $this -> unauthorized('Token required');
             }
 
-            $postId = (int)$request -> route('postId');
+            $postId = (int)$request -> param('postId', 0);
             $result = $this -> postService -> deletePost($token, $postId);
             return $this -> success($result, 'Deleted', 200);
 
