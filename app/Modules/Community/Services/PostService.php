@@ -156,7 +156,7 @@ class PostService extends BaseService{
         $userId = (int)$auth -> verifyAndGetUserId($token);
 
         // postId 검증
-        if(!$postId < 1){
+        if($postId < 1){
             throw new \InvalidArgumentException('postId must be positive integer');
         }
 
@@ -188,11 +188,12 @@ class PostService extends BaseService{
         // 대상 게시글 조회
         $post = $this -> postRepository -> findPublishedPostById($postId);
         if(!$post){
+            throw new RuntimeException('Post not found');
+        }
+        
+        if((int)$post['usser_id'] !== (int)$userId){
             throw new RuntimeException('Forbidden');
         }
-
-        // updated_at은 서버에서 갱신
-        $data['updated_at'] = date('Y-m-d H:i:s');
 
         // 업데이트
         $affected = $this -> postRepository -> updatePost($postId, $data);

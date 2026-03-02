@@ -56,6 +56,7 @@ class PostController extends BaseController{
 
     // 상세 조회
     public function show(Request $request): Response{
+        
         try{
             //  토큰 겁증
             $token = $request -> bearerToken();
@@ -107,7 +108,14 @@ class PostController extends BaseController{
 
             // postId
             $postId = (int)$request -> param('postId', 0);
-            if(!$postId){
+            if($postId < 1){
+                $uri = $_SERVER['REQUEST_URI'] ?? '';
+                
+                if(preg_match('~/(api/)?posts/(\d+)~', $uri, $m)){
+                    $postId = (int)$m[2]; // 숫자는 2번 그룹
+                }
+            }
+            if($postId < 1){
                 return $this -> error('Invalid postId');
             }
 

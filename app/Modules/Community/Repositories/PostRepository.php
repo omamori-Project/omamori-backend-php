@@ -134,8 +134,8 @@ class PostRepository extends BaseRepository{
     // 게시글 수정
     public function updatePost(int $postId, array $data): int{
         // 허용 필드만 남기기
-        $allowed = ['title', 'content', 'updated_at'];
-        $filtered = array_intersect_key($allowed);
+        $allowed = ['title', 'content'];
+        $filtered = array_intersect_key($data, array_flip($allowed));
         if(empty($filtered)){
             throw new \InvalidArgumentException('No fields to update');
         }
@@ -149,7 +149,9 @@ class PostRepository extends BaseRepository{
 
         $setSql = implode(', ', $setParts);
         $sql = "UPDATE {$this -> table}
-                SET {$setSql}
+                SET {$setSql},
+                    updated_at = NOW()
+                WHERE id = ?
                     AND deleted_at IS NULL";
         
         $params[] = $postId;
