@@ -148,4 +148,64 @@ class PostService extends BaseService{
         ];
     }
 
+
+    // 게시글 수정
+    public function updatePost(string $token, int $postId, array $input): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = (int)$auth -> verifyAndGetUserId($token);
+
+        // postId 검증
+        if(!$postId < 1){
+            throw new \InvalidArgumentException('postId must be positive integer');
+        }
+
+        // title/content 둘 중 하나는 있어야 함
+        $hasTitle = array_key_exists('title', $input);
+        $hasContent = array_key_exists('content', $input);
+        if(!$hasTitle && !$hasContent){
+            throw new \InvalidArgumentException('title or content is required');
+        }
+
+        // 전달된 필드만 업데이트
+        $data = [];
+        if($hasTitle){
+            $title = trim((string)$input['title']);
+            if($title === ''){
+                throw new \InvalidArgumentException('title can not be empty');
+            }
+            $data['title'] = $title;
+        }
+
+        if($hasContent){
+            $content = trim((string)$input['content']);
+            if($content === ''){
+                throw new \InvalidArgumentException('content can not be empty');
+            }
+            $data['content'] = $content;
+        }
+
+        // 대상 게시글 조회
+        $post = $this -> postRepository -> findPublishedPostById($postId);
+        if(!$post){
+            throw new RuntimeException('Forbidden');
+        }
+
+        // updated_at은 서버에서 갱신
+        $data['updated_at'] = date('Y-m-d H:i:s');
+
+        // 업데이트
+        $affected = $this -> postRepository -> updatePost($postId, $data);
+        if($affected < 1){
+            throw new RuntimeException('Update failed');
+        }
+
+        // 데이터 반환
+        $updated = $this -> postRepository -> findPublishedPostById($postId);
+        if(!$updated){
+            throw new RuntimeException('Post not found after update');
+        }
+        return $updated;
+    }
+
 }
