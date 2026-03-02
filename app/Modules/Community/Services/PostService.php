@@ -235,4 +235,39 @@ class PostService extends BaseService{
         return ['post' => $postId];
     }
 
+
+    // 내 게시글 목록 조회
+    public function indexByMe(string $token, array $query): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = (int)$auth -> verifyAndGetUserId($token);
+
+        // $query 정규화
+        $page = isset($query['page']) && is_numeric($query['page']) ? (int)$query['page'] : 1;
+        $size = isset($query['size']) && is_numeric($query['size']) ? (int)$query['size'] : 10;
+        $sort = isset($query['sort']) ? (string)$query['sort'] : 'latest';
+
+        if(!in_array($sort, ['latest', 'oldest'], true)) $sort = 'latest';
+        if($page < 1) $page = 1;
+        if($size < 1) $size = 1;
+        if($size > 50) $size = 50;
+
+        // sort(string) -> orderBy(array)
+        $orderBy = ['created_at' => 'DESC'];
+        if($sort === 'oldest'){
+            $orderBy = ['created_at' => 'ASC'];
+        }
+
+        $p = $this -> postRepository -> paginateByUserId($userId, $page, $size, $orderBy);
+
+        return [
+            'items' => $p['items'],
+            'meta' => [
+                'page' => $page,
+                'size' => $size,
+                'total' => $p['total'],
+                'sort' => $sort,
+            ],
+        ];
+    }
 }
