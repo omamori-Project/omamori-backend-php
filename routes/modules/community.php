@@ -34,3 +34,8 @@ $router -> patch('/api/posts/[i:postId]', function($request){
 $router -> delete('/api/posts/[i:postId]', function($request){
     return (new PostController()) -> destroy($request);
 }, 'omamoris.community.destroy');
+
+// 내 게시글 목록 조회
+$router -> get('/api/me/posts', function($request){
+    return (new PostController()) -> indexByMe($request);
+}, 'omamoris.community.indexByMe');
