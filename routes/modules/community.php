@@ -43,5 +43,5 @@ $router -> get('/api/me/posts', function($request){
 
 // 댓글 조회
 $router -> get('/api/posts/[i:postId]/comments', function($request){
-    return (new CommentController()) -> show($request);
+    return (new CommentController()) -> index($request);
 }, 'omamoris.comment.show');
