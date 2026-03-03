@@ -19,23 +19,19 @@ class CommentService extends BaseService{
 
 
     // 댓글 조회
-    public function getCommentsByPost(int $postId, int $page, int $size): array{
+    public function showByPost(int $postId, array $query): array{
         if($postId < 1){
             throw new \InvalidArgumentException('postId must be positive integer');
         }
 
         // 기본값 보정
-        if($page < 1){
-            $page = 1;
-        }
-        if($size < 1){
-            $size = 10;
-        }
+        $page = isset($query['page']) ? (int)$query['page'] : 1;
+        $size = isset($query['size']) ? (int)$query['size'] : 10;
 
-        // 과도한 요청 방지
-        if($size > 50){
-            $size = 50;
-        }
+        if($page < 1) $page = 1;
+        if($size < 1) $size = 10;
+        if($size > 50) $size = 50;
+        
         return $this -> commentRepository -> pagenateByPostId($postId, $page, $size);
     }
 }
