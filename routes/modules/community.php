@@ -2,6 +2,7 @@
 
 // import
 use App\Modules\Community\Controllers\PostController;
+use App\Modules\Community\Controllers\CommentController;
 
 global $router;
 
@@ -39,3 +40,8 @@ $router -> delete('/api/posts/[i:postId]', function($request){
 $router -> get('/api/me/posts', function($request){
     return (new PostController()) -> indexByMe($request);
 }, 'omamoris.community.indexByMe');
+
+// 댓글 조회
+$router -> get('/api/posts/[i:postId]/comments', function($request){
+    return (new CommentController()) -> index($request);
+}, 'omamoris.comment.show');
