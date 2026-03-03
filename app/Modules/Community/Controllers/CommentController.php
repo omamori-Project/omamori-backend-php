@@ -18,7 +18,7 @@ class CommentController extends BaseController{
         $this -> commentService = new CommentService;
     }
 
-    public function show(Request $request): Response{
+    public function index(Request $request): Response{
         try{
             // postId 검증
             $postId = (int)$request -> param('postId', 0);
