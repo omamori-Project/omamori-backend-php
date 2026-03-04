@@ -64,7 +64,7 @@ class CommentService extends BaseService{
         $commentId = $this -> commentRepository -> createComment($postId, $userId, $content);
 
         // 생성 후 재조회해서 반환
-        $created = $this -> commentRepository -> findById($commentId);
-        return $created ?? ['id' => $commentId];
+        $created = $this -> commentRepository -> createComment($postId, $userId, $content);
+        return  $created;
     }
 }

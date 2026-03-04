@@ -53,7 +53,7 @@ class CommentController extends BaseController{
 
             $input = $request -> input();
             $result = $this -> commentService -> createComment($token, $postId, $input);
-            return $this -> success($request, 'OK', 200);
+            return $this -> success($result, 'Created', 201);
 
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);

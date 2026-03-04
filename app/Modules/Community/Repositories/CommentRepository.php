@@ -24,13 +24,13 @@ class CommentRepository extends BaseRepository{
 
 
     // 댓글 작성
-    public function createComment(int $postId, int $userId, string $content): int{
-        $id = $this -> create([
-            'post_id' => $postId,
-            'user_id' => $userId,
-            'parent_id' => null,
-            'content' => $content,
-        ]);
-        return (int)$id;
+    public function createComment(int $postId, int $userId, string $content): array{
+        $sql = "INSERT INTO {$this -> table}
+                (post_id, user_id, parent_id, content)
+            VALUES
+                (?, ?, ?, ?)
+            RETURNING id, post_id, user_id, parent_id, content, created_at, updated_at, deleted_at";
+
+        return $this -> db -> queryOne($sql, [$postId, $userId, null, $content]);
     }
 }
