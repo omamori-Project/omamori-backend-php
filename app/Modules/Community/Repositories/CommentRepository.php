@@ -22,4 +22,14 @@ class CommentRepository extends BaseRepository{
         return $this -> paginate($page, $size, ['post_id' => $postId]);
     }
 
+
+    // 댓글 작성
+    public function createComment(int $postId, int $userId, string $content): int{
+        $id = $this -> create([
+            'post_id' => $postId,
+            'user_id' => $userId,
+            'content' => $content,
+        ]);
+        return (int)$id;
+    }
 }
