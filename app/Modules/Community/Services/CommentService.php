@@ -36,7 +36,7 @@ class CommentService extends BaseService{
         if($size < 1) $size = 10;
         if($size > 50) $size = 50;
         
-        return $this -> commentRepository -> pagenateByPostId($postId, $page, $size);
+        return $this -> commentRepository -> paginateByPostId($postId, $page, $size);
     }
 
 

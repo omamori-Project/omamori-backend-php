@@ -18,7 +18,7 @@ class CommentRepository extends BaseRepository{
 
 
     // 게시물 댓글 조회
-    public function pagenateByPostId(int $postId, int $page, int $size): array{
+    public function paginateByPostId(int $postId, int $page, int $size): array{
         return $this -> paginate($page, $size, ['post_id' => $postId]);
     }
 
@@ -28,6 +28,7 @@ class CommentRepository extends BaseRepository{
         $id = $this -> create([
             'post_id' => $postId,
             'user_id' => $userId,
+            'parent_id' => null,
             'content' => $content,
         ]);
         return (int)$id;
