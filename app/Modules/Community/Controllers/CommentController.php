@@ -15,7 +15,7 @@ class CommentController extends BaseController{
 
     public function __construct()
     {
-        $this -> commentService = new CommentService;
+        $this -> commentService = new CommentService();
     }
 
     public function index(Request $request): Response{

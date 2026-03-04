@@ -61,8 +61,6 @@ class CommentService extends BaseService{
             throw new \RuntimeException('Post not found');
         }
 
-        $commentId = $this -> commentRepository -> createComment($postId, $userId, $content);
-
         // 생성 후 재조회해서 반환
         $created = $this -> commentRepository -> createComment($postId, $userId, $content);
         return  $created;
