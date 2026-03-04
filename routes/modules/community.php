@@ -45,3 +45,8 @@ $router -> get('/api/me/posts', function($request){
 $router -> get('/api/posts/[i:postId]/comments', function($request){
     return (new CommentController()) -> index($request);
 }, 'omamoris.comment.show');
+
+// 댓글 작성
+$router -> post('/api/posts/[i:postId]/comments', function($request){
+    return (new CommentController()) -> create($request);
+}, 'omamoris.comment.create');

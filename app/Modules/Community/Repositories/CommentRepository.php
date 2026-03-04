@@ -13,13 +13,24 @@ class CommentRepository extends BaseRepository{
 
     public function __construct(Database $db)
     {
-        return parent::__construct($db);
+        parent::__construct($db);
     }
 
 
     // 게시물 댓글 조회
-    public function pagenateByPostId(int $postId, int $page, int $size): array{
+    public function paginateByPostId(int $postId, int $page, int $size): array{
         return $this -> paginate($page, $size, ['post_id' => $postId]);
     }
 
+
+    // 댓글 작성
+    public function createComment(int $postId, int $userId, string $content): array{
+        $sql = "INSERT INTO {$this -> table}
+                (post_id, user_id, parent_id, content)
+            VALUES
+                (?, ?, ?, ?)
+            RETURNING id, post_id, user_id, parent_id, content, created_at, updated_at, deleted_at";
+
+        return $this -> db -> queryOne($sql, [$postId, $userId, null, $content]);
+    }
 }
