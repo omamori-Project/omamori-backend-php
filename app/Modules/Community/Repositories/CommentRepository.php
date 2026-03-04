@@ -13,7 +13,7 @@ class CommentRepository extends BaseRepository{
 
     public function __construct(Database $db)
     {
-        return parent::__construct($db);
+        parent::__construct($db);
     }
 
 
