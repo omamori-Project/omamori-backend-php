@@ -50,3 +50,8 @@ $router -> get('/api/posts/[i:postId]/comments', function($request){
 $router -> post('/api/posts/[i:postId]/comments', function($request){
     return (new CommentController()) -> create($request);
 }, 'omamoris.comment.create');
+
+// 댓글 목록
+$router -> get('/api/me/comments', function($request){
+    return (new CommentController()) -> list($request);
+}, 'omamotis.comment.list');
