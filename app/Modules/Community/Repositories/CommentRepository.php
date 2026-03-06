@@ -33,4 +33,10 @@ class CommentRepository extends BaseRepository{
 
         return $this -> db -> queryOne($sql, [$postId, $userId, null, $content]);
     }
+
+
+    // 댓글 목록
+    public function paginateComment(int $postId, int $page, int $size): array{
+        return $this -> paginate($page, $size, ['post_id' => $postId]);
+    }
 }
