@@ -22,10 +22,15 @@ class CommentService extends BaseService{
     }
 
 
-    // 댓글 조회
+    // 댓글 조회 / 목록
     public function showByPost(int $postId, array $query): array{
         if($postId < 1){
             throw new \InvalidArgumentException('postId must be positive integer');
+        }
+        
+        $post = $this->postRepository->findById($postId);
+        if(!$post){
+            throw new \RuntimeException('Post not found');
         }
 
         // 기본값 보정
