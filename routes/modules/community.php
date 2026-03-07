@@ -55,3 +55,8 @@ $router -> post('/api/posts/[i:postId]/comments', function($request){
 $router -> get('/api/me/comments', function($request){
     return (new CommentController()) -> list($request);
 }, 'omamotis.comment.list');
+
+// 댓글 수정
+$router -> patch('/api/comments/[i:commentId]', function($request){
+    return (new CommentController()) -> update($request);
+}, 'omamoris.comment.update');
