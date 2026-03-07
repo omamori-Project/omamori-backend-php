@@ -131,4 +131,27 @@ class CommentService extends BaseService{
         $updatedComment = $this -> commentRepository -> updateComment($commentId, $content);
         return $updatedComment;
     }
+
+
+    // 댓글 삭제
+    public function destroyComment(string $token, int $commentId): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // 댓글 존재 확인
+        $comment = $this -> commentRepository -> findById($commentId);
+        if(!$comment || !empty($comment['deleted_at'])){
+            throw new \RuntimeException('Comment not found');
+        }
+
+        // 본인 댓글인지 확인
+        if((int)$comment['user_id'] !== $userId){
+            throw new \RuntimeException('Forbidden');
+        }
+
+        // soft delete
+        $this -> commentRepository -> deleteComment($commentId);
+        return ['comment_id' => $commentId];
+    }
 }
