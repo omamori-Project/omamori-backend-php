@@ -70,3 +70,8 @@ $router -> delete('/api/comments/[i:commentId]', function($request){
 $router -> post('/api/comments/[i:commentId]/replies', function($request){
     return (new CommentController()) -> reply($request);
 }, 'omamoris.comment.reply');
+
+// 내 댓글/답글 목록
+$router -> get('/api/me/comments', function($request){
+    return (new CommentController()) -> myCommentList($request);
+}, 'omamoris.comment.myCommentList');
