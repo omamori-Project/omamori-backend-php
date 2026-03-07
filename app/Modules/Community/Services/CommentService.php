@@ -102,4 +102,33 @@ class CommentService extends BaseService{
 
         return $this -> commentRepository -> paginateMyComment($userId, $page, $size, $sort, $type, $postId);
     }
+
+
+    // 댓글 수정
+    public function updateComment(int $commentId, array $input): array
+    {
+        // commentId 검증
+        if ($commentId <= 0) {
+            throw new \InvalidArgumentException('CommentId must be positive integer');
+        }
+
+        // content 필수 체크
+        $this -> validateRequired($input, ['content']);
+
+        $content = trim((string)$input['content']);
+
+        if ($content === '') {
+            throw new \InvalidArgumentException('Content is required');
+        }
+
+        // 댓글 존재 확인
+        $comment = $this -> commentRepository -> findById($commentId);
+        if (!$comment) {
+            throw new \RuntimeException('Comment not found');
+        }
+
+        // 댓글 수정
+        $updatedComment = $this -> commentRepository -> updateComment($commentId, $content);
+        return $updatedComment;
+    }
 }
