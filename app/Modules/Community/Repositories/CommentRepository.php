@@ -81,4 +81,16 @@ class CommentRepository extends BaseRepository{
             'last_page' => (int)ceil($total / $size)
         ];
     }
+
+
+    // 댓글 수정
+    public function updateComment(int $commentId, string $content): array{
+        $sql = "UPDATE {$this -> table}
+                SET content = ?,
+                    updated_at = NOW()
+                WHERE id = ?
+                RETURNING *";
+        
+        return $this -> db -> queryOne($sql, [$content, $commentId]);
+    }
 }
