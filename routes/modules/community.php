@@ -60,3 +60,8 @@ $router -> get('/api/me/comments', function($request){
 $router -> patch('/api/comments/[i:commentId]', function($request){
     return (new CommentController()) -> update($request);
 }, 'omamoris.comment.update');
+
+// 댓글 삭제
+$router -> delete('/api/comments/[i:commentId]', function($request){
+    return (new CommentController()) -> destroy($request);
+}, 'omamoris.community.destroy');
