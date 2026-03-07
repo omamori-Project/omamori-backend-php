@@ -102,4 +102,29 @@ class CommentController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 댓글 삭제
+    public function commentDestroy(Request $request): Response{
+        try{
+            // 토큰 검증
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            // commentId 검증
+            $commentId = (int)$request -> param('commentId', 0);
+            if($commentId <= 0){
+                return $this -> error('Invalid commentId');
+            }
+
+            $result = $this -> commentService -> destroyComment($token, $commentId);
+
+            return $this -> success($result, 'Deleted', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
