@@ -155,4 +155,24 @@ class CommentController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 내 댓글 / 답글 목록
+    public function myCommentList(Request $request): Response{
+        try{
+            // 토큰 검증
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $query = $request -> query();
+            $result = $this -> commentService -> paginateCommentsByUser($token, $query);
+
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }

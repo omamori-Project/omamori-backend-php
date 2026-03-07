@@ -134,4 +134,51 @@ class CommentRepository extends BaseRepository{
 
         return $this -> db -> queryOne($sql, [$postId, $userId, $parentId, $content]);
     }
+
+
+    // 내 댓글/답글 목록
+    public function paginateCommentsByUser(int $userId, int $page, int $size, string $sort = 'latest', string $type = 'all', ?int $postId = null): array{
+        $offset = ($page - 1) * $size;
+
+        $conditions = ['user_id = ?', 'deleted_at IS NULL'];
+        $params = [$userId];
+
+        if($postId !== null){
+            $conditions[] = 'post_id = ?';
+            $params[] = $postId;
+        }
+
+        if($type === 'comment'){
+            $conditions[] = 'parent_id IS NULL';
+        }elseif($type === 'reply'){
+            $conditions[] = 'parent_id IS NOT NULL';
+        }
+
+        $where = implode(' AND ', $conditions);
+        $orderBy = $sort === 'oldest' ? 'created_at ASC' : 'created_at DESC';
+
+        $items = $this -> db -> query(
+            "SELECT * FROM {$this -> table}
+             WHERE {$where}
+             ORDER BY {$orderBy}
+             LIMIT ? OFFSET ?",
+             [...$params, $size, $offset]
+        );
+
+        $totalRow = $this -> db -> queryOne(
+            "SELECT COUNT(*) AS count
+             FROM {$this -> table}
+             WHERE {$where}",
+            $params
+        );
+
+        $total = (int)$totalRow['count'];
+        return [
+            'data' => $items,
+            'current_page' => $page,
+            'per_page' => $size,
+            'total' => $total,
+            'last_page' => (int)ceil($total / $size)
+        ];
+    }
 }
