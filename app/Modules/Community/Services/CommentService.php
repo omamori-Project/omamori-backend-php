@@ -154,4 +154,34 @@ class CommentService extends BaseService{
         $this -> commentRepository -> deleteComment($commentId);
         return ['comment_id' => $commentId];
     }
+
+
+    // 답글 작성
+    public function createReply(string $token, int $commentId, array $input): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // 입력값 검증
+        $this -> validateRequired($input, ['content']);
+
+        $content = trim($input['content']);
+        if($content === ''){
+            throw new \InvalidArgumentException('Content is required');
+        }
+
+        // 부모 댓글 조회
+        $parentComment = $this->commentRepository -> findCommentById($commentId);
+        if(!$parentComment){
+            throw new \RuntimeException('Comment not found');
+        }
+
+        // 답글은 최상위 댓글에만 허용할 경우
+        if($parentComment['parent_id'] !== null){
+            throw new \RuntimeException('Reply can only be added to top-level comments');
+        }
+
+        // 답글 작성
+        return $this -> commentRepository -> createReply((int)$parentComment['post_id'], $userId, $commentId, $content);
+    }
 }
