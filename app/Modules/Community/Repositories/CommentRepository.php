@@ -98,9 +98,11 @@ class CommentRepository extends BaseRepository{
     // 댓글 삭제
     public function deleteComment(int $commentId): array{
         $sql = "UPDATE {$this -> table}
-                SET deleted_at = NOW()
+                SET deleted_at = NOW(),
+                    updated_at = NOW()
                 WHERE id = ?
-                AND deleted_at IS NULL";
+                    AND deleted_at IS NULL
+                RETURNING id, post_id, user_id, parent_id, content, created_at, updated_at, deleted_at";
 
         $result = $this -> db -> queryOne($sql, [$commentId]);
         if(!$result){

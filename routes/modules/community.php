@@ -54,7 +54,7 @@ $router -> post('/api/posts/[i:postId]/comments', function($request){
 // 댓글 목록
 $router -> get('/api/me/comments', function($request){
     return (new CommentController()) -> list($request);
-}, 'omamotis.comment.list');
+}, 'omamoris.comment.list');
 
 // 댓글 수정
 $router -> patch('/api/comments/[i:commentId]', function($request){
@@ -64,4 +64,9 @@ $router -> patch('/api/comments/[i:commentId]', function($request){
 // 댓글 삭제
 $router -> delete('/api/comments/[i:commentId]', function($request){
     return (new CommentController()) -> commentDestroy($request);
-}, 'omamoris.community.commentdestroy');
+}, 'omamoris.comment.destroy');
+
+// 답글 작성
+$router -> post('/api/comments/[i:commentId]/replies', function($request){
+    return (new CommentController()) -> reply($request);
+}, 'omamoris.comment.reply');
