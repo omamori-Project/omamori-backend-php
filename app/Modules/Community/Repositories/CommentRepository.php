@@ -102,6 +102,10 @@ class CommentRepository extends BaseRepository{
                 WHERE id = ?
                 AND deleted_at IS NULL";
 
-        return $this -> db -> queryOne($sql, [$commentId]);
+        $result = $this -> db -> queryOne($sql, [$commentId]);
+        if(!$result){
+            throw new \RuntimeException('Comment not found or already deleted');
+        }
+        return $result;
     }
 }

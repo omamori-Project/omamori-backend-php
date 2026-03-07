@@ -63,5 +63,5 @@ $router -> patch('/api/comments/[i:commentId]', function($request){
 
 // 댓글 삭제
 $router -> delete('/api/comments/[i:commentId]', function($request){
-    return (new CommentController()) -> destroy($request);
-}, 'omamoris.community.destroy');
+    return (new CommentController()) -> commentDestroy($request);
+}, 'omamoris.community.commentdestroy');
