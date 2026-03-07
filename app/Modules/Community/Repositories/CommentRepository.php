@@ -96,12 +96,12 @@ class CommentRepository extends BaseRepository{
 
 
     // 댓글 삭제
-    public function deleteComment(int $commentId): bool{
+    public function deleteComment(int $commentId): array{
         $sql = "UPDATE {$this -> table}
                 SET deleted_at = NOW()
                 WHERE id = ?
                 AND deleted_at IS NULL";
 
-        return $this -> db -> execute($sql, [$commentId]);
+        return $this -> db -> queryOne($sql, [$commentId]);
     }
 }
