@@ -110,4 +110,28 @@ class CommentRepository extends BaseRepository{
         }
         return $result;
     }
+
+
+    // 댓글 단건 조회
+    public function findCommentById(int $commentId): ?array{
+        $sql = "SELECT *
+                FROM {$this -> table}
+                WHERE id = ?
+                    AND deleted_at IS NULL";
+
+        $result = $this -> db -> queryOne($sql, [$commentId]);
+        return $result ?: null;
+    }
+
+
+    // 답글 작성
+    public function createReply(int $postId, int $userId, int $parentId, string $content): array{
+        $sql = "INSERT INTO {$this -> table}
+                    (post_id, user_id, parent_id, content)
+                VALUES
+                    (?, ?, ?, ?)
+                RETURNING id, post_id, user_id, parent_id, content, created_at, updated_at, deleted_at";
+
+        return $this -> db -> queryOne($sql, [$postId, $userId, $parentId, $content]);
+    }
 }
