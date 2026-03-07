@@ -127,4 +127,32 @@ class CommentController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 답글 작성
+    public function reply(Request $request): Response{
+        try{
+            // 토큰 검증
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            // commentId 검증
+            $commentId = (int)$request -> param('commentId', 0);
+            if($commentId <= 0){
+                return $this -> error('Invalid commentId');
+            }
+
+            // body 입력값 받기
+            $input = $request -> input();
+
+            // 서비스 호출
+            $result = $this -> commentService -> createReply($token, $commentId, $input);
+            return $this -> success($result, 'Created', 201);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
