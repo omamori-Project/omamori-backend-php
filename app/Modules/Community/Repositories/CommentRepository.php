@@ -96,16 +96,12 @@ class CommentRepository extends BaseRepository{
 
 
     // 댓글 삭제
-    public function deleteComment(int $commentId): array{
+    public function deleteComment(int $commentId): bool{
         $sql = "UPDATE {$this -> table}
                 SET deleted_at = NOW()
                 WHERE id = ?
                 AND deleted_at IS NULL";
 
-        $result = $this -> db -> queryOne($sql, [$commentId]);
-        if(!$result){
-            throw new \RuntimeException('Comment not found or already deleted');
-        }
-        return $result;
+        return $this -> db -> execute($sql, [$commentId]);
     }
 }

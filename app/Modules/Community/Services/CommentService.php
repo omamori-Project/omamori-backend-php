@@ -141,7 +141,7 @@ class CommentService extends BaseService{
 
         // 댓글 존재 확인
         $comment = $this -> commentRepository -> findById($commentId);
-        if(!$comment || !empty($comment['deleted_at'])){
+        if(!$comment){
             throw new \RuntimeException('Comment not found');
         }
 
@@ -151,7 +151,10 @@ class CommentService extends BaseService{
         }
 
         // soft delete
-        $this -> commentRepository -> deleteComment($commentId);
+        $deleted = $this->commentRepository -> deleteComment($commentId);
+        if(!$deleted){
+            throw new \RuntimeException('Delete failed');
+        }
         return ['comment_id' => $commentId];
     }
 }
