@@ -16,9 +16,9 @@ class LikeRepository extends BaseRepository{
         parent::__construct($db);
     }
 
-    // 특정 유저가 특정 게시글에 좋아요를 눌렀는지 확인
-    public function findLikeByUserAndPost(int $userId, int $postId): ?array{
-        return $this->findOneBy([
+    // 좋아요 존재 여부 확인
+    public function existsLike(int $userId, int $postId): ?array{
+        return $this -> findOneBy([
             'user_id' => $userId,
             'post_id' => $postId
         ]);
@@ -27,7 +27,7 @@ class LikeRepository extends BaseRepository{
 
     // 좋아요 추가
     public function createLike(int $userId, int $postId): int{
-        return (int)$this->create([
+        return (int)$this -> create([
             'user_id' => $userId,
             'post_id' => $postId
         ]);
