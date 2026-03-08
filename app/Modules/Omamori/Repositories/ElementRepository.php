@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Element\Repositories;
+namespace App\Modules\Omamori\Repositories;
 
 // import
 use App\Common\Base\BaseRepository;

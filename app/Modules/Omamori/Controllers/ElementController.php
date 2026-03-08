@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Element\Controllers;
+namespace App\Modules\Omamori\Controllers;
 
 use App\Common\Base\BaseController;
 use App\Common\Exceptions\ErrorHandler;

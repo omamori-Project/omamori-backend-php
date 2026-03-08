@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Modules\Element\Services;
+namespace App\Modules\Omamori\Services;
 
 // import
 use App\Common\Base\BaseService;
 use App\Core\Database;
 use App\Modules\Auth\Services\AuthService;
-use App\Modules\File\Repositories\FileRepository;
+use App\Modules\Omamori\Repositories\FileRepository;
 use App\Modules\Omamori\Repositories\OmamoriRepository;
-use App\Modules\Element\Repositories\ElementRepository;
+use App\Modules\Omamori\Repositories\ElementRepository;
 
 
 // 상속
