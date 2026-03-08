@@ -3,6 +3,7 @@
 // import
 use App\Modules\Community\Controllers\PostController;
 use App\Modules\Community\Controllers\CommentController;
+use App\Modules\Community\Controllers\LikesController;
 
 global $router;
 
@@ -75,3 +76,8 @@ $router -> post('/api/comments/[i:commentId]/replies', function($request){
 $router -> get('/api/me/comments', function($request){
     return (new CommentController()) -> myCommentList($request);
 }, 'omamoris.comment.myCommentList');
+
+// 좋아요 추가
+$router -> post('/api/posts/[i:post]/likes', function($request){
+    return (new LikesController()) -> create($request);
+}, 'omamoris.likes.create');
