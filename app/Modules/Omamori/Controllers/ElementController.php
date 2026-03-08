@@ -6,7 +6,7 @@ use App\Common\Base\BaseController;
 use App\Common\Exceptions\ErrorHandler;
 use App\Core\Request;
 use App\Core\Response;
-use App\Modules\Element\Services\ElementService;
+use App\Modules\Omamori\Services\ElementService;
 
 class ElementController extends BaseController{
     protected ElementService $elementService;

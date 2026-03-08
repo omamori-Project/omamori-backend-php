@@ -34,6 +34,20 @@ class ElementRepository extends BaseRepository{
         return $row;
     }
 
+
+    // 현재 오마모리의 최대 layer 조회
+    public function findMaxLayerByOmamoriId(int $omamoriId): int{
+        $sql = "SELECT COALESCE(MAX(layer), 0) AS max_layer
+                FROM {$this -> table}
+                WHERE omamori_id = ?
+                    AND deleted_at IS NULL
+                    AND type <> 'background'";
+
+        $row = $this -> db -> queryOne($sql, [$omamoriId]);
+        return (int)($row['max_layer'] ?? 0);
+    }
+
+
     // 오마모리 요소 재정렬 (background 제외)
     public function getElementsById(int $omamoriId, array $elementIds): array{
         if(empty($elementIds)){

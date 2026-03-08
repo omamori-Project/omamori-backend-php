@@ -14,12 +14,12 @@ class FileRepository extends BaseRepository{
         parent::__construct($db);
     }
 
-    public function findByFileKey(string $fileKey): ?array{
-        $sql = "SELECT id, file_key
-                FROM {$this -> table}
-                WHERE file_key = ?
-                    AND deleted_at IS NULL";
+    public function findFileById(int $id): ?array{
+    $sql = "SELECT id, file_key
+            FROM {$this -> table}
+            WHERE id = ?
+                AND deleted_at IS NULL";
 
-        return $this -> db -> queryOne($sql, [$fileKey]) ?: null;
-    }
+    return $this -> db -> queryOne($sql, [$id]) ?: null;
+}
 }
