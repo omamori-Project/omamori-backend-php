@@ -11,11 +11,11 @@ use App\Modules\Community\Services\LikeService;
 
 // 상속
 class LikeController extends BaseController{
-    protected LikeService $likesService;
+    protected LikeService $likeService;
 
     public function __construct()
     {
-        $this -> likesService = new LikeService();
+        $this -> likeService = new LikeService();
     }
 
     // 좋아요 추가
@@ -31,7 +31,7 @@ class LikeController extends BaseController{
             $authHeader = $request -> header('Authorization');
             $token = str_replace('Bearer ', '', $authHeader);
 
-            $result = $this -> likesService -> createLike($token, $postId);
+            $result = $this -> likeService -> createLike($token, $postId);
             return $this -> success($result, 'Like created', 201);
 
         }catch(\RuntimeException $e){
@@ -56,11 +56,35 @@ class LikeController extends BaseController{
             $authHeader = $request -> header('Authorization');
             $token = str_replace('Bearer ', '', $authHeader);
 
-            $result = $this -> likesService -> destroyLike($token, $postId);
+            $result = $this -> likeService -> destroyLike($token, $postId);
             return $this -> success($result, 'Like deleted', 200);
 
         }catch(\RuntimeException $e){
             return $this -> error($e -> getMessage(), 409);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 좋아요 여부 조회
+    public function show(Request $request): Response{
+        try{
+            // 토큰 검증
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            // postId 검증
+            $postId = (int)$request -> param('post', 0);
+            if($postId <= 0){
+                return $this -> error('Invalid postId');
+            }
+
+            $result = $this -> likeService -> showLikeStatus($token, $postId);
+            return $this -> success($result, 'OK', 200);
 
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);

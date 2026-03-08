@@ -51,4 +51,18 @@ class LikeRepository extends BaseRepository{
         $this -> db -> query($sql, [$userId, $postId]);
         return true;
     }
+
+
+    // 좋아요 여부 조회
+    public function existsByUserIdAndPostId(int $userId, int $postId): bool{
+        $sql = "SELECT EXISTS (
+                    SELECT 1
+                    FROM post_likes
+                    WHERE user_id = ?
+                    AND post_id = ?
+                ) AS liked";
+
+        $result = $this -> db -> queryOne($sql, [$userId, $postId]);
+        return (bool)$result['liked'];
+    }
 }
