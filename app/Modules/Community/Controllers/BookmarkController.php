@@ -62,7 +62,26 @@ class BookmarkController extends BaseController{
             return $this -> success(null, 'Bookmark removed', 200);
 
         }catch(\Exception $e){
-            return ErrorHandler::handle($e);
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 내 북마크 목록 조회
+    public function index(Request $request): Response{
+        try{
+            // 토큰 확인
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            $query = $request -> query();
+            $result = $this -> bookmarkService -> getMyBookmarks($token, $query);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
         }
     }
 }

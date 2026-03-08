@@ -65,4 +65,39 @@ class BookmarkService extends BaseService{
         // 북마크 삭제
         return $this -> bookmarkRepository -> deleteBookmark($postId, $userId);
     }
+
+
+    // 내 북마크 목록 조회
+    public function getMyBookmarks(string $token, array $query): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // page, size 기본값 처리
+        $page = isset($query['page']) ? (int)$query['page'] : 1;
+        $size = isset($query['size']) ? (int)$query['size'] : 10;
+
+        if ($page < 1) {
+            $page = 1;
+        }
+        if ($size < 1) {
+            $size = 10;
+        }
+        if ($size > 50) {
+            $size = 50;
+        }
+        $offset = ($page - 1) * $size;
+
+        $items = $this -> bookmarkRepository -> findByUserId($userId, $size, $offset);
+        $total = $this -> bookmarkRepository -> countByUserId($userId);
+        return [
+            'items' => $items,
+            'pagination' => [
+                'page' => $page,
+                'size' => $size,
+                'total' => $total,
+                'last_page' => (int)ceil($total / $size)
+            ]
+        ];
+    }
 }

@@ -46,4 +46,39 @@ class BookmarkRepository extends BaseRepository{
         $result = $this -> db -> execute($sql, [$postId, $userId]);
         return $result > 0;
     }
+
+
+     // 내 북마크 목록 조회
+    public function findByUserId(int $userId, int $size, int $offset): array{
+        $sql = "SELECT
+                    posts.id,
+                    posts.user_id,
+                    posts.omamori_id,
+                    posts.title,
+                    posts.content,
+                    posts.created_at,
+                    posts.updated_at
+                FROM post_bookmarks
+                INNER JOIN posts
+                    ON post_bookmarks.post_id = posts.id
+                WHERE post_bookmarks.user_id = ?
+                    AND posts.deleted_at IS NULL
+                ORDER BY post_bookmarks.id DESC
+                LIMIT ? OFFSET ?";
+
+        return $this -> db -> query($sql, [$userId, $size, $offset]);
+    }
+
+    // 내 북마크 개수
+    public function countByUserId(int $userId): int{
+        $sql = "SELECT COUNT(*) AS total
+                FROM post_bookmarks
+                INNER JOIN posts
+                    ON post_bookmarks.post_id = posts.id
+                WHERE post_bookmarks.user_id = ?
+                    AND posts.deleted_at IS NULL";
+
+        $row = $this -> db -> queryOne($sql, [$userId]);
+        return (int)($row['total'] ?? 0);
+    }
 }
