@@ -102,3 +102,8 @@ $router -> post('/api/posts/[i:post]/bookmarks', function($request){
 $router -> delete('/api/posts/[i:post]/bookmarks', function($request){
     return (new BookmarkController()) -> destroy($request);
 }, 'omamoris.bookmarks.destroy');
+
+// 내 북마크 목록 조회
+$router -> get('/api/me/bookmarks', function($request){
+    return (new BookmarkController()) -> index($request);
+}, 'omamoris.bookmarks.index');
