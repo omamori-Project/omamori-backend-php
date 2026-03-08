@@ -44,4 +44,25 @@ class BookmarkService extends BaseService{
             'user_id' => $userId
         ];
     }
+
+
+    // 북마크 취소
+    public function destroyBookmark(string $token, int $postId): bool{
+        // postId 검증
+        if ($postId <= 0) {
+            throw new \InvalidArgumentException('Invalid postId');
+        }
+
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // 북마크 존재 여부 확인
+        if (! $this -> bookmarkRepository -> existsBookmark($postId, $userId)) {
+            throw new \InvalidArgumentException('Bookmark not found');
+        }
+
+        // 북마크 삭제
+        return $this -> bookmarkRepository -> deleteBookmark($postId, $userId);
+    }
 }
