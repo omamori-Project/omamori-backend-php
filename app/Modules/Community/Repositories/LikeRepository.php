@@ -17,19 +17,27 @@ class LikeRepository extends BaseRepository{
     }
 
     // 좋아요 존재 여부 확인
-    public function existsLike(int $userId, int $postId): ?array{
-        return $this -> findOneBy([
-            'user_id' => $userId,
-            'post_id' => $postId
-        ]);
+    public function existsLike(int $userId, int $postId): bool{
+        $sql = "SELECT id
+                FROM {$this -> table}
+                WHERE user_id = ?
+                  AND post_id = ?
+                LIMIT 1";
+
+        $result = $this -> db -> queryOne($sql, [$userId, $postId]);
+        return !empty($result);
     }
 
 
     // 좋아요 추가
     public function createLike(int $userId, int $postId): int{
-        return (int)$this -> create([
-            'user_id' => $userId,
-            'post_id' => $postId
-        ]);
+        $sql = "INSERT INTO {$this -> table}
+                    (user_id, post_id)
+                VALUES
+                    (?, ?)
+                RETURNING id";
+
+        $result = $this -> db -> queryOne($sql, [$userId, $postId]);
+        return (int)$result['id'];
     }
 }
