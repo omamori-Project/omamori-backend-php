@@ -60,7 +60,6 @@ class LikeRepository extends BaseRepository{
                     FROM post_likes
                     WHERE user_id = ?
                     AND post_id = ?
-                    AND deleted_at IS NULL
                 ) AS liked";
 
         $result = $this -> db -> queryOne($sql, [$userId, $postId]);
