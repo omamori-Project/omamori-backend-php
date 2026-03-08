@@ -33,7 +33,7 @@ class BookmarkService extends BaseService{
 
         // 이미 북마크 했는지 확인
         if ($this -> bookmarkRepository -> existsBookmark($postId, $userId)) {
-            throw new \RuntimeException('Already bookmarked');
+            throw new \InvalidArgumentException('Already bookmarked');
         }
 
         // 북마크 저장
