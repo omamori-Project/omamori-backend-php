@@ -40,4 +40,15 @@ class LikeRepository extends BaseRepository{
         $result = $this -> db -> queryOne($sql, [$userId, $postId]);
         return (int)$result['id'];
     }
+
+
+    // 좋아요 취소
+    public function deleteLike(int $userId, int $postId): bool{
+        $sql = "DELETE FROM {$this -> table}
+                WHERE user_id = ?
+                AND post_id = ?";
+
+        $this -> db -> query($sql, [$userId, $postId]);
+        return true;
+    }
 }
