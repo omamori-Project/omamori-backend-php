@@ -35,4 +35,15 @@ class BookmarkRepository extends BaseRepository{
         $result = $this -> db -> queryOne($sql, [$postId, $userId]);
         return (bool)$result;
     }
+
+
+    // 북마크 취소
+    public function deleteBookmark(int $postId, int $userId): bool{
+        $sql = "DELETE FROM {$this -> table}
+                WHERE post_id = ?
+                    AND user_id = ?";
+
+        $result = $this -> db -> execute($sql, [$postId, $userId]);
+        return $result > 0;
+    }
 }

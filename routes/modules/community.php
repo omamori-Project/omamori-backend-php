@@ -97,3 +97,8 @@ $router -> get('/api/posts/[i:post]/likes/me', function($request){
 $router -> post('/api/posts/[i:post]/bookmarks', function($request){
     return (new BookmarkController()) -> create($request);
 }, 'omamoris.bookmarks.create');
+
+// 북마크 취소
+$router -> delete('/api/posts/[i:post]/bookmarks', function($request){
+    return (new BookmarkController()) -> destroy($request);
+}, 'omamoris.bookmarks.destroy');
