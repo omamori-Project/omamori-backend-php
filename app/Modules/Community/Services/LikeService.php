@@ -53,4 +53,36 @@ class LikeService extends BaseService{
             'user_id' => $userId
         ];
     }
+
+
+    // 좋아요 취소
+    public function destroyLike(string $token, int $postId): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        // postId 검증
+        if ($postId <= 0) {
+            throw new \InvalidArgumentException('Post id must be positive integer');
+        }
+
+        // 게시글 존재 확인
+        $post = $this -> postRepository -> findById($postId);
+        if (!$post) {
+            throw new RuntimeException('Post not found');
+        }
+
+        // 좋아요 존재 여부 확인
+        if (!$this -> likesRepository -> existsLike($userId, $postId)) {
+            throw new RuntimeException('Like not found');
+        }
+
+        // 좋아요 삭제
+        $this -> likesRepository -> deleteLike($userId, $postId);
+
+        return [
+            'post_id' => $postId,
+            'user_id' => $userId
+        ];
+    }
 }

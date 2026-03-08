@@ -41,4 +41,29 @@ class LikeController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 좋아요 취소
+    public function destroy(Request $request): Response{
+        try{
+            // post 검증
+            $postId = (int)$request -> param('post', 0);
+            if($postId <= 0){
+                return $this -> error('Invalid post');
+            }
+
+            // Authorization 헤더에서 Bearer 토큰 추출
+            $authHeader = $request -> header('Authorization');
+            $token = str_replace('Bearer ', '', $authHeader);
+
+            $result = $this -> likesService -> destroyLike($token, $postId);
+            return $this -> success($result, 'Like deleted', 200);
+
+        }catch(\RuntimeException $e){
+            return $this -> error($e -> getMessage(), 409);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }

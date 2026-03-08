@@ -81,3 +81,8 @@ $router -> get('/api/me/comments', function($request){
 $router -> post('/api/posts/[i:post]/likes', function($request){
     return (new LikeController()) -> create($request);
 }, 'omamoris.likes.create');
+
+// 좋아요 취소
+$router -> delete('/api/posts/[i:post]/likes', function($request){
+    return (new LikeController()) -> destroy($request);
+}, 'omamoris.likes.destroy');
