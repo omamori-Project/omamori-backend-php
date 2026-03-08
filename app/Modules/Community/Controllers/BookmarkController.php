@@ -41,4 +41,28 @@ class BookmarkController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 북마크 취소
+    public function destroy(Request $request): Response{
+        try{
+            // 토큰 확인
+            $token = $request -> bearerToken();
+            if(!$token){
+                return $this -> unauthorized('Token required');
+            }
+
+            // postId 확인
+            $postId = (int)$request -> param('post', 0);
+            if($postId <= 0){
+                return $this -> error('Invalid postId');
+            }
+
+            $this -> bookmarkService -> destroyBookmark($token, $postId);
+            return $this -> success(null, 'Bookmark removed', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler::handle($e);
+        }
+    }
 }
