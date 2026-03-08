@@ -4,6 +4,7 @@
 use App\Modules\Community\Controllers\PostController;
 use App\Modules\Community\Controllers\CommentController;
 use App\Modules\Community\Controllers\LikeController;
+use App\Modules\Community\Controllers\BookmarkController;
 
 global $router;
 
