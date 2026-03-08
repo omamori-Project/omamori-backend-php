@@ -86,3 +86,8 @@ $router -> post('/api/posts/[i:post]/likes', function($request){
 $router -> delete('/api/posts/[i:post]/likes', function($request){
     return (new LikeController()) -> destroy($request);
 }, 'omamoris.likes.destroy');
+
+// 좋아요 여부 조회
+$router -> get('/api/posts/[i:post]/likes/me', function($request){
+    return (new LikeController()) -> show($request);
+}, 'omamoris.likes.show');
