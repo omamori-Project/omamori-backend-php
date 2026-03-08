@@ -78,7 +78,7 @@ class LikeController extends BaseController{
             }
 
             // postId 검증
-            $postId = (int)$request -> param('postId', 0);
+            $postId = (int)$request -> param('post', 0);
             if($postId <= 0){
                 return $this -> error('Invalid postId');
             }
@@ -87,7 +87,7 @@ class LikeController extends BaseController{
             return $this -> success($result, 'OK', 200);
 
         }catch(\Exception $e){
-            return ErrorHandler::handle($e);
+            return ErrorHandler:: handle($e);
         }
     }
 }
