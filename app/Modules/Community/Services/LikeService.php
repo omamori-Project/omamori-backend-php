@@ -13,12 +13,12 @@ use RuntimeException;
 // 상속
 class LikeService extends BaseService{
     protected Database $db;
-    protected LikeRepository $likesRepository;
+    protected LikeRepository $likeRepository;
     protected PostRepository $postRepository;
 
     public function __construct(){
         $this -> db = new Database();
-        $this -> likesRepository = new LikeRepository($this -> db);
+        $this -> likeRepository = new LikeRepository($this -> db);
         $this -> postRepository = new PostRepository($this -> db);
     }
 
@@ -41,12 +41,12 @@ class LikeService extends BaseService{
         }
 
         // 중복 좋아요 확인
-        if ($this -> likesRepository -> existsLike($userId, $postId)) {
+        if ($this -> likeRepository -> existsLike($userId, $postId)) {
             throw new RuntimeException('Already liked');
         }
 
         // 좋아요 추가
-        $likeId = $this -> likesRepository -> createLike($userId, $postId);
+        $likeId = $this -> likeRepository -> createLike($userId, $postId);
         return [
             'id' => $likeId,
             'post_id' => $postId,
@@ -73,16 +73,30 @@ class LikeService extends BaseService{
         }
 
         // 좋아요 존재 여부 확인
-        if (!$this -> likesRepository -> existsLike($userId, $postId)) {
+        if (!$this -> likeRepository -> existsLike($userId, $postId)) {
             throw new RuntimeException('Like not found');
         }
 
         // 좋아요 삭제
-        $this -> likesRepository -> deleteLike($userId, $postId);
+        $this -> likeRepository -> deleteLike($userId, $postId);
 
         return [
             'post_id' => $postId,
             'user_id' => $userId
         ];
+    }
+
+
+    // 좋아요 여부 조회
+    public function showLikeStatus(string $token, int $postId): array{
+        $auth = new AuthService();
+        $userId = $auth -> verifyAndGetUserId($token);
+
+        if($postId <= 0){
+            throw new \InvalidArgumentException('PostId must be positive integer');
+        }
+
+        $liked = $this-> likeRepository -> existsByUserIdAndPostId($userId, $postId);
+        return ['liked' => $liked];
     }
 }
