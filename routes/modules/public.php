@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Public\Controller\ShareController;
+use App\Modules\Public\Controllers\ShareController;
 
 global $router;
 
