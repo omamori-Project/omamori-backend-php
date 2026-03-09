@@ -223,7 +223,7 @@ class OmamoriController extends BaseController{
             }
             $input = $request->input();
 
-            $result = $this -> omamoriService -> saveDraft($token, $omamoriId, $input);
+            $result = $this -> omamoriService -> saveDraft($token, $omamoriId);
             return $this -> success($result, 'OK', 200);
 
         }catch(\Exception $e){

@@ -8,7 +8,6 @@ use App\Common\Exceptions\ErrorHandler;
 use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
-use App\Modules\Element\Repositories\ElementRepository;
 use App\Modules\Omamori\Repositories\OmamoriRepository;
 use App\Modules\Auth\Services\AuthService;
 
@@ -213,42 +212,54 @@ class OmamoriService extends BaseService{
         $auth = new AuthService();
         $userId = $auth -> verifyAndGetUserId($token);
 
-        // title, meaning 받기
-        $data = $this -> only($input, ['title', 'meaning']);
+         // 허용 필드만 받기
+        $data = $this -> only($input, ['title', 'meaning', 'applied_frame_id']);
 
         // title 정리
-        $title = null;
         if(array_key_exists('title', $data)){
-            $t = trim((string)$data['title']);
-            if($t !== ''){
-                $title = $t;
+        $title = trim((string)$data['title']);
+            if($title === ''){
+                throw new \InvalidArgumentException('title required');
             }
-        }       
+            $data['title'] = $title;
+        }      
 
         // meaning 정리
-        $meaning = null;
         if(array_key_exists('meaning', $data)){
-            $m = trim((string)$data['meaning']);
-            if($m !== ''){
-                $meaning = $m;
+            if($data['meaning'] === null){
+                $data['meaning'] = null;
+            }else{
+                $meaning = trim((string)$data['meaning']);
+                $data['meaning'] = ($meaning === '') ? null : $meaning;
             }
         }
 
-        // 최소 검증
-        if($title === null){
-            throw new \InvalidArgumentException('title required');
-        }
-        if($meaning === null){
-            throw new \InvalidArgumentException('meaning required');
+        // applied_frame_id 정리
+        if(array_key_exists('applied_frame_id', $data)){
+            if($data['applied_frame_id'] === null){
+                $data['applied_frame_id'] = null;
+            }else{
+                if(!is_int($data['applied_frame_id']) && !(is_string($data['applied_frame_id']) && ctype_digit($data['applied_frame_id']))){
+                    throw new \InvalidArgumentException('applied_frame_id must be int or null');
+                }
+                $data['applied_frame_id'] = (int)$data['applied_frame_id'];
+            }
         }
 
+        // 하나도 없으면 실패
+        if(empty($data)){
+            throw new \InvalidArgumentException('At least one field is required');
+        }
+    
+
         // update
-        $updated = $this -> omamoriRepository -> updateDraftInfo($userId, $omamoriId, $title, $meaning);
+        $updated = $this -> omamoriRepository -> updateDraftInfo($userId, $omamoriId, $data);
         return [
             'id' => (int)$updated['id'],
             'title' => $updated['title'],
             'meaning' => $updated['meaning'],
             'status' => $updated['status'],
+            'applied_frame_id' => $updated['applied_frame_id'] ?? null,
             'published_at' => $updated['published_at'],
             'created_at' => $updated['created_at'],
             'updated_at' => $updated['updated_at'],
@@ -301,7 +312,7 @@ class OmamoriService extends BaseService{
     }
 
     // 오마모리 임시 저장
-    public function saveDraft(string $token, int $omamoriId, array $input): array{
+    public function saveDraft(string $token, int $omamoriId): array{
         // 토큰 검증
         $auth = new AuthService();
         $userId = $auth -> verifyAndGetUserId($token);
@@ -311,91 +322,17 @@ class OmamoriService extends BaseService{
         if(!$current){
             throw new \RuntimeException('Omamori not found');
         }
+
+        // draft 상태만 임시 저장 가능
         if(($current['status'] ?? null) !== 'draft'){
             throw new \RuntimeException('Omamori already published');
         }
 
-        // 보내는 내용
-        $title = $input['title'] ?? null;
-        if(!is_string($title) || trim($title) === ''){
-            throw new \InvalidArgumentException('title required');
+        // updated_at만 갱신
+        $updated = $this -> omamoriRepository -> touchDraft($userId, $omamoriId);
+        if(!$updated){
+            throw new \RuntimeException('Save draft failed');
         }
-        $title = trim($title);
-
-        $meaning = array_key_exists('meaning', $input) ? $input['meaning'] : null;
-        if(is_string($meaning)){
-            $meaning = trim($meaning);
-            if($meaning === '') $meaning = null;
-        }
-        if(!is_null($meaning) && !is_string($meaning)){
-            throw new \InvalidArgumentException('meaning must be string or null');
-        }
-
-        $backMessage = array_key_exists('back_message', $input) ? $input['back_message'] : null;
-        if(is_string($backMessage)){
-            $backMessage = trim($backMessage);
-            if($backMessage === '') $backMessage = null;
-        }
-        if(!is_null($backMessage) && !is_string($backMessage)){
-            throw new \InvalidArgumentException('back_message must be string or null');
-        }
-
-        $fortuneColorId = array_key_exists('applied_fortune_color_id', $input) ? $input['applied_fortune_color_id'] : null;
-        if($fortuneColorId !== null){
-            if(!is_int($fortuneColorId) && !(is_string($fortuneColorId) && ctype_digit($fortuneColorId))){
-                throw new \InvalidArgumentException('applied_fortune_color_id must be int or null');
-            }
-            $fortuneColorId = (int)$fortuneColorId;
-
-            if(!$this -> omamoriRepository -> existsActiveFortuneColor($fortuneColorId)){
-                throw new \InvalidArgumentException('fortune color not active');
-            }
-        }
-
-        $elements = $input['elements'] ?? null;
-        if(!is_array($elements)){
-            throw new \InvalidArgumentException('elements required');
-        }
-        $elementRepo = new ElementRepository($this -> db);
-
-        try{
-            $this -> db -> beginTransaction();
-            $omamoriRow = $this -> omamoriRepository -> saveDraftAll($userId, $omamoriId, $title, $meaning, $backMessage, $fortuneColorId);
-            $elementRepo -> softDeleteAllByOmamoriId($omamoriId);
-            
-            $inserted = [];
-            $layer = 0;
-            foreach($elements as $el){
-                if(!is_array($el)){
-                    throw new \InvalidArgumentException('elements item must be object');
-                }
-
-                $type = $el['type'] ?? null;
-                $props = $el['props'] ?? null;
-                $transform = $el['transform'] ?? null;
-
-                if(!is_string($type) || trim($type) === ''){
-                    throw new \InvalidArgumentException('element.type required');
-                }
-                if(!is_array($props)){
-                    throw new \InvalidArgumentException('element.props required');
-                }
-                if(!is_array($transform)){
-                    throw new \InvalidArgumentException('element.transform required');
-                }
-
-                $inserted[] = $elementRepo -> insert($omamoriId, $type, $layer, $props, $transform);
-                $layer ++;
-            }
-            $this -> db -> commit();
-            return[
-                'omamori' => $omamoriRow,
-                'elements' => $inserted,
-                ];
-
-        }catch(\Exception $e){
-            $this -> db -> rollBack();
-            throw $e;
-        }
+        return $updated;
     }
 }
