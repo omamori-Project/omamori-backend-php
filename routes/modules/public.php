@@ -13,3 +13,8 @@ $router -> get('/api/public/shares/[*:token]', function($request){
 $router -> patch('/api/shares/[i:shareId]', function($request){
     return (new ShareController()) -> update($request);
 }, 'omamoris.shares.update');
+
+// 미리보기 카드
+$router -> get('/api/public/shares/[*:token]/preview', function($request){
+    return (new ShareController()) -> preview($request);
+}, 'omamoris.shares.preview');
