@@ -123,4 +123,14 @@ class ShareRepository extends BaseRepository{
                 'last_page' => (int)ceil($total / $perPage),
             ];
     }
+
+
+    // 공유 링크 삭제/취소
+    public function revokeShare(int $shareId): bool{
+        $sql = "UPDATE {$this -> table}
+                SET revoked_at = ?
+                WHERE id = ?";
+
+        return $this -> db -> execute($sql, [date('Y-m-d H:i:s'), $shareId]);
+    }
 }

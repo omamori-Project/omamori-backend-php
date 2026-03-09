@@ -172,4 +172,46 @@ class ShareService extends BaseService{
             ],
         ];
     }
+
+
+    // 공유 링크 삭제/취소
+    public function deleteShare(string $token, int $shareId): array{
+        // 토큰 검증
+        if (!$token) {
+            throw new \InvalidArgumentException('Token required');
+        }
+        // $shareId가 멊으면 오류
+        if ($shareId <= 0) {
+            throw new \InvalidArgumentException('Invalid shareId');
+        }
+        // 사용자 검증
+        $userId = $this -> authService -> verifyAndGetUserId($token);
+        if (!$userId) {
+            throw new \Exception('Unauthorized');
+        }
+        // 공유 ID 검증
+        $share = $this -> shareRepository -> findById($shareId);
+        if (!$share) {
+            throw new \Exception('Share not found');
+        }
+        // 오마모리 존재 확인
+        $omamori = $this -> shareRepository -> findOmamoriByIdAndUserId((int)$share['omamori_id'], $userId);
+        if (!$omamori) {
+            throw new \Exception('Forbidden');
+        }
+
+        if (!empty($share['revoked_at'])) {
+            throw new \Exception('Share has already been revoked');
+        }
+
+        $revoked = $this -> shareRepository -> revokeShare($shareId);
+        if (!$revoked) {
+            throw new \Exception('Failed to delete share');
+        }
+
+        return [
+            'id' => $shareId,
+            'revoked_at' => $this -> now(),
+        ];
+    }
 }
