@@ -68,4 +68,28 @@ class ShareController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 공유 링크 생성
+    public function create(Request $request): Response{
+        try {
+            // 오마모리 존제 확인
+            $omamoriId = (int)$request -> param('omamoriId', 0);
+            if ($omamoriId <= 0) {
+                return $this -> error('Invalid omamoriId');
+            }
+
+            // body 내용 받기
+            $data = $this -> validate($request, [
+                'option' => 'required',
+                'expires_at' => 'required',
+            ]);
+
+            $result = $this -> shareService -> createShare($omamoriId, $data);
+            return $this -> success($result, 'Created', 201);
+
+        } catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }

@@ -65,6 +65,35 @@ class ShareService extends BaseService{
     }
 
 
+    // 공유 링크 생성
+    public function createShare(int $omamoriId, array $data): array{
+        $this -> validateRequired($data, ['option', 'expires_at']);
+
+        // 오마모리 확인
+        $omamori = $this -> shareRepository -> findOmamoriById($omamoriId);
+        if(!$omamori){
+            throw new \Exception('Omamori not found');
+        }
+
+        // 공유 코드 생성
+        $shareCode = bin2hex(random_bytes(16));
+        
+        $shareId = $this -> shareRepository -> createShare([
+            'omamori_id' => $omamoriId,
+            'share_code' => $shareCode,
+            'option' => $data['option'],
+            'expires_at' => $data['expires_at'],
+        ]);
+
+        // 링크 만들기
+        $share = $this -> shareRepository -> findById($shareId);
+        if(!$share){
+            throw new \Exception('Failed to create share');
+        }
+        return $share;
+    }
+
+
     // 공통 검증
     private function getValidShareByCode(string $shareCode): array{
         $share = $this -> shareRepository -> findByShareCode($shareCode);
