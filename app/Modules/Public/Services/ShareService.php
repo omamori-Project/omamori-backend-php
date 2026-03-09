@@ -42,4 +42,25 @@ class ShareService extends BaseService{
         }
         return $omamori;
     }
+
+
+    // 공유 설정 수정
+    public function updateShare(int $shareId, array $data): array{
+        $share = $this -> shareRepository -> findById($shareId);
+        if (!$share) {
+            throw new \Exception('Share not found');
+        }
+
+        $updateData = [
+            'is_active' => isset($data['is_active'])
+                ? (bool)$data['is_active']
+                : (bool)$share['is_active']
+        ];
+
+        $updated = $this -> shareRepository -> updateShare($shareId, $updateData);
+        if (!$updated) {
+            throw new \Exception('Failed to update share');
+        }
+        return $this -> shareRepository -> findById($shareId);
+    }
 }
