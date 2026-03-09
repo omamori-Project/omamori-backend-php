@@ -5,7 +5,7 @@ use App\Modules\Public\Controllers\ShareController;
 global $router;
 
 // 외부 공유용 오마모리 조회
-$router -> get('/api/public/shares/[*:token]', function($request){
+$router -> get('/api/public/shares/[:token]', function($request){
     return (new ShareController()) -> show($request);
 }, 'omamoris.shares.show');
 
@@ -15,6 +15,6 @@ $router -> patch('/api/shares/[i:shareId]', function($request){
 }, 'omamoris.shares.update');
 
 // 미리보기 카드
-$router -> get('/api/public/shares/[*:token]/preview', function($request){
+$router -> get('/api/public/shares/[:token]/preview', function($request){
     return (new ShareController()) -> preview($request);
 }, 'omamoris.shares.preview');
