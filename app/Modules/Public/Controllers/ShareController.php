@@ -51,4 +51,21 @@ class ShareController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 미리보기 카드
+    public function preview(Request $request): Response{
+        try {
+            $token = (string)$request -> param('token', '');
+            if ($token === '') {
+                return $this -> error('Invalid token');
+            }
+
+            $result = $this -> shareService-> preview($token);
+            return $this -> success($result, 'OK', 200);
+
+        } catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
