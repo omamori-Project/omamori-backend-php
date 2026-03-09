@@ -27,7 +27,7 @@ $router->get('/api/health', function ($request) {
 });
 
 // 존재 확인
-$moduleFiles = ['user.php', 'auth.php', 'omamori.php', 'community.php'];
+$moduleFiles = ['user.php', 'auth.php', 'omamori.php', 'community.php', 'public.php'];
 
 foreach ($moduleFiles as $file) {
     $path = __DIR__ . "/modules/{$file}";
