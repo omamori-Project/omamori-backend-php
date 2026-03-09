@@ -64,7 +64,7 @@ class ShareController extends BaseController{
             $result = $this -> shareService-> preview($token);
             return $this -> success($result, 'OK', 200);
 
-        } catch(\Exception $e){
+        }catch(\Exception $e){
             return ErrorHandler:: handle($e);
         }
     }
@@ -73,7 +73,7 @@ class ShareController extends BaseController{
     // 공유 링크 생성
     public function create(Request $request): Response{
         try {
-            // 오마모리 존제 확인
+            // 오마모리 존재 확인
             $omamoriId = (int)$request -> param('omamoriId', 0);
             if ($omamoriId <= 0) {
                 return $this -> error('Invalid omamoriId');
@@ -88,7 +88,24 @@ class ShareController extends BaseController{
             $result = $this -> shareService -> createShare($omamoriId, $data);
             return $this -> success($result, 'Created', 201);
 
-        } catch(\Exception $e){
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 내보내기(다운로드 URL 반환)
+    public function download(Request $request): Response{
+        try{
+            // 오마모리 존재 확인
+            $omamoriId = (int)$request -> param('omamoriId');
+
+            $data = $this -> validate($request, ['dpi' => 'numeric']);
+
+            $result = $this->shareService->exportOmamori($omamoriId, $request -> all());
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
             return ErrorHandler:: handle($e);
         }
     }
