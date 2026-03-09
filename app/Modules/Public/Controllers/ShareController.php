@@ -109,4 +109,28 @@ class ShareController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+    // 내가 생성한 공유 링크 목록
+    public function index(Request $request): Response{
+        try {
+            // 토큰 검증
+            $token = $request -> bearerToken();
+            if (!$token) {
+                return $this -> unauthorized('Token required');
+            }
+
+            // 오마모리 존재 확인
+            $omamoriId = (int)$request -> param('omamoriId', 0);
+            if ($omamoriId <= 0) {
+                return $this -> error('Invalid omamoriId');
+            }
+
+            $query = $request -> query();
+            $result = $this -> shareService -> getMyShares($token, $omamoriId, $query);
+            return $this -> success($result, 'OK', 200);
+
+        } catch (\Exception $e) {
+            return ErrorHandler:: handle($e);
+        }
+    }
 }

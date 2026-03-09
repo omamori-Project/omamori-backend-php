@@ -28,3 +28,8 @@ $router -> post('/api/omamoris/[i:omamoriId]/share', function($request){
 $router -> post('/api/omamoris/[i:omamoriId]/export', function($request){
     return (new ShareController()) -> download($request);
 }, 'omamoris.shares.download');
+
+// 내가 생성한 공유 링크 목록
+$router -> get('/api/omamoris/[i:omamoriId]/shares', function($request){
+    return (new ShareController()) -> index($request);
+}, 'omamoris.shares.index');
