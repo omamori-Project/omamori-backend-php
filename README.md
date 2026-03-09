@@ -59,9 +59,38 @@ omamori-php-final/
 │       │   ├── Controllers/UserController.php
 │       │   ├── Services/UserService.php
 │       │   └── Repositories/UserRepository.php
-│       ├── Auth/                구현 필요 (実装必要)
-│       ├── Omamori/             구현 필요 (実装必要)
-│       └── Community/           구현 필요 (実装必要)
+│       ├── Auth/
+│       │    ├── Controllers/AuthController.php
+│       │    ├── Services/AuthService.php
+│       │    └── Repositories/AythRepository.php
+│       ├── Omamori/
+│       │    ├── Controllers/
+│       │    │    ├── OmamoriController.php
+│       │    │    └── ElementController.php
+│       │    ├── Services/
+│       │    │    ├── OmamoriService.php
+│       │    │    └── ElementService.php
+│       │    └── Repositories
+│       │         ├── OmamoriRepository.php
+│       │         ├── ElementRepository.php
+│       │         └── FileRepository.php
+│       ├── Community/
+│       │    ├── Controllers/
+│       │    │    ├── PostController.php
+│       │    │    ├── CommentController.php
+│       │    │    ├── LikeController.php
+│       │    │    └── BookmarkController.php
+│       │    ├── Services/
+│       │    │    ├── PostService.php
+│       │    │    ├── CommentService.php
+│       │    │    ├── LikeService.php
+│       │    │    └── BookmarkService.php
+│       │    └── Repositories
+│       │         ├── PostRepository.php
+│       │         ├── CommentRepository.php
+│       │         ├── LikeRepository.php
+│       │         └── BookmarkRepository.php
+│       └── Public/              구현 필요 (実装必要)
 │
 ├── routes/
 │   ├── api.php                  메인 라우트 (メインルート)
@@ -69,7 +98,8 @@ omamori-php-final/
 │       ├── user.php
 │       ├── auth.php
 │       ├── omamori.php
-│       └── community.php
+│       ├── community.php
+|       └── public.php
 │
 ├── docs/
 │   └── HOW_TO_USE.md            클래스 사용 가이드 (クラス利用ガイド)
