@@ -133,4 +133,26 @@ class ShareController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    function destroy(Request $request): Response{
+        try {
+            // 토큰 검증
+            $token = $request -> bearerToken();
+            if (!$token) {
+                return $this -> unauthorized('Token required');
+            }
+            // shareId 겁증
+            $shareId = (int)$request -> param('shareId', 0);
+            if ($shareId <= 0) {
+                return $this -> error('Invalid shareId');
+            }
+
+            $result = $this -> shareService -> deleteShare($token, $shareId);
+            return $this -> success($result, 'OK', 200);
+
+        } catch (\Exception $e) {
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
