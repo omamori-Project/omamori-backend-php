@@ -33,3 +33,8 @@ $router -> post('/api/omamoris/[i:omamoriId]/export', function($request){
 $router -> get('/api/omamoris/[i:omamoriId]/shares', function($request){
     return (new ShareController()) -> index($request);
 }, 'omamoris.shares.index');
+
+// 공유 링크 삭제/취소
+$router -> delete('/api/shares/[i:shareId]', function($request){
+    return (new ShareController()) -> destroy($request);
+}, 'omamoris.shares.destroy');
