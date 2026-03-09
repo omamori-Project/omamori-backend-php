@@ -8,3 +8,8 @@ global $router;
 $router -> get('/api/public/shares/[*:token]', function($request){
     return (new ShareController()) -> show($request);
 }, 'omamoris.shares.show');
+
+// 공유 설정 수정
+$router -> patch('/api/shares/[i:shareId]', function($request){
+    return (new ShareController()) -> update($request);
+}, 'omamoris.shares.update');
