@@ -11,9 +11,8 @@ use App\Core\Database;
 class ShareRepository extends BaseRepository{
     protected string $table = 'shares';
 
-    public function __construct(Database $db)
-    {
-        parent::__construct($db);
+    public function __construct(Database $db){
+        parent:: __construct($db);
     }
 
     // share_code로 공유 정보 조회
@@ -25,7 +24,7 @@ class ShareRepository extends BaseRepository{
         return $this -> db -> queryOne($sql, [$shareCode]);
     }
 
-    
+
     // 공유된 오마모리 조회
     public function findOmamoriById(int $omamoriId): ?array{
         $sql = "SELECT *
