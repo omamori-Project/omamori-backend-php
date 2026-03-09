@@ -44,9 +44,7 @@ class ShareController extends BaseController{
                 return $this -> error('Invalid shareId');
             }
 
-            $data = $request -> all();
-
-            $result = $this -> shareService -> updateShare($shareId, $data);
+            $result = $this -> shareService -> updateShare($shareId);
             return $this -> success($result, 'Updated', 200);
 
         }catch(\Exception $e){

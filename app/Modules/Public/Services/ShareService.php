@@ -45,17 +45,16 @@ class ShareService extends BaseService{
 
 
     // 공유 설정 수정
-    public function updateShare(int $shareId, array $data): array{
+    public function updateShare(int $shareId): array{
         $share = $this -> shareRepository -> findById($shareId);
         if(!$share){
             throw new \Exception('Share not found');
         }
 
-        $updateData = [
-            'is_active' => isset($data['is_active'])
-                ? (bool)$data['is_active']
-                : (bool)$share['is_active']
-        ];
+        $current = filter_var($share['is_public'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        $current = $current ?? false;
+
+        $updateData = ['is_public' => $current ? 'false' : 'true'];
 
         $updated = $this -> shareRepository -> updateShare($shareId, $updateData);
         if(!$updated){

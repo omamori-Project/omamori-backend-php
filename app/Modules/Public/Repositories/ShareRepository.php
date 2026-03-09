@@ -15,6 +15,17 @@ class ShareRepository extends BaseRepository{
         parent:: __construct($db);
     }
 
+
+    // shareId로 공유 정보 조회
+    public function findById($id): ?array{
+        $sql = "SELECT *
+                FROM {$this -> table}
+                WHERE id = ?
+                LIMIT 1";
+        return $this -> db -> queryOne($sql, [$id]);
+    }
+
+
     // share_code로 공유 정보 조회
     public function findByShareCode(string $shareCode): ?array{
         $sql = "SELECT *
@@ -39,10 +50,9 @@ class ShareRepository extends BaseRepository{
     // 공유 설정 수정
     public function updateShare(int $shareId, array $data): bool{
         $sql = "UPDATE {$this -> table}
-                SET is_active = ?,
-                    updated_at = NOW()
+                SET is_public = ?
                 WHERE id = ?";
 
-        return $this -> db -> execute($sql, [$data['is_active'], $shareId]);
+        return $this -> db -> execute($sql, [$data['is_public'], $shareId]);
     }
 }
