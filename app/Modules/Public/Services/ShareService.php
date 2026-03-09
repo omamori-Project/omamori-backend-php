@@ -20,24 +20,24 @@ class ShareService extends BaseService{
     // 외부 공유용 오마모리 조회
     public function showByToken(string $token): array{
         $share = $this -> shareRepository -> findByShareCode($token);
-        if (!$share) {
+        if(!$share){
             throw new \Exception('Share not found');
         }
 
-        if (!(bool)$share['is_public']) {
+        if(!(bool)$share['is_public']){
             throw new \Exception('Share is not public');
         }
 
-        if (!empty($share['revoked_at'])) {
+        if(!empty($share['revoked_at'])){
             throw new \Exception('Share has been revoked');
         }
 
-        if (!empty($share['expires_at']) && strtotime($share['expires_at']) < time()) {
+        if(!empty($share['expires_at']) && strtotime($share['expires_at']) < time()){
             throw new \Exception('Share has expired');
         }
 
         $omamori = $this -> shareRepository -> findOmamoriById((int)$share['omamori_id']);
-        if (!$omamori) {
+        if(!$omamori){
             throw new \Exception('Omamori not found');
         }
         return $omamori;
@@ -47,7 +47,7 @@ class ShareService extends BaseService{
     // 공유 설정 수정
     public function updateShare(int $shareId, array $data): array{
         $share = $this -> shareRepository -> findById($shareId);
-        if (!$share) {
+        if(!$share){
             throw new \Exception('Share not found');
         }
 
@@ -58,7 +58,7 @@ class ShareService extends BaseService{
         ];
 
         $updated = $this -> shareRepository -> updateShare($shareId, $updateData);
-        if (!$updated) {
+        if(!$updated){
             throw new \Exception('Failed to update share');
         }
         return $this -> shareRepository -> findById($shareId);

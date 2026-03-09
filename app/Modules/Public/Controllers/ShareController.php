@@ -30,7 +30,26 @@ class ShareController extends BaseController{
             $result = $this -> shareService -> showByToken($token);
             return $this -> success($result, 'OK', 200);
 
-        } catch (\Exception $e) {
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 공유 설정 수정
+    public function update(Request $request): Response{
+        try {
+            $shareId = (int)$request -> param('shareId', 0);
+            if ($shareId <= 0) {
+                return $this -> error('Invalid shareId');
+            }
+
+            $data = $request -> all();
+
+            $result = $this -> shareService -> updateShare($shareId, $data);
+            return $this -> success($result, 'Updated', 200);
+
+        }catch(\Exception $e){
             return ErrorHandler:: handle($e);
         }
     }
