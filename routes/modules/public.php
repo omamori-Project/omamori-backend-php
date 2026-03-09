@@ -18,3 +18,8 @@ $router -> patch('/api/shares/[i:shareId]', function($request){
 $router -> get('/api/public/shares/[:token]/preview', function($request){
     return (new ShareController()) -> preview($request);
 }, 'omamoris.shares.preview');
+
+// 공유 링크 생성
+$router -> post('/api/omamoris/[i:omamoriId]/share', function($request){
+    return (new ShareController()) -> create($request);
+}, 'omamoris.shares.create');
