@@ -62,4 +62,35 @@ class ShareService extends BaseService{
         }
         return $this -> shareRepository -> findById($shareId);
     }
+
+
+    // 미리보기 카드
+    public function preview(string $token): array{
+        $share = $this -> shareRepository -> findByToken($token);
+        if(!$share){
+            throw new \Exception('Share not found');
+        }
+
+        if(!(bool)$share['is_public']){
+            throw new \Exception('Share is not public');
+        }
+
+        if(!empty($share['revoked_at'])){
+            throw new \Exception('Share has been revoked');
+        }
+
+        if(!empty($share['expires_at']) && strtotime($share['expires_at']) < time()){
+            throw new \Exception('Share has expired');
+        }
+
+        $omamori = $this -> shareRepository -> findOmamoriById((int)$share['omamori_id']);
+        if(!$omamori){
+            throw new \Exception('Omamori not found');
+        }
+
+        return [
+            'id' => $omamori['id'],
+            'title' => $omamori['title'],
+        ];
+    }
 }
