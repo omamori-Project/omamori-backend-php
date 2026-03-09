@@ -34,4 +34,15 @@ class ShareRepository extends BaseRepository{
                 LIMIT 1";
         return $this -> db -> queryOne($sql, [$omamoriId]);
     }
+
+
+    // 공유 설정 수정
+    public function updateShare(int $shareId, array $data): bool{
+        $sql = "UPDATE {$this -> table}
+                SET is_active = ?,
+                    updated_at = NOW()
+                WHERE id = ?";
+
+        return $this -> db -> execute($sql, [$data['is_active'], $shareId]);
+    }
 }
