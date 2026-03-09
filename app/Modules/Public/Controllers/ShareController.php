@@ -73,7 +73,7 @@ class ShareController extends BaseController{
     // 공유 링크 생성
     public function create(Request $request): Response{
         try {
-            // 오마모리 존제 확인
+            // 오마모리 존재 확인
             $omamoriId = (int)$request -> param('omamoriId', 0);
             if ($omamoriId <= 0) {
                 return $this -> error('Invalid omamoriId');
@@ -96,7 +96,7 @@ class ShareController extends BaseController{
 
     // 내보내기(다운로드 URL 반환)
     public function download(Request $request): Response{
-        // 오마모리 존제 확인
+        // 오마모리 존재 확인
         $omamoriId = (int)$request -> param('omamoriId');
 
         $result = $this -> shareService -> exportOmamori($omamoriId, $request -> all());
