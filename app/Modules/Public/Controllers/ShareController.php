@@ -92,4 +92,14 @@ class ShareController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 내보내기(다운로드 URL 반환)
+    public function download(Request $request): Response{
+        // 오마모리 존제 확인
+        $omamoriId = (int)$request -> param('omamoriId');
+
+        $result = $this -> shareService -> exportOmamori($omamoriId, $request -> all());
+        return $this -> success($result, 'OK');
+    }
 }
