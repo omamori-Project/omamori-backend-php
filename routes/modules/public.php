@@ -23,3 +23,8 @@ $router -> get('/api/public/shares/[:token]/preview', function($request){
 $router -> post('/api/omamoris/[i:omamoriId]/share', function($request){
     return (new ShareController()) -> create($request);
 }, 'omamoris.shares.create');
+
+// 다운로드 URL
+$router -> post('/api/omamoris/[i:omamoriId]/export', function($request){
+    return (new ShareController()) -> download($request);
+}, 'omamoris.shares.download');
