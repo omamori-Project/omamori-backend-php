@@ -69,7 +69,6 @@ class ShareRepository extends BaseRepository{
         return $this -> create([
             'omamori_id' => $data['omamori_id'],
             'share_code' => $data['share_code'],
-            'token' => $data['token'],
             'option' => $data['option'],
             'expires_at' => $data['expires_at'],
         ]);
