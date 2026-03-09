@@ -29,7 +29,7 @@ class ShareRepository extends BaseRepository{
     // share_code로 공유 정보 조회
     public function findByShareCode(string $shareCode): ?array{
         $sql = "SELECT *
-                FROM shares
+                FROM {$this -> table}
                 WHERE share_code = ?
                 LIMIT 1";
         return $this -> db -> queryOne($sql, [$shareCode]);
@@ -54,5 +54,12 @@ class ShareRepository extends BaseRepository{
                 WHERE id = ?";
 
         return $this -> db -> execute($sql, [$data['is_public'], $shareId]);
+    }
+
+
+    // 미리보기 카드
+    // token으로 공유 정보 조회
+    public function findByToken(string $token): ?array{
+        return $this -> findOneBy(['token' => $token]);
     }
 }

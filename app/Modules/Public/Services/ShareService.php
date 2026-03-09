@@ -19,22 +19,7 @@ class ShareService extends BaseService{
 
     // 외부 공유용 오마모리 조회
     public function showByToken(string $token): array{
-        $share = $this -> shareRepository -> findByShareCode($token);
-        if(!$share){
-            throw new \Exception('Share not found');
-        }
-
-        if(!(bool)$share['is_public']){
-            throw new \Exception('Share is not public');
-        }
-
-        if(!empty($share['revoked_at'])){
-            throw new \Exception('Share has been revoked');
-        }
-
-        if(!empty($share['expires_at']) && strtotime($share['expires_at']) < time()){
-            throw new \Exception('Share has expired');
-        }
+        $share = $this-> getValidShareByCode($token);
 
         $omamori = $this -> shareRepository -> findOmamoriById((int)$share['omamori_id']);
         if(!$omamori){
@@ -61,5 +46,43 @@ class ShareService extends BaseService{
             throw new \Exception('Failed to update share');
         }
         return $this -> shareRepository -> findById($shareId);
+    }
+
+
+    // 미리보기 카드
+    public function preview(string $token): array{
+        $share = $this -> getValidShareByCode($token);
+
+        $omamori = $this -> shareRepository -> findOmamoriById((int)$share['omamori_id']);
+        if(!$omamori){
+            throw new \Exception('Omamori not found');
+        }
+
+        return [
+            'id' => $omamori['id'],
+            'title' => $omamori['title'],
+        ];
+    }
+
+
+    // 공통 검증
+    private function getValidShareByCode(string $shareCode): array{
+        $share = $this -> shareRepository -> findByShareCode($shareCode);
+        if(!$share){
+            throw new \Exception('Share not found');
+        }
+
+        if(!(bool)$share['is_public']){
+            throw new \Exception('Share is not public');
+        }
+
+        if(!empty($share['revoked_at'])){
+            throw new \Exception('Share has been revoked');
+        }
+
+        if(!empty($share['expires_at']) && strtotime($share['expires_at']) < time()){
+            throw new \Exception('Share has expired');
+        }
+        return $share;
     }
 }
