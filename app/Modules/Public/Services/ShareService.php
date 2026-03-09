@@ -114,4 +114,18 @@ class ShareService extends BaseService{
         }
         return $share;
     }
+
+
+    // 내보내기(다운로드 URL 반환)
+    public function exportOmamori(int $omamoriId, array $options): array{
+        // 오마모리 존제 확인
+        $omamori = $this -> shareRepository -> findOmamoriById($omamoriId);
+        if (!$omamori) {
+            throw new \Exception('Omamori not found');
+        }
+
+        // URL
+        $downloadUrl = "/downloads/omamori_{$omamoriId}.png";
+        return ['download_url' => $downloadUrl];
+    }
 }
