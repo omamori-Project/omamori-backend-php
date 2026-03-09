@@ -62,4 +62,16 @@ class ShareRepository extends BaseRepository{
     public function findByToken(string $token): ?array{
         return $this -> findOneBy(['token' => $token]);
     }
+
+
+    // 공유 링크 생성
+    public function createShare(array $data): string{
+        return $this -> create([
+            'omamori_id' => $data['omamori_id'],
+            'share_code' => $data['share_code'],
+            'token' => $data['token'],
+            'option' => $data['option'],
+            'expires_at' => $data['expires_at'],
+        ]);
+    }
 }
