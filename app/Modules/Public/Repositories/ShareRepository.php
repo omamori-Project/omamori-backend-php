@@ -73,4 +73,23 @@ class ShareRepository extends BaseRepository{
             'expires_at' => $data['expires_at'],
         ]);
     }
+
+
+    // 내가 생성한 공유 링크 목록
+    public function findByUserAndOmamori(int $userId, int $omamoriId, array $query = []): array{
+        $page = (int)($query['page'] ?? 1);
+        $perPage = (int)($query['per_page'] ?? 15);
+
+        if ($page < 1) {
+            $page = 1;
+        }
+        if ($perPage < 1) {
+            $perPage = 15;
+        }
+
+        return $this -> paginate($page, $perPage, [
+            'user_id' => $userId,
+            'omamori_id' => $omamoriId,
+        ]);
+    }
 }
