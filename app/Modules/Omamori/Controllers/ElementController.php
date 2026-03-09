@@ -53,8 +53,8 @@ class ElementController extends BaseController{
             }
 
             // route param
-            $omamoriId = (int)$request -> param('omamoriId');
-            if(!$omamoriId){
+            $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            if($omamoriId <= 0){
                 return $this -> error('Invalid omamoriId');
             }
 

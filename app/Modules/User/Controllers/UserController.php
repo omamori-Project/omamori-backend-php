@@ -35,7 +35,7 @@ class UserController extends BaseController {
 
             if (!$user) {
                 // notFound() 사용
-                return $this->notFound('User not found');
+                return $this -> notFound('User not found');
             }
 
             // success() 사용

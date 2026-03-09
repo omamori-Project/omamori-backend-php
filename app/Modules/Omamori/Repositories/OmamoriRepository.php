@@ -74,7 +74,7 @@ class OmamoriRepository extends BaseRepository{
 
     // 오마모리 조회
     public function findOwnById(int $userId, int $omamoriId): ?array{
-        $sql = "SELECT id, user_id, title, meaning, status, back_message, published_at, created_at, updated_at, deleted_at
+        $sql = "SELECT id, user_id, title, meaning, status, back_message, applied_frame_id, published_at, created_at, updated_at, deleted_at
                 FROM {$this -> table}
                 WHERE id = ?
                     AND user_id = ?
@@ -102,7 +102,7 @@ class OmamoriRepository extends BaseRepository{
                 }
             }
 
-            $sql = "SELECT id, title, meaning, status, back_message, published_at, created_at, updated_at
+            $sql = "SELECT id, title, meaning, status, back_message, applied_frame_id, published_at, created_at, updated_at
                     FROM {$this -> table}
                     WHERE user_id = ?
                         AND deleted_at IS NULL";
@@ -208,7 +208,7 @@ class OmamoriRepository extends BaseRepository{
                 WHERE id = ?
                     AND user_id = ?
                     AND deleted_at IS NULL
-                RETURNING id, user_id, title, meaning, status, published_at, created_at, updated_at, deleted_at";
+                RETURNING id, user_id, title, meaning, status, applied_frame_id, published_at, created_at, updated_at, deleted_at";
 
         $row = $this -> db -> queryOne($sql, [$omamoriId, $userId]);
         if(!$row){
@@ -225,7 +225,7 @@ class OmamoriRepository extends BaseRepository{
         WHERE id = ?
             AND user_id = ?
             AND deleted_at IS NULL
-            RETURNING id, user_id, title, meaning, status, back_message, published_at, created_at, updated_at, deleted_at";
+            RETURNING id, user_id, title, meaning, status, back_message, applied_frame_id, published_at, created_at, updated_at, deleted_at";
         
         $row = $this -> db -> queryOne($sql, [$backMessage, $omamoriId, $userId]);
         if(!$row){
@@ -278,7 +278,7 @@ class OmamoriRepository extends BaseRepository{
                     AND user_id = ?
                     AND deleted_at IS NULL
                     AND status = 'draft'
-                RETURNING id, user_id, title, meaning, status, back_message, applied_fortune_color_id, published_at, created_at, updated_at, deleted_at";
+                RETURNING id, user_id, title, meaning, status, back_message, applied_fortune_color_id, applied_frame_id, published_at, created_at, updated_at, deleted_at";
 
         $row = $this -> db -> queryOne($sql, [$title, $meaning, $backMessage, $fortuneColorId, $omamoriId, $userId]);
                
@@ -288,7 +288,7 @@ class OmamoriRepository extends BaseRepository{
         return $row;
     }
 
-
+    // 
     public function touchDraft(int $userId, int $omamoriId): array{
         $sql = "UPDATE {$this -> table}
                 SET updated_at = NOW()

@@ -4,10 +4,7 @@ namespace App\Modules\Omamori\Services;
 
 // import
 use App\Common\Base\BaseService;
-use App\Common\Exceptions\ErrorHandler;
 use App\Core\Database;
-use App\Core\Request;
-use App\Core\Response;
 use App\Modules\Omamori\Repositories\OmamoriRepository;
 use App\Modules\Auth\Services\AuthService;
 
@@ -81,6 +78,7 @@ class OmamoriService extends BaseService{
             'title' => $row['title'],
             'meaning' => $row['meaning'],
             'status' => $row['status'],
+            'applied_frame_id' => $row['applied_frame_id'] ?? null,
         ];
     }
 
@@ -102,6 +100,7 @@ class OmamoriService extends BaseService{
             'meaning' => $row['meaning'],
             'status' => $row['status'],
             'back_message' => $row['back_message'],
+            'applied_frame_id' => $row['applied_frame_id'] ?? null,
             'published_at' => $row['published_at'] ?? null,
             'created_at' => $row['created_at'],
             'updated_at' => $row['updated_at'],
@@ -183,6 +182,7 @@ class OmamoriService extends BaseService{
                 'created_at' => $row['created_at'],
                 'updated_at' => $row['updated_at'],
                 'published_at' => $row['published_at'] ?? null,
+                'applied_frame_id' => $row['applied_frame_id'] ?? null,
             ];
         }
 
@@ -202,6 +202,8 @@ class OmamoriService extends BaseService{
             'created_at' => $updated['created_at'],
             'updated_at' => $updated['updated_at'],
             'published_at' => $updated['published_at'] ?? null,
+            'applied_frame_id' => $row['applied_frame_id'] ?? null,
+
         ];
     }
 
