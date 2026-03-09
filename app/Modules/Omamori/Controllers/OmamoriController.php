@@ -152,7 +152,7 @@ class OmamoriController extends BaseController{
             }
 
             $result = $this -> omamoriService -> updateOmamori($token, $omamoriId, $input);
-            return $this -> success($result, 'updated', 200);
+            return $this -> success($result, 'Updated', 200);
 
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);
@@ -221,9 +221,8 @@ class OmamoriController extends BaseController{
             if($omamoriId <= 0){
                 return $this -> error('Invalid omamoriId');
             }
-            $input = $request->input();
 
-            $result = $this -> omamoriService -> saveDraft($token, $omamoriId, $input);
+            $result = $this -> omamoriService -> saveDraft($token, $omamoriId);
             return $this -> success($result, 'OK', 200);
 
         }catch(\Exception $e){

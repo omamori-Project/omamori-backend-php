@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Modules\Element\Services;
+namespace App\Modules\Omamori\Services;
 
 // import
 use App\Common\Base\BaseService;
 use App\Core\Database;
 use App\Modules\Auth\Services\AuthService;
-use App\Modules\File\Repositories\FileRepository;
+use App\Modules\Omamori\Repositories\FileRepository;
 use App\Modules\Omamori\Repositories\OmamoriRepository;
-use App\Modules\Element\Repositories\ElementRepository;
+use App\Modules\Omamori\Repositories\ElementRepository;
 
 
 // 상속
@@ -38,63 +38,65 @@ class ElementService extends BaseService{
             throw new \RuntimeException('Omamori not found or not allowed');
         }
 
-        // background upsert
-        $type = $input['type'] ?? null;
-        if($type === 'background'){
-            $props = $input['props'] ?? null;
-
-            if(!is_array($props)){
-                throw new \InvalidArgumentException('props required');
-            }
-
-            if(!isset($props['fortune_color_id'])){
-                throw new \InvalidArgumentException('fortune_color_id required');
-            }
-
-            $fortuneColorId = (int)$props['fortune_color_id'];
-            if($fortuneColorId <= 0){
-                throw new \InvalidArgumentException('Invalid fortune_color_id');
-            }
-
-            if(!$this -> omamoriRepository -> existsActiveFortuneColor($fortuneColorId)){
-                throw new \InvalidArgumentException('Fortune color not found');
-            }
-
-            $updated = $this -> omamoriRepository -> updateAppliedFortuneColor($userId, $omamoriId, $fortuneColorId);
-
-            return [
-                'omamori_id' => (int)$omamoriId,
-                'type' => 'background',
-                'applied_fortune_color_id' => (int)$updated['applied_fortune_color_id'],
-                'updated_at' => $updated['updated_at'],
-            ];
-        }
-
-        
-
         // 필수값 체크
-        if(!isset($input['type']) || !isset($input['layer']) || !isset($input['props']) || !isset($input['transform'])){
-            throw new \InvalidArgumentException('Invalid input');
-        }
+        $this -> validateRequired($input, ['type', 'props']);
 
         // 오마모리 요소
         $type = $input['type'];
-        $layer = $input['layer'];
         $props = $input['props'];
-        $transform = $input['transform'];
+        $transform = $input['transform'] ?? null;
 
-        if(!is_array($props) || !is_array($transform)){
-            throw new \InvalidArgumentException('props and transform must be object');
+        // props / transform 타입 체크
+        if(!is_array($props)){
+            throw new \InvalidArgumentException('props must be object');
+        }
+        if($transform !== null && !is_array($transform)){
+            throw new \InvalidArgumentException('transform must be object');
         }
 
+        // layer 결정
+        // background 는 항상 layer 0
+        if($type === 'background'){
+            $layer = 0;
+
+        // layer를 직접 보냈으면 그 값을 사용
+        }else if(isset($input['layer'])){
+            $layer = (int)$input['layer'];
+            if($layer < 1){
+                throw new \InvalidArgumentException('Invalid layer');
+            }
+
+        // layer가 없으면 마지막 layer + 1 자동 부여
+        }else{
+            $maxLayer = $this -> elementRepository -> findMaxLayerByOmamoriId($omamoriId);
+            $layer = $maxLayer + 1;
+        }
+
+        // stamp 는 asset_key 필수
         if($type === 'stamp'){
             if(!isset($props['asset_key'])){
                 throw new \InvalidArgumentException('asset_key required');
             }
 
-            $file = $this -> fileRepository -> findByFileKey($props['asset_key']);
+            $assetId = (int)$props['asset_key'];
+            if($assetId <= 0){
+                throw new \InvalidArgumentException('Invalid asset_key');
+            }
+
+            $file = $this -> fileRepository -> findFileById($assetId);
             if(!$file){
                 throw new \RuntimeException('Invalid asset_key');
+            }
+
+            // stamp 는 transform 이 없으면 기본값 자동 부여
+            if($transform === null){
+                $transform = [
+                    'x' => 0,
+                    'y' => 0,
+                    'scaleX' => 1,
+                    'scaleY' => 1,
+                    'rotation' => 0,
+                ];
             }
         }
 

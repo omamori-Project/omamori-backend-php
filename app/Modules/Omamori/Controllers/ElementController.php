@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Element\Controllers;
+namespace App\Modules\Omamori\Controllers;
 
 use App\Common\Base\BaseController;
 use App\Common\Exceptions\ErrorHandler;
 use App\Core\Request;
 use App\Core\Response;
-use App\Modules\Element\Services\ElementService;
+use App\Modules\Omamori\Services\ElementService;
 
 class ElementController extends BaseController{
     protected ElementService $elementService;
@@ -53,8 +53,8 @@ class ElementController extends BaseController{
             }
 
             // route param
-            $omamoriId = (int)$request -> param('omamoriId');
-            if(!$omamoriId){
+            $omamoriId = (int)($request -> param('omamoriId') ?? 0);
+            if($omamoriId <= 0){
                 return $this -> error('Invalid omamoriId');
             }
 

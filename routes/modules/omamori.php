@@ -1,7 +1,7 @@
 <?php
 
 use App\Modules\Omamori\Controllers\OmamoriController;
-use App\Modules\Element\Controllers\ElementController;
+use App\Modules\Omamori\Controllers\ElementController;
 
 global $router;
 
