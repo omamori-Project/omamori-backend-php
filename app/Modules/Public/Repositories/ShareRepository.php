@@ -55,4 +55,11 @@ class ShareRepository extends BaseRepository{
 
         return $this -> db -> execute($sql, [$data['is_public'], $shareId]);
     }
+
+
+    // 미리보기 카드
+    // token으로 공유 정보 조회
+    public function findByToken(string $token): ?array{
+        return $this -> findOneBy(['token' => $token]);
+    }
 }
