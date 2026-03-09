@@ -5,16 +5,19 @@ namespace App\Modules\Public\Services;
 // import
 use App\Common\Base\BaseService;
 use App\Core\Database;
+use App\Modules\Auth\Services\AuthService;
 use App\Modules\Public\Repositories\ShareRepository;
 
 
 // 상속
 class ShareService extends BaseService{
     protected ShareRepository $shareRepository;
+    protected AuthService $authService;
 
     public function __construct(){
         $db = new Database();
         $this -> shareRepository = new ShareRepository($db);
+        $this -> authService = new AuthService();
     }
 
     // 외부 공유용 오마모리 조회
@@ -132,5 +135,41 @@ class ShareService extends BaseService{
         // URL
         $downloadUrl = "/downloads/omamori_{$omamoriId}.png";
         return ['download_url' => $downloadUrl];
+    }
+
+
+    // 내가 생성한 공유 링크 목록
+    public function getMyShares(string $token, int $omamoriId, array $query = []): array{
+        if (!$token) {
+            throw new \InvalidArgumentException('Token required');
+        }
+
+        if ($omamoriId <= 0) {
+            throw new \InvalidArgumentException('Invalid omamoriId');
+        }
+
+        // 토큰으로 사용자 확인
+        $userId = $this -> authService -> verifyAndGetUserId($token);
+        if (!$userId) {
+            throw new \Exception('Unauthorized');
+        }
+
+        // 오마모리 존재 확인
+        $omamori = $this -> shareRepository -> findOmamoriById($omamoriId);
+        if (!$omamori) {
+            throw new \Exception('Omamori not found');
+        }
+
+        $result = $this -> shareRepository -> findByUserAndOmamori($userId, $omamoriId, $query);
+
+        return [
+            'items' => $result['data'],
+            'pagination' => [
+                'current_page' => $result['current_page'],
+                'per_page' => $result['per_page'],
+                'total' => $result['total'],
+                'last_page' => $result['last_page'],
+            ],
+        ];
     }
 }
