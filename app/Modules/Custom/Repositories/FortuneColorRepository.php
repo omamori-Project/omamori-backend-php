@@ -73,4 +73,17 @@ class FortuneColorRepository extends BaseRepository{
         $row = $this -> db ->queryOne($sql, $params);
         return (int)($row['total'] ?? 0);
     }
+
+
+    // 행운컬러 단건 조회
+    public function findOneActiveById(int $fortuneColorId): ?array{
+        $sql = "SELECT id, code, name, hex, category, short_meaning, meaning, tips, is_active, created_at, updated_at
+                FROM {$this -> table}
+                WHERE id = ?
+                    AND deleted_at IS NULL
+                    AND is_active = true";
+
+        $row = $this -> db -> queryOne($sql, [$fortuneColorId]);
+        return $row ?: null;
+    }
 }
