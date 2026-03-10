@@ -13,3 +13,8 @@ $router -> post('/api/fortune-colors/today', function($request){
 $router -> get('/api/fortune-colors', function($request){
     return (new FortuneColorController()) -> index($request);
 }, 'omamoris.fortune-colors.index');
+
+// 행운컬러 단건 조회
+$router -> get('/api/fortune-colors/[i:fortuneColorId]', function($request){
+    return (new FortuneColorController()) -> show($request);
+}, 'omamoris.fortune-colors.show');
