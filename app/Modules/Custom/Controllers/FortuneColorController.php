@@ -47,4 +47,18 @@ class FortuneColorController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 행운컬러 단건 조회
+    public function show(Request $request): Response{
+        try{
+            $fortuneColorId = (int)$request -> param('fortuneColorId', 0);
+            
+            $result = $this -> fortuneColorService -> getById($fortuneColorId);
+            return $this->success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
