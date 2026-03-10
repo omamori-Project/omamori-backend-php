@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Omamori\Services;
+namespace App\Modules\Custom\Services;
 
 // import
 use App\Common\Base\BaseService;

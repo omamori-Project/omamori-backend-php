@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Omamori\Controllers;
+namespace App\Modules\Custom\Controllers;
 
 // import
 use App\Common\Base\BaseController;

@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Omamori\Controllers\FortuneColorController;
+use App\Modules\Custom\Controllers\FortuneColorController;
 
 global $router;
 
