@@ -48,8 +48,16 @@ class FortuneColorService extends BaseService{
         if($size < 1) $size = 10;
         if($size > 50) $size = 50;
 
-        if($sort !== null && !in_array($sort, ['latest', 'popular', 'name'], true)){
-            throw new \InvalidArgumentException('Invalid sort');
+        if($sort !== null){
+            $sort = trim($sort);
+
+            if($sort === ''){
+                $sort = 'latest';
+            }
+
+            if(!in_array($sort, ['latest', 'popular', 'name'], true)){
+                throw new \InvalidArgumentException('Invalid sort');
+            }
         }
 
         if($category !== null){
