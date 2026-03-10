@@ -40,4 +40,36 @@ class FortuneColorService extends BaseService{
         // 결과 보내기
         return $colors[$index];
     }
+
+
+    // 행운컬러 목록
+    public function getList(int $page, int $size, ?string $sort = 'latest', ?string $category = null, bool $active = true): array{
+        if($page < 1) $page = 1;
+        if($size < 1) $size = 10;
+        if($size > 50) $size = 50;
+
+        if($sort !== null && !in_array($sort, ['latest', 'popular', 'name'], true)){
+            throw new \InvalidArgumentException('Invalid sort');
+        }
+
+        if($category !== null){
+            $category = trim($category);
+            if($category === ''){
+                $category = null;
+            }
+        }
+
+        $offset = ($page - 1) * $size;
+        $items = $this -> fortuneColorRepository -> findList($size, $offset, $sort, $category, $active);
+        $total = $this -> fortuneColorRepository -> countList($category, $active);
+        return [
+            'items' => $items,
+            'meta' => [
+                'page' => $page,
+                'size' => $size,
+                'total' => $total,
+                'total_pages' => (int)ceil($total / $size),
+            ],
+        ];
+    }
 }
