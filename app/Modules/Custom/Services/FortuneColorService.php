@@ -80,4 +80,19 @@ class FortuneColorService extends BaseService{
             ],
         ];
     }
+
+
+    // 행운컬러 단건 조회
+    public function getById(int $fortuneColorId): array{
+        // fortuneColorId 없으면 오류
+        if($fortuneColorId <= 0){
+            throw new \InvalidArgumentException('Invalid fortuneColorId');
+        }
+
+        $row = $this -> fortuneColorRepository -> findOneActiveById($fortuneColorId);
+        if(!$row){
+            throw new \RuntimeException('Fortune color not found');
+        }
+        return $row;
+    }
 }
