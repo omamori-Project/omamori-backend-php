@@ -25,7 +25,24 @@ class FortuneColorController extends BaseController{
             $input = $request -> all();
             $result = $this -> fortuneColorService -> getTodayResult($input);
             return $this -> success($result, 'OK', 200);
-            
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+    // 행운컬러 목록
+    public function index(Request $request): Response{
+        try{
+            $page = (int)$request -> query('page', 1);
+            $size = (int)$request -> query('size', 10);
+            $sort = $request -> query('sort', 'latest');
+            $category = $request -> query('category');
+            $active = filter_var($request -> query('active', true), FILTER_VALIDATE_BOOLEAN);
+
+            $result = $this -> fortuneColorService -> getList($page, $size, $sort, $category, $active);
+            return $this -> success($result, 'OK', 200);
+
         }catch(\Exception $e){
             return ErrorHandler:: handle($e);
         }
