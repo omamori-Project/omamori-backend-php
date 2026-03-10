@@ -16,4 +16,15 @@ class FortuneColorRepository extends BaseRepository{
     {
         parent::__construct($db);
     }
+
+    // 유호 색 찾기
+    public function findActiveColors(): array{
+        $sql = "SELECT *
+                FROM {$this -> table}
+                WHERE is_active = true
+                AND deleted_at IS NULL
+                ORDER BY id ASC";
+
+        return $this -> db -> query($sql);
+    }
 }
