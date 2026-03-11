@@ -6,15 +6,18 @@ namespace App\Modules\Custom\Services;
 use App\Common\Base\BaseService;
 use App\Core\Database;
 use App\Modules\Custom\Repositories\FortuneColorRepository;
+use App\Modules\Custom\Repositories\AdminFortuneColorRepository;
 
 
 // 상속
 class AdminFortuneColorService extends BaseService{
     protected FortuneColorRepository $fortuneColorRepository;
+    protected AdminFortuneColorRepository $adminFortuneColorRepository;
 
     public function __construct(){
         $db = new Database();
         $this -> fortuneColorRepository = new FortuneColorRepository($db);
+        $this -> adminFortuneColorRepository = new AdminFortuneColorRepository($db);
     }
 
 
@@ -45,5 +48,33 @@ class AdminFortuneColorService extends BaseService{
             $criteria['category'] = $category;
         }
         return $this -> fortuneColorRepository -> paginate($page, $size, $criteria);
+    }
+
+
+    // 생성(관리용)
+    public function store(): array
+    {
+        $now = $this->now();
+
+        $data = [
+            'code' => 'temp-color-' . time(),
+            'name' => 'Temp Color',
+            'hex' => '#000000',
+            'is_active' => true,
+            'category' => null,
+            'short_meaning' => null,
+            'meaning' => null,
+            'tips' => null,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ];
+
+        $id = $this ->adminFortuneColorRepository -> create($data);
+        $row = $this ->adminFortuneColorRepository -> findById($id);
+
+        if(!$row){
+            throw new \RuntimeException('Fortune color create failed');
+        }
+        return $row;
     }
 }
