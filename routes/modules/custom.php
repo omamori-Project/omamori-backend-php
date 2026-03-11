@@ -19,7 +19,12 @@ $router -> get('/api/fortune-colors/[i:fortuneColorId]', function($request){
     return (new FortuneColorController()) -> show($request);
 }, 'omamoris.fortune-colors.show');
 
-// 테마 적용/변경
+// 테마 적용/변경/해제
 $router -> patch('/api/me/theme', function($request){
     return (new FortuneColorController()) -> updateTheme($request);
 }, 'omamoris.fortune-colors.updateTheme');
+
+// 목록(관리용)
+$router -> get('/api/admin/fortune-colors', function($request){
+    return (new FortuneColorController()) -> adminIndex($request);
+}, 'omamoris.fortune-colors.adminIndex');
