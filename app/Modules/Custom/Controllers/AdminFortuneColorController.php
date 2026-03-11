@@ -27,7 +27,19 @@ class AdminFortuneColorController extends BaseController{
             return $this -> success($result, 'OK', 200);
 
         }catch(\Exception $e){
-            return ErrorHandler::handle($e);
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 생성(관리용)
+    public function create(Request $request): Response{
+        try{
+            $result = $this -> adminFortuneColorService -> store();
+            return $this -> success($result, 'Created', 201);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
         }
     }
 }
