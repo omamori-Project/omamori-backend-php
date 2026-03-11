@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Custom\Controllers\FortuneColorController;
+use App\Modules\Custom\Controllers\AdminFortuneColorController;
 
 global $router;
 
@@ -26,5 +27,5 @@ $router -> patch('/api/me/theme', function($request){
 
 // 목록(관리용)
 $router -> get('/api/admin/fortune-colors', function($request){
-    return (new FortuneColorController()) -> adminIndex($request);
-}, 'omamoris.fortune-colors.adminIndex');
+    return (new AdminFortuneColorController()) -> index($request);
+}, 'omamoris.admin.fortune-colors.index');
