@@ -31,4 +31,21 @@ class UserRepository extends BaseRepository{
         $result = $this -> db -> queryOne($sql, [$email, $excludeId]);
         return (int)$result['count'] > 0;
     }
+
+
+    // 내 테마 적용/해제
+    public function updateAppliedFortuneColor(int $userId, ?int $fortuneColorId): array{
+        $sql = "UPDATE {$this -> table}
+                SET applied_fortune_color_id = ?,
+                    updated_at = NOW()
+                WHERE id = ?
+                    AND deleted_at IS NULL
+                RETURNING id, email, name, applied_fortune_color_id, created_at, updated_at";
+
+        $row = $this -> db -> queryOne($sql, [$fortuneColorId, $userId]);
+        if(!$row){
+            throw new \RuntimeException('Theme update failed');
+        }
+        return $row;
+    }
 }
