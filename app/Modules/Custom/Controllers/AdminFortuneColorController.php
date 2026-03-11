@@ -42,4 +42,21 @@ class AdminFortuneColorController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 수정(관리용)
+    public function update(Request $request): Response{
+        try{
+            // Id 확인
+            $fortuneColorId = (int)$request -> param('fortuneColorId', 0);
+            if($fortuneColorId <= 0){
+                return $this -> error('Invalid fortuneColorId');
+            }
+            $result = $this -> adminFortuneColorService -> update($fortuneColorId);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }

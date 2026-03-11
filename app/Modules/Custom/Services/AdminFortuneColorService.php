@@ -77,4 +77,31 @@ class AdminFortuneColorService extends BaseService{
         }
         return $row;
     }
+
+
+    // 수정(관리용)
+    public function update(int $fortuneColorId): array{
+        $fortuneColor = $this -> adminFortuneColorRepository -> findById($fortuneColorId);
+        if(!$fortuneColor){
+            throw new \RuntimeException('Fortune color not found');
+        }
+
+        $updateData = [
+            'name' => 'Updated Temp Color',
+            'hex' => '#111111',
+            'is_active' => false,
+            'updated_at' => $this->now(),
+        ];
+
+        $updated = $this -> adminFortuneColorRepository -> update($fortuneColorId, $updateData);
+        if(!$updated){
+            throw new \RuntimeException('Fortune color update failed');
+        }
+
+        $row = $this -> adminFortuneColorRepository -> findById($fortuneColorId);
+        if(!$row){
+            throw new \RuntimeException('Fortune color not found after update');
+        }
+        return $row;
+    }
 }
