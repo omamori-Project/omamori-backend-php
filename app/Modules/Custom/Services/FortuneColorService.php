@@ -5,16 +5,20 @@ namespace App\Modules\Custom\Services;
 // import
 use App\Common\Base\BaseService;
 use App\Core\Database;
+use App\Modules\Auth\Services\AuthService;
 use App\Modules\Custom\Repositories\FortuneColorRepository;
+use App\Modules\User\Repositories\UserRepository;
 
 // 상속
 class FortuneColorService extends BaseService{
     protected Database $db;
     protected FortuneColorRepository $fortuneColorRepository;
+    protected UserRepository $userRepository;
 
     public function __construct(){
         $this -> db = new Database();
         $this -> fortuneColorRepository = new FortuneColorRepository($this -> db);
+        $this -> userRepository = new UserRepository($this -> db);
     }
 
 
@@ -94,5 +98,29 @@ class FortuneColorService extends BaseService{
             throw new \RuntimeException('Fortune color not found');
         }
         return $row;
+    }
+
+
+    // 내 테마 적용/변경
+    public function updateTheme(string $token, array $input): array{
+        // 토큰 검증
+        $auth = new AuthService();
+        $userId = $auth->verifyAndGetUserId($token);
+
+        $fortuneColorId = $input['fortune_color_id'] ?? null;
+        if($fortuneColorId === null){
+            return $this -> userRepository -> updateAppliedFortuneColor($userId, null);
+        }
+
+        if(!is_int($fortuneColorId) && !(is_string($fortuneColorId) && ctype_digit($fortuneColorId))){
+            throw new \InvalidArgumentException('fortune_color_id must be int or null');
+        }
+
+        $fortuneColorId = (int)$fortuneColorId;
+        $fortuneColor = $this -> fortuneColorRepository -> findById($fortuneColorId);
+        if(!$fortuneColor){
+            throw new \RuntimeException('Fortune color not found');
+        }
+        return $this -> userRepository -> updateAppliedFortuneColor($userId, $fortuneColorId);
     }
 }

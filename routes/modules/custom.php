@@ -18,3 +18,8 @@ $router -> get('/api/fortune-colors', function($request){
 $router -> get('/api/fortune-colors/[i:fortuneColorId]', function($request){
     return (new FortuneColorController()) -> show($request);
 }, 'omamoris.fortune-colors.show');
+
+// 테마 적용/변경
+$router -> patch('/api/me/them', function($request){
+    return (new FortuneColorController()) -> updateThem($request);
+}, 'omamoris.fortune-colors.updateThem');
