@@ -101,11 +101,11 @@ class FortuneColorService extends BaseService{
     }
 
 
-    // 내 테마 적용/변경
-    public function updateTheme(string $token, array $input): array{
-        // 토큰 검증
+    // 내 테마 적용/해제
+    public function updateMyTheme(string $token, array $input): array{
+        //  토큰 검증
         $auth = new AuthService();
-        $userId = $auth->verifyAndGetUserId($token);
+        $userId = $auth -> verifyAndGetUserId($token);
 
         $fortuneColorId = $input['fortune_color_id'] ?? null;
         if($fortuneColorId === null){

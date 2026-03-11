@@ -8,18 +8,15 @@ use App\Common\Exceptions\ErrorHandler;
 use App\Core\Request;
 use App\Core\Response;
 use App\Modules\Custom\Services\FortuneColorService;
-use App\Modules\User\Services\UserService;
 
 
 // 상속
 class FortuneColorController extends BaseController{
     protected FortuneColorService $fortuneColorService;
-    protected UserService $userService;
 
     public function __construct()
     {
         $this -> fortuneColorService = new FortuneColorService();
-        $this -> userService = new UserService();
     }
 
     // 생년월일 기반 1회성 결과
@@ -66,16 +63,15 @@ class FortuneColorController extends BaseController{
     }
 
 
-    // 내 테마 적용/변경
+    // 내 테마 적용/해제
     public function updateTheme(Request $request): Response{
         try{
-            // 토큰 겁증
+            // 토큰 검증
             $token = $request -> bearerToken();
             if(!$token){
                 return $this -> unauthorized('Token required');
             }
-
-            $result = $this -> userService -> updateTheme($token, $request -> all());
+            $result = $this -> fortuneColorService ->  updateMyTheme($token, $request -> all());
             return $this -> success($result, 'OK', 200);
 
         }catch(\Exception $e){
