@@ -36,9 +36,9 @@ class AdminFortuneColorService extends BaseService{
         $criteria = [];
 
         if($active === 'true'){
-            $criteria['active'] = 1;
+            $criteria['is_active'] = 1;
         }elseif($active === 'false'){
-            $criteria['active'] = 0;
+            $criteria['is_active'] = 0;
         }
 
         if(!empty($category)){
