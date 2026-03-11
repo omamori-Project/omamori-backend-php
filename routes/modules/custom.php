@@ -29,3 +29,8 @@ $router -> patch('/api/me/theme', function($request){
 $router -> get('/api/admin/fortune-colors', function($request){
     return (new AdminFortuneColorController()) -> index($request);
 }, 'omamoris.admin.fortune-colors.index');
+
+// 생성(관리용)
+$router -> post('/api/admin/fortune-colors', function($request){
+    return (new AdminFortuneColorController()) -> create($request);
+}, 'omamoris.admin.fortune-colors.create');
