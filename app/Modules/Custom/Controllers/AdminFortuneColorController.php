@@ -59,4 +59,23 @@ class AdminFortuneColorController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 삭제(관리용)
+    public function destroy(Request $request): Response{
+        try{
+            // Id 검증
+            $fortuneColorId = (int)$request -> param('fortuneColorId', 0);
+            if($fortuneColorId <= 0){
+                return $this -> error('Invalid fortuneColorId');
+            }
+
+            // 삭제
+            $this -> adminFortuneColorService -> destroy($fortuneColorId);
+            return $this -> success(null, 'Deleted', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
