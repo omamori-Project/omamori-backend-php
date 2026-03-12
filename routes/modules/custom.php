@@ -50,3 +50,8 @@ $router -> delete('/api/admin/fortune-colors/[i:fortuneColorId]', function($requ
 $router -> get('/api/frames', function($request){
     return (new FrameController()) -> index($request);
 }, 'omamoris.frames.index');
+
+// 프레임 적용
+$router -> post('/api/omamoris/[i:omamoriId]/apply-frame', function($request){
+    return (new FrameController()) -> apply($request);
+}, 'omamoris.frames.apply');
