@@ -55,3 +55,8 @@ $router -> get('/api/frames', function($request){
 $router -> post('/api/omamoris/[i:omamoriId]/apply-frame', function($request){
     return (new FrameController()) -> apply($request);
 }, 'omamoris.frames.apply');
+
+// 프레임 적용 해제
+$router -> delete('/api/omamoris/[i:omamoriId]/frame', function($request){
+    return (new FrameController()) -> destroy($request);
+}, 'omamoris.frames.destroy');
