@@ -4,6 +4,7 @@ use App\Modules\Custom\Controllers\FortuneColorController;
 use App\Modules\Custom\Controllers\AdminFortuneColorController;
 use App\Modules\Custom\Controllers\FrameController;
 use App\Modules\Custom\Controllers\AdminFrameController;
+use App\Modules\Custom\Controllers\StampController;
 
 global $router;
 
@@ -80,4 +81,9 @@ $router -> delete('/api/admin/frames/[i:frameId]', function($request){
 // 프레임 목록(관리자)
 $router -> get('/api/admin/frames', function($request){
     return (new AdminFrameController()) -> index($request);
+}, 'omamoris.admin.frames.index');
+
+// 스탬프 목록 조회 + 필터링
+$router -> get('/api/stamps', function($request){
+    return (new StampController()) -> index($request);
 }, 'omamoris.admin.frames.index');
