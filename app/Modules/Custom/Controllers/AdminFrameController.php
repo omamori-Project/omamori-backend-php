@@ -73,4 +73,18 @@ class AdminFrameController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 프레임 목록 (관리자)
+    public function index(Request $request): Response{
+        try{
+            $query = $request -> query();
+            $result = $this -> adminFrameService -> indexFrames($query);
+
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
