@@ -15,4 +15,10 @@ class AdminFrameRepository extends BaseRepository{
     public function __construct(){
         parent::__construct(new Database());
     }
+
+
+    // 프레임 등록 (관리자)
+    public function findByFileKey(string $fileKey): ?array{
+        return $this -> findOneBy(['file_key' => $fileKey]);
+    }
 }

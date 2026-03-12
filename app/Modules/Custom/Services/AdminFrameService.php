@@ -30,14 +30,19 @@ class AdminFrameService extends BaseService{
             'assetUrl'
         ]);
 
-        $fileId = $this -> fileRepository -> create([
-            'user_id' => 1,
-            'purpose' => 'frame',
-            'visibility' => 'public',
-            'file_key' => $data['frameKey'],
-            'url' => $data['assetUrl'],
-            'created_at' => $this -> now(),
-        ]);
+        $file = $this -> fileRepository -> findByFileKey($data['frameKey']);
+        if ($file) {
+            $fileId = $file['id'];
+        } else {
+            $fileId = $this -> fileRepository -> create([
+                'user_id' => 1,
+                'purpose' => 'frame',
+                'visibility' => 'public',
+                'file_key' => $data['frameKey'],
+                'url' => $data['assetUrl'],
+                'created_at' => $this -> now(),
+            ]);
+        }
 
         $frameId = $this -> frameRepository -> create([
             'name' => $data['name'],
@@ -50,6 +55,10 @@ class AdminFrameService extends BaseService{
             'updated_at' => $this -> now(),
         ]);
 
-        return $this -> frameRepository -> findById($frameId) ?? [];
+        $result = $this -> frameRepository -> findById($frameId) ?? [];
+        if ($result && isset($result['meta'])) {
+            $result['meta'] = json_decode($result['meta'], true);
+        }
+        return $result;
     }
 }
