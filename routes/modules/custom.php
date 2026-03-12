@@ -39,3 +39,8 @@ $router -> post('/api/admin/fortune-colors', function($request){
 $router -> patch('/api/admin/fortune-colors/[i:fortuneColorId]', function($request){
     return (new AdminFortuneColorController()) -> update($request);
 }, 'omamoris.admin.fortune-colors.update');
+
+// 삭제
+$router -> delete('/api/admin/fortune-colors/[i:fortuneColorId]', function($request){
+    return (new AdminFortuneColorController()) -> destroy($request);
+}, 'omamoris.admin.fortune-colors.destroy');
