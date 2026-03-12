@@ -65,4 +65,9 @@ $router -> delete('/api/omamoris/[i:omamoriId]/frame', function($request){
 // 프레임 등록 (관리자)
 $router -> post('/api/admin/frames', function($request){
     return (new AdminFrameController()) -> create($request);
-}, 'omamoris.frames.create');
+}, 'omamoris.admin.frames.create');
+
+// 프레임 수정(관리자)
+$router -> patch('/api/admin/frames/[i:frameId]', function($request){
+    return (new AdminFrameController()) -> update($request);
+}, 'omamoris.admin.frames.update');
