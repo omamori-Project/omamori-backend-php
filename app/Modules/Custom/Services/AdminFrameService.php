@@ -105,4 +105,15 @@ class AdminFrameService extends BaseService{
     }
     return $result;
     }
+
+
+    // 프레임 삭제 (관리자)
+    public function destroyFrame(int $frameId): bool{
+        // frame 검증
+        $frame = $this -> frameRepository -> findById($frameId);
+        if (!$frame) {
+            throw new \Exception('Frame not found');
+        }
+        return $this -> frameRepository -> delete($frameId);
+    }
 }
