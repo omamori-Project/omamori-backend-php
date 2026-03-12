@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Modules\Custom\Controllers;
+
+// import
+use App\Common\Base\BaseController;
+use App\Common\Exceptions\ErrorHandler;
+use App\Core\Request;
+use App\Core\Response;
+use App\Modules\Custom\Services\AdminFortuneColorService;
+
+
+// 속상
+class AdminFortuneColorController extends BaseController{
+    protected AdminFortuneColorService $adminFortuneColorService;
+
+    public function __construct(){
+        $this -> adminFortuneColorService = new AdminFortuneColorService();
+    }
+
+
+    // 목록(관리용)
+    public function index(Request $request): Response{
+        try{
+            $query = $request -> query();
+            $result = $this -> adminFortuneColorService -> index($query);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 생성(관리용)
+    public function create(Request $request): Response{
+        try{
+            $result = $this -> adminFortuneColorService -> store();
+            return $this -> success($result, 'Created', 201);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 수정(관리용)
+    public function update(Request $request): Response{
+        try{
+            // Id 확인
+            $fortuneColorId = (int)$request -> param('fortuneColorId', 0);
+            if($fortuneColorId <= 0){
+                return $this -> error('Invalid fortuneColorId');
+            }
+            $result = $this -> adminFortuneColorService -> update($fortuneColorId);
+            return $this -> success($result, 'OK', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 삭제(관리용)
+    public function destroy(Request $request): Response{
+        try{
+            // Id 검증
+            $fortuneColorId = (int)$request -> param('fortuneColorId', 0);
+            if($fortuneColorId <= 0){
+                return $this -> error('Invalid fortuneColorId');
+            }
+
+            // 삭제
+            $this -> adminFortuneColorService -> destroy($fortuneColorId);
+            return $this -> success(null, 'Deleted', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
+}

@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Custom\Controllers\FortuneColorController;
+use App\Modules\Custom\Controllers\AdminFortuneColorController;
 
 global $router;
 
@@ -19,7 +20,27 @@ $router -> get('/api/fortune-colors/[i:fortuneColorId]', function($request){
     return (new FortuneColorController()) -> show($request);
 }, 'omamoris.fortune-colors.show');
 
-// 테마 적용/변경
+// 테마 적용/변경/해제
 $router -> patch('/api/me/theme', function($request){
     return (new FortuneColorController()) -> updateTheme($request);
 }, 'omamoris.fortune-colors.updateTheme');
+
+// 목록(관리용)
+$router -> get('/api/admin/fortune-colors', function($request){
+    return (new AdminFortuneColorController()) -> index($request);
+}, 'omamoris.admin.fortune-colors.index');
+
+// 생성(관리용)
+$router -> post('/api/admin/fortune-colors', function($request){
+    return (new AdminFortuneColorController()) -> create($request);
+}, 'omamoris.admin.fortune-colors.create');
+
+// 수정(UI 수정)
+$router -> patch('/api/admin/fortune-colors/[i:fortuneColorId]', function($request){
+    return (new AdminFortuneColorController()) -> update($request);
+}, 'omamoris.admin.fortune-colors.update');
+
+// 삭제
+$router -> delete('/api/admin/fortune-colors/[i:fortuneColorId]', function($request){
+    return (new AdminFortuneColorController()) -> destroy($request);
+}, 'omamoris.admin.fortune-colors.destroy');
