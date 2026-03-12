@@ -15,11 +15,11 @@ class FileRepository extends BaseRepository{
     }
 
     public function findFileById(int $id): ?array{
-    $sql = "SELECT id, file_key
-            FROM {$this -> table}
-            WHERE id = ?
-                AND deleted_at IS NULL";
+        $sql = "SELECT id, file_key
+                FROM {$this -> table}
+                WHERE id = ?
+                    AND deleted_at IS NULL";
 
-    return $this -> db -> queryOne($sql, [$id]) ?: null;
-}
+        return $this -> db -> queryOne($sql, [$id]) ?: null;
+    }
 }

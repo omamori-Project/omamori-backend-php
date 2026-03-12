@@ -6,15 +6,18 @@ namespace App\Modules\Custom\Services;
 use App\Common\Base\BaseService;
 use App\Core\Database;
 use App\Modules\Custom\Repositories\FrameRepository;
+use App\Modules\Omamori\Repositories\FileRepository;
 
 
 // 상속
 class AdminFrameService extends BaseService{
     protected FrameRepository $frameRepository;
+    protected FileRepository $fileRepository;
 
     public function __construct(){
         $db = new Database();
         $this -> frameRepository = new FrameRepository($db);
+        $this -> fileRepository = new FileRepository($db);
     }
 
 
@@ -27,24 +30,26 @@ class AdminFrameService extends BaseService{
             'assetUrl'
         ]);
 
-        $frameData = [
+        $fileId = $this -> fileRepository -> create([
+            'user_id' => 1,
+            'purpose' => 'frame',
+            'visibility' => 'public',
+            'file_key' => $data['frameKey'],
+            'url' => $data['assetUrl'],
+            'created_at' => $this -> now(),
+        ]);
+
+        $frameId = $this -> frameRepository -> create([
             'name' => $data['name'],
             'frame_key' => $data['frameKey'],
             'preview_url' => $data['previewUrl'],
-            'asset_url' => $data['assetUrl'],
+            'asset_file_id' => $fileId,
             'is_active' => $data['isActive'] ?? true,
             'meta' => isset($data['meta']) ? json_encode($data['meta']) : null,
             'created_at' => $this -> now(),
             'updated_at' => $this -> now(),
-        ];
+        ]);
 
-        $frameId = $this -> frameRepository -> create($frameData);
-
-        $result = $this -> frameRepository -> findById($frameId);
-        if ($result && isset($result['meta']) && is_string($result['meta'])) {
-            $decoded = json_decode($result['meta'], true);
-            $result['meta'] = $decoded ?? $result['meta'];
-        }
-        return $result ?? [];
+        return $this -> frameRepository -> findById($frameId) ?? [];
     }
 }
