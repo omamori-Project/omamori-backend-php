@@ -84,7 +84,7 @@ class AdminFrameService extends BaseService{
         }
 
         if (isset($data['isActive'])) {
-            $updateData['is_active'] = $data['isActive'];
+            $updateData['is_active'] = $data['isActive'] ? 'true' : 'false';
         }
 
         if (isset($data['meta'])) {
