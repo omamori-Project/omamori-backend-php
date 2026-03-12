@@ -116,4 +116,24 @@ class AdminFrameService extends BaseService{
         }
         return $this -> frameRepository -> delete($frameId);
     }
+
+
+    // 프레임 목록 (관리자)
+    public function indexFrames(array $query): array{
+        $page = (int)($query['page'] ?? 1);
+        $size = (int)($query['size'] ?? 10);
+        $isActive = isset($query['isActive']) && $query['isActive'] !== ''
+            ? ($query['isActive'] === 'true' ? 1 : 0)
+            : null;
+        $keyword = trim($query['keyword'] ?? '');
+
+        $result = $this -> frameRepository -> getAdminFrames($page, $size, $isActive, $keyword);
+
+        foreach ($result['data'] as &$item) {
+            if (isset($item['meta']) && is_string($item['meta'])) {
+                $item['meta'] = json_decode($item['meta'], true);
+            }
+        }
+        return $result;
+}
 }
