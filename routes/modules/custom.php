@@ -2,6 +2,7 @@
 
 use App\Modules\Custom\Controllers\FortuneColorController;
 use App\Modules\Custom\Controllers\AdminFortuneColorController;
+use App\Modules\Custom\Controllers\FrameController;
 
 global $router;
 
@@ -44,3 +45,18 @@ $router -> patch('/api/admin/fortune-colors/[i:fortuneColorId]', function($reque
 $router -> delete('/api/admin/fortune-colors/[i:fortuneColorId]', function($request){
     return (new AdminFortuneColorController()) -> destroy($request);
 }, 'omamoris.admin.fortune-colors.destroy');
+
+// 유저용 프레임 목록
+$router -> get('/api/frames', function($request){
+    return (new FrameController()) -> index($request);
+}, 'omamoris.frames.index');
+
+// 프레임 적용
+$router -> post('/api/omamoris/[i:omamoriId]/apply-frame', function($request){
+    return (new FrameController()) -> apply($request);
+}, 'omamoris.frames.apply');
+
+// 프레임 적용 해제
+$router -> delete('/api/omamoris/[i:omamoriId]/frame', function($request){
+    return (new FrameController()) -> destroy($request);
+}, 'omamoris.frames.destroy');
