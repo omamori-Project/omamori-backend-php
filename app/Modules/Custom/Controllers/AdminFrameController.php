@@ -36,4 +36,23 @@ class AdminFrameController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 프레임 수정 (관리자)
+    public function update(Request $request): Response{
+        try{
+            // Id 검증
+            $frameId = (int)$request -> param('frameId', 0);
+            if($frameId <= 0){
+                return $this -> error('Invalid frameId');
+            }
+
+            $data = $request -> all();
+            $result = $this -> adminFrameService -> updateFrame($frameId, $data);
+            return $this -> success($result, 'Updated', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
