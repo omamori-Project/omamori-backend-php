@@ -104,4 +104,21 @@ class AdminFortuneColorService extends BaseService{
         }
         return $row;
     }
+
+
+    // 삭제(관리용)
+    public function destroy(int $fortuneColorId): bool{
+        // Id 받기
+        $fortuneColor = $this -> adminFortuneColorRepository -> findById($fortuneColorId);
+        if(!$fortuneColor){
+            throw new \RuntimeException('Fortune color not found');
+        }
+
+        // 삭제
+        $deleted = $this -> adminFortuneColorRepository ->delete($fortuneColorId);
+        if(!$deleted){
+            throw new \RuntimeException('Fortune color delete failed');
+        }
+        return true;
+    }
 }
