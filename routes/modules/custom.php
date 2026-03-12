@@ -3,6 +3,7 @@
 use App\Modules\Custom\Controllers\FortuneColorController;
 use App\Modules\Custom\Controllers\AdminFortuneColorController;
 use App\Modules\Custom\Controllers\FrameController;
+use App\Modules\Custom\Controllers\AdminFrameController;
 
 global $router;
 
@@ -60,3 +61,23 @@ $router -> post('/api/omamoris/[i:omamoriId]/apply-frame', function($request){
 $router -> delete('/api/omamoris/[i:omamoriId]/frame', function($request){
     return (new FrameController()) -> destroy($request);
 }, 'omamoris.frames.destroy');
+
+// 프레임 등록 (관리자)
+$router -> post('/api/admin/frames', function($request){
+    return (new AdminFrameController()) -> create($request);
+}, 'omamoris.admin.frames.create');
+
+// 프레임 수정(관리자)
+$router -> patch('/api/admin/frames/[i:frameId]', function($request){
+    return (new AdminFrameController()) -> update($request);
+}, 'omamoris.admin.frames.update');
+
+// 프레임 삭제(관리자)
+$router -> delete('/api/admin/frames/[i:frameId]', function($request){
+    return (new AdminFrameController()) -> destroy($request);
+}, 'omamoris.admin.frames.destroy');
+
+// 프레임 목록(관리자)
+$router -> get('/api/admin/frames', function($request){
+    return (new AdminFrameController()) -> index($request);
+}, 'omamoris.admin.frames.index');
