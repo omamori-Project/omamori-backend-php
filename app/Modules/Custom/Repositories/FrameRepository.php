@@ -26,4 +26,10 @@ class FrameRepository extends BaseRepository{
         }
         return $this -> paginate($page, $size, $criteria);
     }
+
+
+    // 프레임 적용
+    public function findByFrameKey(string $frameKey): ?array{
+        return $this -> findOneBy(['frame_key' => $frameKey]);
+    }
 }
