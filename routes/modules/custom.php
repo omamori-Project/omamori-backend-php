@@ -86,4 +86,4 @@ $router -> get('/api/admin/frames', function($request){
 // 스탬프 목록 조회 + 필터링
 $router -> get('/api/stamps', function($request){
     return (new StampController()) -> index($request);
-}, 'omamoris.admin.frames.index');
+}, 'omamoris.stamps.index');
