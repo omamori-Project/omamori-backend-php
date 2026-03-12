@@ -55,4 +55,22 @@ class AdminFrameController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 프레임 삭제 (관리자)
+    public function destroy(Request $request): Response{
+        try{
+            // Id 검증
+            $frameId = (int)$request -> param('frameId', 0);
+            if($frameId <= 0){
+                return $this -> error('Invalid frameId');
+            }
+
+            $this -> adminFrameService -> destroyFrame($frameId);
+            return $this -> success(null, 'Deleted', 200);
+
+        }catch(\Exception $e){
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
