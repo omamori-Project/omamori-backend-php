@@ -9,5 +9,10 @@ use App\Core\Database;
 
 // 상속
 class AdminFrameRepository extends BaseRepository{
-    
+    protected string $table = 'frames';
+    protected string $primaryKey = 'id';
+
+    public function __construct(){
+        parent::__construct(new Database());
+    }
 }
