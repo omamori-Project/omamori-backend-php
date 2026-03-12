@@ -61,4 +61,61 @@ class AdminFrameService extends BaseService{
         }
         return $result;
     }
+
+
+    // 프레임 수정 (관리자)
+    public function updateFrame(int $frameId, array $data): array{
+        $frame = $this -> frameRepository -> findById($frameId);
+
+        if (!$frame) {
+            throw new \Exception('Frame not found');
+        }
+
+        // 요청값 중 수정 가능한 항목만 추출
+        $updateData = $this -> only($data, [
+            'name',
+            'frameKey',
+            'previewUrl',
+            'isActive',
+            'meta'
+        ]);
+
+        // API 필드명을 DB 컬럼명으로 변경
+        if (isset($updateData['frameKey'])) {
+            $updateData['frame_key'] = $updateData['frameKey'];
+            unset($updateData['frameKey']);
+        }
+
+        if (isset($updateData['previewUrl'])) {
+            $updateData['preview_url'] = $updateData['previewUrl'];
+            unset($updateData['previewUrl']);
+        }
+
+        if (isset($updateData['isActive'])) {
+            $updateData['is_active'] = $updateData['isActive'];
+            unset($updateData['isActive']);
+        }
+
+        if (isset($updateData['meta'])) {
+            $updateData['meta'] = json_encode($updateData['meta']);
+        }
+
+        // 수정할 값이 없으면 기존 데이터 반환
+        if (empty($updateData)) {
+            $result = $frame;
+        } else {
+            $updateData['updated_at'] = $this -> now();
+
+            $this -> frameRepository -> update($frameId, $updateData);
+
+            $result = $this -> frameRepository -> findById($frameId) ?? [];
+        }
+
+        // meta를 보기 좋게 다시 배열로 변환
+        if ($result && isset($result['meta']) && is_string($result['meta'])) {
+            $decoded = json_decode($result['meta'], true);
+            $result['meta'] = $decoded ?? $result['meta'];
+        }
+        return $result;
+    }
 }
