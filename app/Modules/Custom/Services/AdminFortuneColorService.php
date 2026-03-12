@@ -89,8 +89,8 @@ class AdminFortuneColorService extends BaseService{
         $updateData = [
             'name' => 'Updated Temp Color',
             'hex' => '#111111',
-            'is_active' => false,
-            'updated_at' => $this->now(),
+            'is_active' => 'false',
+            'updated_at' => $this -> now(),
         ];
 
         $updated = $this -> adminFortuneColorRepository -> update($fortuneColorId, $updateData);

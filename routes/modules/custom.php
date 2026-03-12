@@ -36,6 +36,6 @@ $router -> post('/api/admin/fortune-colors', function($request){
 }, 'omamoris.admin.fortune-colors.create');
 
 // 수정(UI 수정)
-$router -> post('/api/admin/fortune-colors/[i:fortuneColorId]', function($request){
+$router -> patch('/api/admin/fortune-colors/[i:fortuneColorId]', function($request){
     return (new AdminFortuneColorController()) -> update($request);
 }, 'omamoris.admin.fortune-colors.update');
