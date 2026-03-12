@@ -305,4 +305,13 @@ class OmamoriRepository extends BaseRepository{
         }
         return $row;
     }
+
+
+    // 프레임 적용
+    public function applyFrame(int $omamoriId, int $frameId): bool{
+        return $this -> update($omamoriId, [
+            'applied_frame_id' => $frameId,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+    }
 }
