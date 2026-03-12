@@ -48,4 +48,22 @@ class FrameController extends BaseController{
             return ErrorHandler::handle($e);
         }
     }
+
+
+    // 프레임 적용 해제
+    public function destroy(Request $request): Response{
+        try {
+            // Id 검증
+            $omamoriId = (int) $request -> param('omamoriId', 0);
+            if ($omamoriId <= 0) {
+                return $this -> error('Invalid omamoriId');
+            }
+            $result = $this -> frameService -> removeFrame($omamoriId);
+            return $this -> success($result, 'OK', 200);
+
+        } catch (\Exception $e) {
+            return ErrorHandler:: handle($e);
+        }
+    }
+
 }
