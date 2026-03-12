@@ -45,4 +45,10 @@ class FrameService extends BaseService{
         }
         return $this -> omamoriRepository -> applyFrame($omamoriId, (int) $frame['id']);
     }
+
+
+    // 프레임 적용 해제
+    public function removeFrame(int $omamoriId): bool{
+        return $this -> omamoriRepository -> removeFrame($omamoriId);
+    }
 }

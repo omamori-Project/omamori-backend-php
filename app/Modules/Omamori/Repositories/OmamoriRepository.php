@@ -314,4 +314,13 @@ class OmamoriRepository extends BaseRepository{
             'updated_at' => date('Y-m-d H:i:s')
         ]);
     }
+
+
+    // 프레임 적용 해제
+    public function removeFrame(int $omamoriId): bool{
+        return $this -> update($omamoriId, [
+            'applied_frame_id' => null,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+    }
 }
