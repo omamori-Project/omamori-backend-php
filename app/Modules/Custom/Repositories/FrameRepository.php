@@ -5,6 +5,7 @@ namespace App\Modules\Custom\Repositories;
 // import
 use App\Common\Base\BaseRepository;
 use App\Core\Database;
+use App\Modules\Custom\Repositories\FrameRepository;
 
 
 // 상속
@@ -14,7 +15,7 @@ class FrameRepository extends BaseRepository{
     protected string $primaryKey = 'id';
 
     public function __construct(Database $db){
-        parent::__construct($db);
+        $this -> frameRepository = new FrameRepository(new Database());
     }
 
 
