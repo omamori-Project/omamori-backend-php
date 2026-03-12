@@ -76,3 +76,8 @@ $router -> patch('/api/admin/frames/[i:frameId]', function($request){
 $router -> delete('/api/admin/frames/[i:frameId]', function($request){
     return (new AdminFrameController()) -> destroy($request);
 }, 'omamoris.admin.frames.destroy');
+
+// 프레임 목록(관리자)
+$router -> delete('/api/admin/frames', function($request){
+    return (new AdminFrameController()) -> index($request);
+}, 'omamoris.admin.frames.index');
