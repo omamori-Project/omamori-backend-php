@@ -2,6 +2,7 @@
 
 // import
 use App\Modules\System\Controllers\RenderController;
+use App\Modules\System\Controllers\FileController;
 
 global $router;
 
@@ -25,3 +26,13 @@ $router -> get('/api/renders/[*:renderCode]', function($request){
 $router -> delete('/api/renders/[*:renderCode]', function($request){
     return (new RenderController()) -> destroy($request);
 }, 'omamoris.render.destroy');
+
+// 파일 업로드 → url 반환
+$router -> post('/api/files', function($request){
+    return (new FileController()) -> upload($request);
+}, 'omamoris.file.upload');
+
+// 파일 삭제
+$router -> delete('/api/files/[*:fileName]', function($request){
+    return (new FileController()) -> destroy($request);
+}, 'omamoris.file.destroy');
