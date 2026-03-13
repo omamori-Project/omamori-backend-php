@@ -33,6 +33,6 @@ $router -> post('/api/files', function($request){
 }, 'omamoris.file.upload');
 
 // 파일 삭제
-$router -> post('/api/files/{fileId}', function($request){
+$router -> delete('/api/files/[*:fileName]', function($request){
     return (new FileController()) -> destroy($request);
 }, 'omamoris.file.destroy');

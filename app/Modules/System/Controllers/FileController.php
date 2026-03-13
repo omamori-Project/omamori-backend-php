@@ -39,21 +39,21 @@ class FileController extends BaseController{
 
 
     // 파일 삭제
-    // public function destroy(Request $request): Response{
-    //     try {
-    //         $path = $request -> param('path');
-    //         if (!$path) {
-    //             return $this -> error('Path is required');
-    //         }
+    public function destroy(Request $request): Response{
+        try {
+            $fileName = $request -> param('fileName');
+            if (!$fileName) {
+                return $this -> error('fileName is required');
+            }
 
-    //         $this -> fileService -> delete($path);
-    //         return $this->success(null, 'Deleted');
+            $this -> fileService -> delete($fileName);
+            return $this->success(null, 'Deleted');
 
-    //     } catch (\InvalidArgumentException $e) {
-    //         return $this -> error($e -> getMessage(), 400);
+        } catch (\InvalidArgumentException $e) {
+            return $this -> error($e -> getMessage(), 400);
 
-    //     } catch (\Throwable $e) {
-    //         return ErrorHandler:: handle($e);
-    //     }
-    // }
+        } catch (\Throwable $e) {
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
