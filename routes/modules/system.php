@@ -20,3 +20,8 @@ $router -> get('/api/renders/me', function($request){
 $router -> get('/api/renders/[*:renderCode]', function($request){
     return (new RenderController()) -> show($request);
 }, 'omamoris.render.show');
+
+// 렌더 결과 삭제 (만료 전 수동 삭제)
+$router -> delete('/api/renders/[*:renderCode]', function($request){
+    return (new RenderController()) -> destroy($request);
+}, 'omamoris.render.destroy');
