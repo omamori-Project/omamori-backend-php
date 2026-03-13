@@ -251,4 +251,18 @@ class RenderService extends BaseService{
         $userId = 0;
         return $this -> renderRepository -> findMyRenders($userId, $page, $perPage);
     }
+
+
+    // 렌더 결과 삭제
+    public function deleteRender(string $renderCode): bool{
+        if ($renderCode === '') {
+            throw new \InvalidArgumentException('renderCode is required.');
+        }
+
+        $render = $this -> renderRepository -> findByRenderCode($renderCode);
+        if (!$render) {
+            throw new \InvalidArgumentException('Render not found.');
+        }
+        return $this -> renderRepository -> deleteByRenderCode($renderCode);
+    }
 }
