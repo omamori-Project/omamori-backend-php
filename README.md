@@ -70,7 +70,7 @@ omamori-php-final/
 │       │    ├── Services/
 │       │    │    ├── OmamoriService.php
 │       │    │    └── ElementService.php
-│       │    └── Repositories
+│       │    └── Repositories/
 │       │         ├── OmamoriRepository.php
 │       │         ├── ElementRepository.php
 │       │         └── FileRepository.php
@@ -85,12 +85,37 @@ omamori-php-final/
 │       │    │    ├── CommentService.php
 │       │    │    ├── LikeService.php
 │       │    │    └── BookmarkService.php
-│       │    └── Repositories
+│       │    └── Repositories/
 │       │         ├── PostRepository.php
 │       │         ├── CommentRepository.php
 │       │         ├── LikeRepository.php
 │       │         └── BookmarkRepository.php
-│       └── Public/              구현 필요 (実装必要)
+│       ├──  Public/
+│       │    ├── Controllers/
+│       │    │    └── ShareController.php
+│       │    ├── Services/
+│       │    │    └── ShareService.php
+│       │    └── Repositories/
+│       │         └── ShareRepository.php
+│       └── Custom/
+│            ├── Controllers/
+│            │    ├── AdminFortuneColorController.php
+│            │    ├── AdminFrameController.php
+│            │    ├── FortuneColorController.php
+│            │    ├── FrameController.php
+│            │    └── StampController.php
+│            ├── Services/
+│            │    ├── AdminFortuneColorService.php
+│            │    ├── AdminFrameService.php
+│            │    ├── FortuneColorService.php
+│            │    ├── FrameService.php
+│            │    └── StampService.php
+│            └── Repositories/
+│                 ├── AdminFortuneColorRepository.php
+│                 ├── AdminFrameRepository.php
+│                 ├── FortuneColorRepository.php
+│                 ├── FrameRepository.php
+│                 └── StampRepository.php
 │
 ├── routes/
 │   ├── api.php                  메인 라우트 (メインルート)
@@ -99,7 +124,8 @@ omamori-php-final/
 │       ├── auth.php
 │       ├── omamori.php
 │       ├── community.php
-|       └── public.php
+|       ├── public.php
+|       └── custom.php
 │
 ├── docs/
 │   └── HOW_TO_USE.md            클래스 사용 가이드 (クラス利用ガイド)
