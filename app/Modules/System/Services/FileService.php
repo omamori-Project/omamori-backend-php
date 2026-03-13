@@ -38,4 +38,22 @@ class FileService extends BaseService{
         $url = '/uploads/' . $fileName;
         return ['url' => $url];
     }
+
+
+    // 파일 삭제
+    public function delete(string $fileName): void{
+        if (!$fileName) {
+            throw new \InvalidArgumentException('fileName is required');
+        }
+
+        $filePath = __DIR__ . '/../../../../public/uploads/' . $fileName;
+
+        if (!file_exists($filePath)) {
+            throw new \InvalidArgumentException('File not found');
+        }
+
+        if (!unlink($filePath)) {
+            throw new \RuntimeException('Failed to delete file');
+        }
+    }
 }
