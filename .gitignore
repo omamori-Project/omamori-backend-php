@@ -1,24 +1,69 @@
+# =========================
+# Dependency
+# =========================
+# Composer로 설치되는 라이브러리
 /vendor/
+
+# =========================
+# Storage (로그 / 캐시 / 생성 파일)
+# =========================
+# 로그 파일
 /storage/logs/*
+# 캐시 파일
 /storage/cache/*
+# 오마모리 생성 이미지
 /storage/omamori/generated/*
+# 오마모리 임시 파일
 /storage/omamori/temp/*
+# 빈 폴더 유지용
 !.gitkeep
+# app 내부 로그
 app/storage/logs/*
 
+
+# =========================
+# Environment 설정 파일
+# =========================
+# 환경 변수 파일
 .env
 .env.backup
 .env.production
 
+
+# =========================
+# Generated Image
+# =========================
+# PNG 이미지 파일은 Git 관리 제외
+.png
+
+
+# =========================
+# Test / Build Cache
+# =========================
+# PHPUnit 실행 캐시
 .phpunit.result.cache
+# Composer lock 파일
 composer.lock
 
+
+# =========================
+# OS 불필요 파일
+# =========================
+# macOS / Windows 시스템 파일
 .DS_Store
 Thumbs.db
 
+
+# =========================
+# IDE / Editor 설정
+# =========================
+# IDE 설정 파일
 /.idea
 /.vscode
 
 
-#Ignore vscode AI rules
+# =========================
+# VSCode AI 규칙 파일
+# =========================
+# VSCode AI instruction 파일
 .github\instructions\codacy.instructions.md
