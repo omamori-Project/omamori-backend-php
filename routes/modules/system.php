@@ -31,3 +31,8 @@ $router -> delete('/api/renders/[*:renderCode]', function($request){
 $router -> post('/api/files', function($request){
     return (new FileController()) -> upload($request);
 }, 'omamoris.file.upload');
+
+// 파일 삭제
+$router -> post('/api/files/[i:fileId]', function($request){
+    return (new FileController()) -> destroy($request);
+}, 'omamoris.file.destroy');
