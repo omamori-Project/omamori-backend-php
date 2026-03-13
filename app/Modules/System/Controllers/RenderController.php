@@ -50,4 +50,21 @@ class RenderController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 내 렌더 히스토리
+    public function myHistory(Request $request): Response{
+        try {
+            $query = $request -> query();
+
+            $page = isset($query['page']) ? (int)$query['page'] : 1;
+            $perPage = isset($query['perPage']) ? (int)$query['perPage'] : 15;
+
+            $result = $this -> renderService -> getMyRenders($page, $perPage);
+            return $this -> success($result, 'OK', 200);
+
+        } catch (\Exception $e) {
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
