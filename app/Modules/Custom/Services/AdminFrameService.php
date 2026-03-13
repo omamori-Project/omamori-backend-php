@@ -6,7 +6,7 @@ namespace App\Modules\Custom\Services;
 use App\Common\Base\BaseService;
 use App\Core\Database;
 use App\Modules\Custom\Repositories\FrameRepository;
-use App\Modules\Omamori\Repositories\FileRepository;
+use App\Modules\System\Repositories\FileRepository;
 
 
 // 상속

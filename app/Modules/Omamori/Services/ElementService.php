@@ -6,7 +6,7 @@ namespace App\Modules\Omamori\Services;
 use App\Common\Base\BaseService;
 use App\Core\Database;
 use App\Modules\Auth\Services\AuthService;
-use App\Modules\Omamori\Repositories\FileRepository;
+use App\Modules\System\Repositories\FileRepository;
 use App\Modules\Omamori\Repositories\OmamoriRepository;
 use App\Modules\Omamori\Repositories\ElementRepository;
 
