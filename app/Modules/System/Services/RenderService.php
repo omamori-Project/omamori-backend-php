@@ -17,7 +17,8 @@ class RenderService extends BaseService{
         $this -> renderRepository = new RenderRepository($db);
     }
 
-    // 레이어 합성 → 이미지 생성
+
+    // 레이어 합성
     public function createRender(array $data): array{
         // 바깥 필수값 확인
         $this -> validateRequired($data, ['canvas', 'side', 'format', 'dpi', 'layers', 'store']);
@@ -63,6 +64,8 @@ class RenderService extends BaseService{
 
         // render_code 생성
         $renderCode = $this -> generateRenderCode();
+        // 이미지 생성
+        $filePath = $this -> renderImage($data, $renderCode);
 
         // 임시로 file_id, user_id, omamori_id 는 나중에 연결
         $renderData = [
@@ -85,12 +88,116 @@ class RenderService extends BaseService{
         return [
             'id' => $renderId,
             'render_code' => $renderCode,
+            'file_path' => $filePath,
             'side' => $side,
             'format' => $format,
             'dpi' => $dpi,
             'width' => $width,
             'height' => $height,
             'store' => $store,
+        ];
+    }
+
+
+    // 이미지 생성
+    protected function renderImage(array $data, string $renderCode): string{
+        $width = (int)$data['canvas']['width'];
+        $height = (int)$data['canvas']['height'];
+        $layers = $data['layers'];
+
+        $image = imagecreatetruecolor($width, $height);
+
+        // ひとまず白背景
+        $white = imagecolorallocate($image, 255, 255, 255);
+        imagefill($image, 0, 0, $white);
+
+        usort($layers, function ($a, $b) {
+            return ($a['layer'] ?? 0) <=> ($b['layer'] ?? 0);
+        });
+
+        foreach($layers as $layer){
+            $type = $layer['type'] ?? '';
+            if ($type === 'background') {
+                $this -> drawBackground($image, $layer, $width, $height);
+            }
+            if ($type === 'text') {
+                $this -> drawText($image, $layer);
+            }
+        }
+
+        $dir = __DIR__ . '/../../../../storage/renders';
+        if(!is_dir($dir)){
+            mkdir($dir, 0777, true);
+        }
+
+        $filename = 'render_' . time() . '_' . mt_rand(1000, 9999) . '.png';
+        $filePath = $dir . '/' . $filename;
+
+        imagepng($image, $filePath);
+        imagedestroy($image);
+        return $filePath;
+    }
+
+
+    // 배경 생성
+    protected function drawBackground($image, array $layer, int $width, int $height): void{
+        $colorHex = $layer['color'] ?? '#ffffff';
+        [$r, $g, $b] = $this -> hexToRgb($colorHex);
+
+        $color = imagecolorallocate($image, $r, $g, $b);
+        imagefilledrectangle($image, 0, 0, $width, $height, $color);
+    }
+
+
+    // 문자 생성
+    protected function drawText($image, array $layer): void{
+        $text = $layer['content'] ?? '';
+        if ($text === '') {
+            return;
+        }
+
+        $x = (int)($layer['transform']['x'] ?? 0);
+        $y = (int)($layer['transform']['y'] ?? 30);
+
+        $fontSize = (int)($layer['style']['fontSize'] ?? 20);
+        $colorHex = $layer['style']['color'] ?? '#111111';
+        [$r, $g, $b] = $this -> hexToRgb($colorHex);
+
+        $color = imagecolorallocate($image, $r, $g, $b);
+
+        // 자기 환경에 맞게 폰트를 두기
+        $fontPath = __DIR__ . '/../../../../storage/fonts/NotoSansJP-Regular.ttf';
+
+        if (!file_exists($fontPath)) {
+            return;
+        }
+
+        imagettftext(
+            $image,
+            $fontSize,
+            0,
+            $x,
+            $y,
+            $color,
+            $fontPath,
+            $text
+        );
+    }
+
+
+    // 색코드를 RGB 숫자로 바꾸기
+    protected function hexToRgb(string $hex): array{
+        $hex = ltrim($hex, '#');
+
+        if(strlen($hex) === 3){
+            $hex = $hex[0] . $hex[0]
+                 . $hex[1] . $hex[1]
+                 . $hex[2] . $hex[2];
+        }
+        return [
+            hexdec(substr($hex, 0, 2)),
+            hexdec(substr($hex, 2, 2)),
+            hexdec(substr($hex, 4, 2)),
         ];
     }
 
