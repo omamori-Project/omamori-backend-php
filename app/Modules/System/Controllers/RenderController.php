@@ -31,4 +31,23 @@ class RenderController extends BaseController{
             return ErrorHandler:: handle($e);
         }
     }
+
+
+    // 렌더 결과 조회
+    public function show(Request $request): Response{
+        try {
+            $renderCode = $request -> param('renderCode');
+            if (!$renderCode) {
+                return $this -> error('renderCode is required.', 400);
+            }
+
+            $result = $this -> renderService -> showRender($renderCode);
+            return $this->success($result, 'OK', 200);
+
+        } catch (\InvalidArgumentException $e) {
+            return $this -> notFound($e -> getMessage());
+        } catch (\Exception $e) {
+            return ErrorHandler:: handle($e);
+        }
+    }
 }
