@@ -235,4 +235,20 @@ class RenderService extends BaseService{
             'updated_at' => $render['updated_at'] ?? null,
         ];
     }
+
+
+    // 내 렌더 히스토리
+    public function getMyRenders(int $page = 1, int $perPage = 15): array{
+        // page
+        if ($page <= 0) {
+            $page = 1;
+        }
+        if ($perPage <= 0) {
+            $perPage = 15;
+        }
+
+        // 임시: 현재는 user_id 0 기준
+        $userId = 0;
+        return $this -> renderRepository -> findMyRenders($userId, $page, $perPage);
+    }
 }
