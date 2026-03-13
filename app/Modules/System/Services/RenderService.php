@@ -206,4 +206,33 @@ class RenderService extends BaseService{
     protected function generateRenderCode(): string{
         return 'rnd_' . bin2hex(random_bytes(8));
     }
+
+
+    // 렌더 결과 조회
+    public function showRender(string $renderCode): array{
+        if($renderCode === ''){
+            throw new \InvalidArgumentException('renderCode is required.');
+        }
+
+        $render = $this -> renderRepository -> findByRenderCode($renderCode);
+        if (!$render) {
+            throw new \InvalidArgumentException('Render not found.');
+        }
+        return [
+            'id' => $render['id'],
+            'render_code' => $render['render_code'],
+            'user_id' => $render['user_id'],
+            'omamori_id' => $render['omamori_id'],
+            'side' => $render['side'],
+            'format' => $render['format'],
+            'dpi' => $render['dpi'],
+            'width' => $render['width'],
+            'height' => $render['height'],
+            'store' => $render['store'],
+            'file_id' => $render['file_id'],
+            'expires_at' => $render['expires_at'],
+            'created_at' => $render['created_at'] ?? null,
+            'updated_at' => $render['updated_at'] ?? null,
+        ];
+    }
 }
