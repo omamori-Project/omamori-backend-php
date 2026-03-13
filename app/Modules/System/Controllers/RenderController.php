@@ -27,6 +27,7 @@ class RenderController extends BaseController{
 
         } catch (\InvalidArgumentException $e) {
             return $this -> error($e -> getMessage(), 400);
+            
         } catch (\Exception $e) {
             return ErrorHandler:: handle($e);
         }
@@ -46,6 +47,7 @@ class RenderController extends BaseController{
 
         } catch (\InvalidArgumentException $e) {
             return $this -> notFound($e -> getMessage());
+
         } catch (\Exception $e) {
             return ErrorHandler:: handle($e);
         }
@@ -62,6 +64,26 @@ class RenderController extends BaseController{
 
             $result = $this -> renderService -> getMyRenders($page, $perPage);
             return $this -> success($result, 'OK', 200);
+
+        } catch (\Exception $e) {
+            return ErrorHandler:: handle($e);
+        }
+    }
+
+
+    // 렌더 결과 삭제 (만료 전 수동 삭제)
+    public function destroy(Request $request): Response{
+        try {
+            $renderCode = $request -> param('renderCode');
+            if (!$renderCode) {
+                return $this -> error('renderCode is required.', 400);
+            }
+
+            $this -> renderService -> deleteRender($renderCode);
+            return $this -> success(null, 'Deleted', 200);
+
+        } catch (\InvalidArgumentException $e) {
+            return $this -> notFound($e -> getMessage());
 
         } catch (\Exception $e) {
             return ErrorHandler:: handle($e);
